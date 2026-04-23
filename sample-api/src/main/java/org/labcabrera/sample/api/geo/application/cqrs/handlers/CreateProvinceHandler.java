@@ -33,11 +33,11 @@ public class CreateProvinceHandler implements CommandHandler<CreateProvinceComma
         var user = securityPort.requireCurrentUser();
         provinceGuard.checkCreate(user);
         log.debug("Creating province (user: {})", user.username());
-        var current = provinceRepository.findByCodeOrName(command.code(), command.name());
+        var current = provinceRepository.findByName(command.name());
         if (current.isPresent()) {
             throw new ConflictException("province.msg.err.already-exists");
         }
-        Province province = new Province(UUID.randomUUID().toString(), command.code(), command.name(), command.countryCode(), null, null);
+        Province province = new Province(UUID.randomUUID().toString(), command.name(), command.countryId(), null, null);
         var saved = provinceRepository.save(province);
         provinceMetricPort.incrementCreatedCounter();
         eventBusPort.publish(new ProvinceCreatedEvent(saved.id(), saved.name(), saved.createdAt()));

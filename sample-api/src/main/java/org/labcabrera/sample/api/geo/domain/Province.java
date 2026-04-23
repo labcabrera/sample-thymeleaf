@@ -4,9 +4,8 @@ import java.time.LocalDateTime;
 
 public record Province(
     String id,
-    String code,
     String name,
-    String countryCode,
+    String countryId,
     LocalDateTime createdAt,
     LocalDateTime updatedAt) {
 }

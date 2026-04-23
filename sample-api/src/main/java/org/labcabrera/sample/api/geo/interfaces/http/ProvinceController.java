@@ -110,7 +110,7 @@ public class ProvinceController {
     })
     @PostMapping
     public ResponseEntity<ProvinceDto> create(@Validated @RequestBody CreateProvinceDto request) {
-        var command = new CreateProvinceCommand(request.code(), request.name(), request.countryCode());
+        var command = new CreateProvinceCommand(request.name(), request.countryId());
         Province province = commandBus.dispatch(command);
         var dto = mapper.toDto(province);
         return ResponseEntity.created(URI.create("/api/v1/provinces/" + province.id())).body(dto);
@@ -132,7 +132,7 @@ public class ProvinceController {
     })
     public ResponseEntity<ProvinceDto> update(@PathVariable(name = "provinceId") String provinceId,
         @RequestBody UpdateProvinceDto request) {
-        var command = new UpdateProvinceCommand(provinceId, request.code(), request.name(), request.countryCode());
+        var command = new UpdateProvinceCommand(provinceId, request.name(), request.countryId());
         Province province = commandBus.dispatch(command);
         var dto = mapper.toDto(province);
         return ResponseEntity.ok(dto);

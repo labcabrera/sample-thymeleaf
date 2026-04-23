@@ -13,7 +13,7 @@ public interface CountryRepository {
 
     Page<Country> findByRsql(String rsql, Pageable pageable, AuthenticatedUser user);
 
-    Optional<Country> findByName(String name);
+    Optional<Country> findByIdOrName(String id, String name);
 
     Country save(Country entity);
 

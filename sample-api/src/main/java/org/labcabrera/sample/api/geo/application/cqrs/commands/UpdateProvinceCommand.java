@@ -6,8 +6,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record UpdateProvinceCommand(
     @NotNull String provinceId,
-    Optional<String> code,
     Optional<String> name,
-    Optional<String> countryCode
-) {
+    Optional<String> countryId) {
 }

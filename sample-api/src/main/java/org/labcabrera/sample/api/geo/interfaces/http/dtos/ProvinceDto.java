@@ -16,14 +16,11 @@ public class ProvinceDto {
 	@Schema(name = "id", example = "550e8400-e29b-41d4-a716-446655440000", description = "Unique identifier of the province", requiredMode = Schema.RequiredMode.REQUIRED)
 	private String id;
 
-	@Schema(name = "code", example = "MD", description = "Province code", requiredMode = Schema.RequiredMode.REQUIRED)
-	private String code;
-
 	@Schema(name = "name", example = "Madrid", description = "Province name", requiredMode = Schema.RequiredMode.REQUIRED)
 	private String name;
 
-	@Schema(name = "countryCode", example = "ES", description = "ISO country code", requiredMode = Schema.RequiredMode.REQUIRED)
-	private String countryCode;
+	@Schema(name = "countryId", example = "ES", description = "Country identifier", requiredMode = Schema.RequiredMode.REQUIRED)
+	private String countryId;
 
 	@Schema(name = "createdAt", description = "Creation timestamp")
 	private LocalDateTime createdAt;

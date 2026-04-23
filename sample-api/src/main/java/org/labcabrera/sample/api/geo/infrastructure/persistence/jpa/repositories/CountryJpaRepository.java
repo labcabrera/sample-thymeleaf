@@ -12,6 +12,6 @@ public interface CountryJpaRepository extends
     JpaRepository<CountryEntity, String>,
     JpaSpecificationExecutor<CountryEntity> {
 
-    Optional<CountryEntity> findByNameIgnoreCase(String name);
+    Optional<CountryEntity> findByIdAndNameIgnoreCase(String id, String name);
 
 }

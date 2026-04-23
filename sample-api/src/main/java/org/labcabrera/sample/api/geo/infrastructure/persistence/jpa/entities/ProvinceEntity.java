@@ -49,16 +49,12 @@ public class ProvinceEntity {
 
     public boolean merge(Province updated) {
         boolean modified = false;
-        if (updated.code() != null && !updated.code().equals(this.code)) {
-            this.code = updated.code();
-            modified = true;
-        }
         if (updated.name() != null && !updated.name().equals(this.name)) {
             this.name = updated.name();
             modified = true;
         }
-        if (updated.countryCode() != null && !updated.countryCode().equals(this.countryCode)) {
-            this.countryCode = updated.countryCode();
+        if (updated.countryId() != null && !updated.countryId().equals(this.countryCode)) {
+            this.countryCode = updated.countryId();
             modified = true;
         }
         return modified;

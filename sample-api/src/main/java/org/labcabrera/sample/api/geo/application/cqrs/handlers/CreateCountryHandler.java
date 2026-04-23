@@ -1,11 +1,9 @@
 package org.labcabrera.sample.api.geo.application.cqrs.handlers;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import org.labcabrera.sample.api.geo.application.cqrs.commands.CreateCountryCommand;
 import org.labcabrera.sample.api.geo.application.ports.CountryEventBusPort;
-import org.labcabrera.sample.api.geo.application.ports.CountryMetricPort;
 import org.labcabrera.sample.api.geo.application.ports.CountryRepository;
 import org.labcabrera.sample.api.geo.domain.Country;
 import org.labcabrera.sample.api.geo.domain.events.CountryCreatedEvent;
@@ -33,11 +31,11 @@ public class CreateCountryHandler implements CommandHandler<CreateCountryCommand
         var user = securityPort.requireCurrentUser();
         countryGuard.checkCreate(user);
         log.debug("Creating country (user: {})", user.username());
-        var current = countryRepository.findByName(command.name());
+        var current = countryRepository.findByIdOrName(command.id(), command.name());
         if (current.isPresent()) {
             throw new ConflictException("country.msg.err.already-exists");
         }
-        Country country = new Country(UUID.randomUUID().toString(), command.name(), LocalDateTime.now(), null);
+        Country country = new Country(command.id(), command.name(), LocalDateTime.now(), null);
         var saved = countryRepository.save(country);
         eventBusPort.publish(new CountryCreatedEvent(saved.id(), saved.name(), LocalDateTime.now()));
         return saved;

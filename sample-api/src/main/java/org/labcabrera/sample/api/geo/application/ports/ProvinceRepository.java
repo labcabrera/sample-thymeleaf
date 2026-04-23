@@ -13,7 +13,7 @@ public interface ProvinceRepository {
 
     Page<Province> findByRsql(String rsql, Pageable pageable, AuthenticatedUser user);
 
-    Optional<Province> findByCodeOrName(String code, String name);
+    Optional<Province> findByName(String name);
 
     Province save(Province entity);
 

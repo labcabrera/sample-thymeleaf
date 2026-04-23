@@ -32,11 +32,10 @@ public class UpdateProvinceHandler implements CommandHandler<UpdateProvinceComma
             .orElseThrow(() -> new NotFoundException("province.msg.not-found", provinceId, Province.class));
         provinceGuard.checkWrite(existing, user);
 
-        String code = command.code().orElse(existing.code());
         String name = command.name().orElse(existing.name());
-        String countryCode = command.countryCode().orElse(existing.countryCode());
+        String countryId = command.countryId().orElse(existing.countryId());
 
-        var updatedData = new Province(existing.id(), code, name, countryCode, existing.createdAt(), LocalDateTime.now());
+        var updatedData = new Province(existing.id(), name, countryId, existing.createdAt(), LocalDateTime.now());
 
         //TODO check conflict
         var updated = provinceRepository.update(provinceId, updatedData);

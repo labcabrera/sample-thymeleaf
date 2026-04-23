@@ -35,14 +35,8 @@ public class CountryRepositoryJpaAdapter implements CountryRepository {
     private final RSQLParser rsqlParser;
 
     @Override
-    public Optional<Country> findByName(String name) {
-        if (name != null && !name.isBlank()) {
-            var e = jpaRepository.findByNameIgnoreCase(name);
-            if (e.isPresent()) {
-                return e.map(mapper::toDomain);
-            }
-        }
-        return java.util.Optional.empty();
+    public Optional<Country> findByIdOrName(String id, String name) {
+        return jpaRepository.findByIdAndNameIgnoreCase(id, name).map(mapper::toDomain);
     }
 
     @Override
