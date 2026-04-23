@@ -16,7 +16,7 @@ import org.labcabrera.sample.api.geo.domain.UserInfo;
 import org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.entities.CaseFolderEntity;
 import org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.entities.IdCardEntity;
 import org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.entities.UserInfoEntity;
-import org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.mappers.CaseFolderEntityMapper;
+import org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.mappers.ProvinceEntityMapper;
 import org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.mappers.IdCardEntityMapper;
 import org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.mappers.UserInfoEntityMapper;
 
@@ -25,7 +25,7 @@ import org.mapstruct.factory.Mappers;
 
 class CaseFolderEntityMapperTest {
 
-    private final CaseFolderEntityMapper mapper = Mappers.getMapper(CaseFolderEntityMapper.class);
+    private final ProvinceEntityMapper mapper = Mappers.getMapper(ProvinceEntityMapper.class);
 
     @BeforeEach
     void setup() {

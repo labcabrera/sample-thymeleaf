@@ -6,12 +6,11 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 
 import org.apache.commons.lang3.StringUtils;
-import org.labcabrera.sample.api.geo.application.ports.CaseFolderRepository;
+import org.labcabrera.sample.api.geo.application.ports.ProvinceRepository;
 import org.labcabrera.sample.api.geo.application.services.CaseFolderGuard;
-import org.labcabrera.sample.api.geo.domain.CaseFolder;
-import org.labcabrera.sample.api.geo.domain.CaseFolderStatus;
-import org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.entities.CaseFolderEntity;
-import org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.mappers.CaseFolderEntityMapper;
+import org.labcabrera.sample.api.geo.domain.Province;
+import org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.entities.ProvinceEntity;
+import org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.mappers.ProvinceEntityMapper;
 import org.labcabrera.sample.api.shared.application.SecurityPort.AuthenticatedUser;
 import org.labcabrera.sample.api.shared.domain.exceptions.BadRequestException;
 import org.labcabrera.sample.api.shared.domain.exceptions.NotModifiedException;
@@ -30,21 +29,21 @@ import lombok.RequiredArgsConstructor;
 @Component
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class CaseFolderRepositoryJpaAdapter implements CaseFolderRepository {
+public class ProvinceRepositoryJpaAdapter implements ProvinceRepository {
 
-    private final CaseFolderJpaRepository jpaRepository;
-    private final CaseFolderEntityMapper mapper;
+    private final ProvinceJpaRepository jpaRepository;
+    private final ProvinceEntityMapper mapper;
     private final RSQLParser rsqlParser;
 
     @Override
-    @Cacheable(value = "caseFolder", key = "#caseFolderId", unless = "#result == null || #result.isEmpty()")
-    public Optional<CaseFolder> findById(String caseFolderId) {
-        return jpaRepository.findById(caseFolderId).map(mapper::toDomain);
+    @Cacheable(value = "province", key = "#provinceId", unless = "#result == null || #result.isEmpty()")
+    public Optional<Province> findById(String provinceId) {
+        return jpaRepository.findById(provinceId).map(mapper::toDomain);
     }
 
     @Override
-    public Page<CaseFolder> findByRsql(String rsql, Pageable pageable, AuthenticatedUser user) {
-        Specification<CaseFolderEntity> authSpec = (root, query, cb) -> {
+    public Page<Province> findByRsql(String rsql, Pageable pageable, AuthenticatedUser user) {
+        Specification<ProvinceEntity> authSpec = (root, query, cb) -> {
             if (!user.hasRole(CaseFolderGuard.ROLE_CASE_FOLDER_MANAGEMENT)) {
                 return cb.equal(root.get("owner"), user.username());
             }
@@ -56,8 +55,8 @@ public class CaseFolderRepositoryJpaAdapter implements CaseFolderRepository {
         }
         try {
             Node rootNode = rsqlParser.parse(rsql);
-            Specification<CaseFolderEntity> spec = rootNode.accept(new CustomRsqlVisitor<CaseFolderEntity>());
-            Specification<CaseFolderEntity> finalSpec = (spec == null) ? authSpec : spec.and(authSpec);
+            Specification<ProvinceEntity> spec = rootNode.accept(new CustomRsqlVisitor<ProvinceEntity>());
+            Specification<ProvinceEntity> finalSpec = (spec == null) ? authSpec : spec.and(authSpec);
             var page = jpaRepository.findAll(finalSpec, pageable);
             return page.map(mapper::toDomain);
         }
@@ -68,13 +67,13 @@ public class CaseFolderRepositoryJpaAdapter implements CaseFolderRepository {
 
     @Override
     @Transactional
-    @CachePut(value = "caseFolder", key = "#result.id")
-    public CaseFolder save(CaseFolder caseFolder) {
+    @CachePut(value = "province", key = "#result.id")
+    public Province save(Province province) {
         try {
-            if (caseFolder.getId() != null && jpaRepository.existsById(caseFolder.getId())) {
-                throw new BadRequestException("case-folder.msg.err.already-exists", caseFolder.getId());
+            if (province.getId() != null && jpaRepository.existsById(province.getId())) {
+                throw new BadRequestException("province.msg.err.already-exists", province.getId());
             }
-            var entity = mapper.toEntity(caseFolder);
+            var entity = mapper.toEntity(province);
             var savedEntity = jpaRepository.save(entity);
             return mapper.toDomain(savedEntity);
         }
@@ -85,32 +84,23 @@ public class CaseFolderRepositoryJpaAdapter implements CaseFolderRepository {
 
     @Override
     @Transactional
-    @CachePut(value = "caseFolder", key = "#caseFolderId")
-    public CaseFolder update(String caseFolderId, CaseFolder caseFolder) {
-        var current = jpaRepository.findById(caseFolderId)
-            .orElseThrow(() -> new BadRequestException("Case folder not found with id " + caseFolderId));
+    @CachePut(value = "province", key = "#provinceId")
+    public Province update(String provinceId, Province caseFolder) {
+        var current = jpaRepository.findById(provinceId)
+            .orElseThrow(() -> new BadRequestException("Province not found with id " + provinceId));
         boolean modified = current.merge(caseFolder);
         if (!modified) {
-            throw new NotModifiedException("case-folder.msg.err.not-modified", caseFolderId);
+            throw new NotModifiedException("province.msg.err.not-modified", provinceId);
         }
         var savedEntity = jpaRepository.save(current);
         return mapper.toDomain(savedEntity);
     }
 
     @Override
-    @CachePut(value = "caseFolder", key = "#caseFolderId")
-    public CaseFolder updateStatus(String caseFolderId, CaseFolderStatus status) {
-        jpaRepository.updateStatus(caseFolderId, status);
-        var updatedEntity = jpaRepository.findById(caseFolderId)
-            .orElseThrow(() -> new BadRequestException("Case folder not found with id " + caseFolderId));
-        return mapper.toDomain(updatedEntity);
-    }
-
-    @Override
     @Transactional
-    @CacheEvict(value = "caseFolder", key = "#caseFolderId")
-    public void deleteById(String caseFolderId) {
-        jpaRepository.deleteById(caseFolderId);
+    @CacheEvict(value = "province", key = "#provinceId")
+    public void deleteById(String provinceId) {
+        jpaRepository.deleteById(provinceId);
     }
 
 }
