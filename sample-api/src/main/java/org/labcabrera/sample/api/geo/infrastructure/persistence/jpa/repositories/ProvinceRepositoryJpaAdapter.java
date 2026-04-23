@@ -86,8 +86,8 @@ public class ProvinceRepositoryJpaAdapter implements ProvinceRepository {
     @CachePut(value = "province", key = "#result.id")
     public Province save(Province province) {
         try {
-            if (province.getId() != null && jpaRepository.existsById(province.getId())) {
-                throw new BadRequestException("province.msg.err.already-exists", province.getId());
+            if (province.id() != null && jpaRepository.existsById(province.id())) {
+                throw new BadRequestException("province.msg.err.already-exists", province.id());
             }
             var entity = mapper.toEntity(province);
             var savedEntity = jpaRepository.save(entity);

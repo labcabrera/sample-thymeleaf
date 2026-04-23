@@ -113,7 +113,7 @@ public class ProvinceController {
         var command = new CreateProvinceCommand(request.code(), request.name(), request.countryCode());
         Province province = commandBus.dispatch(command);
         var dto = mapper.toDto(province);
-        return ResponseEntity.created(URI.create("/api/v1/provinces/" + province.getId())).body(dto);
+        return ResponseEntity.created(URI.create("/api/v1/provinces/" + province.id())).body(dto);
     }
 
     @PatchMapping("/{provinceId}")

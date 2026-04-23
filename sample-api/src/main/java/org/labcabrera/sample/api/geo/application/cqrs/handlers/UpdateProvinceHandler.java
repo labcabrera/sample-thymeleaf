@@ -1,5 +1,7 @@
 package org.labcabrera.sample.api.geo.application.cqrs.handlers;
 
+import java.time.LocalDateTime;
+
 import org.labcabrera.sample.api.geo.application.cqrs.commands.UpdateProvinceCommand;
 import org.labcabrera.sample.api.geo.application.ports.ProvinceRepository;
 import org.labcabrera.sample.api.geo.domain.Province;
@@ -29,17 +31,15 @@ public class UpdateProvinceHandler implements CommandHandler<UpdateProvinceComma
         var existing = provinceRepository.findById(provinceId)
             .orElseThrow(() -> new NotFoundException("province.msg.not-found", provinceId, Province.class));
         provinceGuard.checkWrite(existing, user);
-        if(command.code().isPresent()) {
-            existing.setCode(command.code().get());
-        }
-        if(command.name().isPresent()) {
-            existing.setName(command.name().get());
-        }
-        if(command.countryCode().isPresent()) {
-            existing.setCountryCode(command.countryCode().get());
-        }
+
+        String code = command.code().orElse(existing.code());
+        String name = command.name().orElse(existing.name());
+        String countryCode = command.countryCode().orElse(existing.countryCode());
+
+        var updatedData = new Province(existing.id(), code, name, countryCode, existing.createdAt(), LocalDateTime.now());
+
         //TODO check conflict
-        var updated = provinceRepository.update(provinceId, existing);
+        var updated = provinceRepository.update(provinceId, updatedData);
         return updated;
     }
 
