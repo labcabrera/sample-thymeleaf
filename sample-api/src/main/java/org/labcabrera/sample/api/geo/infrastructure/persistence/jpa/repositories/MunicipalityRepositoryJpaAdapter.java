@@ -30,7 +30,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MunicipalityRepositoryJpaAdapter implements MunicipalityRepository {
 
-    
     private final MunicipalityJpaRepository jpaRepository;
     private final MunicipalityEntityMapper mapper;
     private final RSQLParser rsqlParser;
@@ -85,12 +84,12 @@ public class MunicipalityRepositoryJpaAdapter implements MunicipalityRepository 
     @Override
     @Transactional
     @CachePut(value = "municipality", key = "#result.id")
-    public Municipality save(Municipality province) {
+    public Municipality save(Municipality municipality) {
         try {
-            if (province.getId() != null && jpaRepository.existsById(province.getId())) {
-                throw new BadRequestException("municipality.msg.err.already-exists", province.getId());
+            if (municipality.id() != null && jpaRepository.existsById(municipality.id())) {
+                throw new BadRequestException("municipality.msg.err.already-exists", municipality.id());
             }
-            var entity = mapper.toEntity(province);
+            var entity = mapper.toEntity(municipality);
             var savedEntity = jpaRepository.save(entity);
             return mapper.toDomain(savedEntity);
         }
@@ -102,10 +101,10 @@ public class MunicipalityRepositoryJpaAdapter implements MunicipalityRepository 
     @Override
     @Transactional
     @CachePut(value = "municipality", key = "#municipalityId")
-    public Municipality update(String municipalityId, Municipality caseFolder) {
+    public Municipality update(String municipalityId, Municipality updatedData) {
         var current = jpaRepository.findById(municipalityId)
             .orElseThrow(() -> new BadRequestException("Province not found with id " + municipalityId));
-        boolean modified = current.merge(caseFolder);
+        boolean modified = current.merge(updatedData);
         if (!modified) {
             throw new NotModifiedException("municipality.msg.err.not-modified", municipalityId);
         }

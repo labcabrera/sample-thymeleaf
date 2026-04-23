@@ -51,12 +51,12 @@ public class MunicipalityEntity {
 
     public boolean merge(Municipality updated) {
         boolean modified = false;
-        if (updated.getCode() != null && !updated.getCode().equals(this.code)) {
-            this.code = updated.getCode();
+        if (updated.code() != null && !updated.code().equals(this.code)) {
+            this.code = updated.code();
             modified = true;
         }
-        if (updated.getName() != null && !updated.getName().equals(this.name)) {
-            this.name = updated.getName();
+        if (updated.name() != null && !updated.name().equals(this.name)) {
+            this.name = updated.name();
             modified = true;
         }
         return modified;

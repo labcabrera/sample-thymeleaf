@@ -113,7 +113,7 @@ public class MunicipalityController {
         var command = new CreateMunicipalityCommand(request.code(), request.name(), request.provinceId());
         Municipality municipality = commandBus.dispatch(command);
         var dto = mapper.toDto(municipality);
-        return ResponseEntity.created(URI.create("/api/v1/municipalities/" + municipality.getId())).body(dto);
+        return ResponseEntity.created(URI.create("/api/v1/municipalities/" + municipality.id())).body(dto);
     }
 
     @PatchMapping("/{municipalityId}")

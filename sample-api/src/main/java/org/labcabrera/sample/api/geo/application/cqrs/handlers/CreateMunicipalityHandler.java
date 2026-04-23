@@ -37,14 +37,11 @@ public class CreateMunicipalityHandler implements CommandHandler<CreateMunicipal
         if (current.isPresent()) {
             throw new ConflictException("municipality.msg.err.already-exists");
         }
-        Municipality municipality = new Municipality();
-        municipality.setId(UUID.randomUUID().toString());
-        municipality.setCode(command.code());
-        municipality.setName(command.name());
-        municipality.setProvinceId(command.provinceId());
+        Municipality municipality = new Municipality(UUID.randomUUID().toString(), command.code(), command.name(), command.provinceId(),
+            null, null);
         var saved = municipalityRepository.save(municipality);
         municipalityMetricPort.incrementCreatedCounter();
-        eventBusPort.publish(new MunicipalityCreatedEvent(saved.getId(), saved.getName(), saved.getCreatedAt()));
+        eventBusPort.publish(new MunicipalityCreatedEvent(saved.id(), saved.name(), saved.createdAt()));
         return saved;
     }
 
