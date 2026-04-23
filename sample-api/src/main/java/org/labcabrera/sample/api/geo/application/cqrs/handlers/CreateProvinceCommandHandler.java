@@ -14,7 +14,6 @@ import org.labcabrera.sample.api.shared.application.SecurityPort;
 import org.labcabrera.sample.api.shared.domain.exceptions.ConflictException;
 import org.springframework.stereotype.Component;
 
-import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

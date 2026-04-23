@@ -2,21 +2,18 @@ package org.labcabrera.sample.front.web;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.labcabrera.sample.front.generated.client.geo.api.ProvincesApi;
-import org.labcabrera.sample.front.generated.client.geo.api.ProvincesApi.GetProvincesByRsqlQueryParams;
+import org.labcabrera.sample.front.generated.client.geo.api.ProvincesApi.GetByRsqlQueryParams;
+import org.labcabrera.sample.front.generated.client.geo.model.ApiResponse;
+import org.labcabrera.sample.front.generated.client.geo.model.CreateProvinceDto;
+import org.labcabrera.sample.front.generated.client.geo.model.Pagination;
+import org.labcabrera.sample.front.generated.client.geo.model.Province;
 import org.labcabrera.sample.front.generated.client.geo.model.ProvinceDto;
+import org.labcabrera.sample.front.generated.client.geo.model.ProvincePage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,23 +31,21 @@ public class ProvincesController {
     private ProvincesApi provincesApi;
 
     @GetMapping
-    public String list(Model model, @RequestParam(value = "q", required = false, defaultValue = "") String q,
-        HttpSession session) {
-        String jwt = (String) session.getAttribute("jwt");
-        if (jwt == null) {
-            //TODO
-            throw new RuntimeException("User not authenticated");
-        }
-        this.log.info("Fetching provinces with query: {} ({})", q, jwt);
-        
-        GetProvincesByRsqlQueryParams query = new GetProvincesByRsqlQueryParams(); 
+    public String list(Model model, @RequestParam(value = "q", required = false, defaultValue = "") String q) {
+        log.trace("Fetching provinces with query: {}", q);
+        GetByRsqlQueryParams query = new GetByRsqlQueryParams();
         query.q(q);
-
-        //TODO fix pagination
-        List<ProvinceDto> provinces = provincesApi.getProvincesByRsql(query);
-
+        ApiResponse<ProvincePage> response = provincesApi.getByRsqlWithHttpInfo(query);
+        if(response.getStatusCode() != 200) {
+            log.error("Error fetching provinces: {}", response.getStatusCode());
+            throw new RuntimeException("Error fetching provinces");
+        }
+        ProvincePage page = response.getData();
+        List<ProvinceDto> provinces = page.getContent();
+        Pagination pagination = page.getPagination();
         model.addAttribute("provinces", provinces);
-        
+        model.addAttribute("page", pagination.getPage());
+        model.addAttribute("size", pagination.getSize());
         model.addAttribute("title", "Provinces - Sample Front");
         return "provinces/list";
     }
@@ -63,9 +58,12 @@ public class ProvincesController {
     }
 
     @PostMapping
-    public String create(ProvinceDto province) {
-        // String url = apiBaseUrl + "/provinces";
-        // rest.postForEntity(url, province, Map.class);
+    public String create(CreateProvinceDto province) {
+        Province response = provincesApi.createProvince(province);
+        if(response == null) {
+            log.error("Error creating province");
+            throw new RuntimeException("Error creating province");
+        }
         return "redirect:/provinces";
     }
 
@@ -93,7 +91,6 @@ public class ProvincesController {
         return "redirect:/provinces";
     }
 
-    @SuppressWarnings("unchecked")
     private ProvinceDto map(Map<String, Object> m) {
         ProvinceDto p = new ProvinceDto();
         p.setId((String) m.get("id"));

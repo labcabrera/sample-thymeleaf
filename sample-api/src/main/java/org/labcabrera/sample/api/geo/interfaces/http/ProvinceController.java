@@ -11,6 +11,7 @@ import org.labcabrera.sample.api.geo.application.cqrs.queries.GetProvincesByRsql
 import org.labcabrera.sample.api.geo.domain.Province;
 import org.labcabrera.sample.api.geo.interfaces.http.dtos.CreateProvinceDto;
 import org.labcabrera.sample.api.geo.interfaces.http.dtos.ProvinceDto;
+import org.labcabrera.sample.api.geo.interfaces.http.dtos.ProvincePage;
 import org.labcabrera.sample.api.geo.interfaces.http.dtos.UpdateProvinceDto;
 import org.labcabrera.sample.api.geo.interfaces.http.mappers.ProvinceDtoMapper;
 import org.labcabrera.sample.api.shared.application.CommandBus;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -80,12 +80,12 @@ public class ProvinceController {
     }
 
     @Operation(
-        operationId = "getProvincesByRsql",
+        operationId = "getByRsql",
         summary = "Get provinces by RSQL",
         description = "Filter provinces using an RSQL expression with optional pagination",
         responses = {
             @ApiResponse(responseCode = "200", description = "Paged provinces", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProvinceDto.class)))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ProvincePage.class))
             }),
             @ApiResponse(responseCode = "400", description = "Invalid RSQL expression", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
@@ -96,7 +96,7 @@ public class ProvinceController {
         }
     )
     @GetMapping
-    public ResponseEntity<PageResponse<ProvinceDto>> getByRsql(
+    public ResponseEntity<ProvincePage> getByRsql(
         @Parameter(name = "q", description = "RSQL expression to filter provinces", in = ParameterIn.QUERY)
         @RequestParam(value = "q", required = false, defaultValue = "") String rsql,
 
@@ -113,7 +113,7 @@ public class ProvinceController {
         var query = new GetProvincesByRsqlQuery(rsql, pageable);
         Page<Province> resultPage = queryBus.dispatch(query);
         Page<ProvinceDto> pageDto = resultPage.map(mapper::toDto);
-        return ResponseEntity.ok(new PageResponse<>(pageDto));
+        return ResponseEntity.ok(new ProvincePage(pageDto));
     }
 
     @Operation(

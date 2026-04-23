@@ -88,6 +88,13 @@ public class GeoApiConfiguration {
 
         apiClient.setBearerToken(jwtSupplier);
 
+        // Reconfigure Feign encoder/decoder to use the provided ObjectMapper
+        apiClient.setFeignBuilder(
+            apiClient.getFeignBuilder()
+                .encoder(new feign.form.FormEncoder(new feign.jackson.JacksonEncoder(objectMapper)))
+                .decoder(new org.labcabrera.sample.front.generated.client.geo.ApiResponseDecoder(objectMapper))
+        );
+
         return apiClient;
     }
 
