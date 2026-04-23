@@ -3,6 +3,12 @@ package org.labcabrera.sample.front.config;
 import org.labcabrera.sample.front.generated.client.geo.ApiClient;
 import org.labcabrera.sample.front.generated.client.geo.api.ProvincesApi;
 import org.labcabrera.sample.front.generated.client.geo.auth.HttpBearerAuth;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import java.util.function.Supplier;
 import org.labcabrera.sample.front.generated.client.geo.auth.OauthClientCredentialsGrant;
 import org.labcabrera.sample.front.generated.client.geo.auth.OauthPasswordGrant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +66,27 @@ public class GeoApiConfiguration {
         //         // none
         //     }
         // }
+
+        // Configure a bearer auth that reads the token from the current HTTP session
+        HttpBearerAuth bearer = new HttpBearerAuth("bearer");
+        apiClient.addAuthorization("bearer-jwt", bearer);
+
+        // Supplier that fetches the JWT from the current HTTP session attribute `jwt`
+        Supplier<String> jwtSupplier = () -> {
+            RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
+            if (!(attrs instanceof ServletRequestAttributes)) {
+                return null;
+            }
+            HttpServletRequest req = ((ServletRequestAttributes) attrs).getRequest();
+            HttpSession session = req.getSession(false);
+            if (session == null) {
+                return null;
+            }
+            Object token = session.getAttribute("jwt");
+            return token != null ? token.toString() : null;
+        };
+
+        apiClient.setBearerToken(jwtSupplier);
 
         return apiClient;
     }

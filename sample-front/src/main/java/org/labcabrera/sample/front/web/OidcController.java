@@ -19,7 +19,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
-import jakarta.servlet.http.HttpSession;
 
 import org.springframework.web.client.RestTemplate;
 
@@ -36,22 +35,19 @@ import java.util.Base64;
 @Controller
 public class OidcController {
 
-    @Value("${oidc.keycloak.base:http://localhost:8090}")
+    @Value("${oidc.base}")
     private String keycloakBase;
 
-    @Value("${oidc.realm:sample}")
+    @Value("${oidc.realm}")
     private String realm;
 
-    @Value("${oidc.client-id:sample-client}")
+    @Value("${oidc.client-id}")
     private String clientId;
 
-    // @Value("${oidc.client-id:sample-client}")
-    // private String clientAuthId;
-
-    @Value("${oidc.client-secret:LddOn5YJ5nL5w7awnt4kJMbmz27t5Rf3}")
+    @Value("${oidc.client-secret}")
     private String clientSecret;
 
-    @Value("${oidc.redirect-uri:http://localhost:8081/oidc/callback}")
+    @Value("${oidc.redirect-uri}")
     private String redirectUri;
 
     private final RestTemplate rest = new RestTemplate();
@@ -82,9 +78,9 @@ public class OidcController {
 
     @GetMapping("/oidc/callback")
     public String callback(@RequestParam(required = false) String code,
-                           @RequestParam(required = false) String state,
-                           Model model,
-                           HttpSession session) throws Exception {
+        @RequestParam(required = false) String state,
+        Model model,
+        HttpSession session) throws Exception {
         model.addAttribute("title", "OIDC Callback");
         model.addAttribute("code", code);
         model.addAttribute("state", state);
@@ -122,7 +118,8 @@ public class OidcController {
                 // store JWT in session
                 session.setAttribute("jwt", idToken != null ? idToken : accessToken);
                 model.addAttribute("message", "Token validated and stored in session.");
-            } else {
+            }
+            else {
                 model.addAttribute("message", "Token validation failed.");
             }
         }
@@ -165,7 +162,8 @@ public class OidcController {
                 return false;
             }
             return true;
-        } catch (ParseException | JOSEException e) {
+        }
+        catch (ParseException | JOSEException e) {
             return false;
         }
     }
@@ -181,7 +179,8 @@ public class OidcController {
         // ensure length between 43 and 128
         if (s.length() < 43) {
             s = s + "A".repeat(43 - s.length());
-        } else if (s.length() > 128) {
+        }
+        else if (s.length() > 128) {
             s = s.substring(0, 128);
         }
         return s;
@@ -192,7 +191,8 @@ public class OidcController {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] digest = md.digest(codeVerifier.getBytes(StandardCharsets.US_ASCII));
             return Base64.getUrlEncoder().withoutPadding().encodeToString(digest);
-        } catch (NoSuchAlgorithmException e) {
+        }
+        catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }

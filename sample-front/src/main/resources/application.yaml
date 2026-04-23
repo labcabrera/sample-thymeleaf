@@ -17,13 +17,12 @@ management:
       show-details: always
 
 oidc:
-  keycloak:
-    base: http://localhost:8090
-    realm: sample
-    client-id: sample-client
-    client-secret: LddOn5YJ5nL5w7awnt4kJMbmz27t5Rf3
-    redirect-uri: http://localhost:8081/oidc/callback
+  base: http://localhost:8090
+  realm: sample
+  client-id: sample-client
+  client-secret: LddOn5YJ5nL5w7awnt4kJMbmz27t5Rf3
+  redirect-uri: http://localhost:8081/oidc/callback
 
 geo:
   api:
-    base-path: http://localhost:8082/api/v1
+    base-path: http://localhost:8082
