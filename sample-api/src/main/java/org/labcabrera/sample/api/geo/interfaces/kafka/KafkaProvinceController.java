@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 import org.springframework.messaging.Message;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.labcabrera.sample.api.geo.application.cqrs.commands.CreateProvinceCommand;
-import org.labcabrera.sample.api.geo.domain.CaseFolderStatus;
 import org.labcabrera.sample.api.shared.application.CommandBus;
 import org.labcabrera.sample.api.shared.infrastructure.messaging.kafka.AuthenticatedConsumer;
 import org.springframework.context.annotation.Bean;

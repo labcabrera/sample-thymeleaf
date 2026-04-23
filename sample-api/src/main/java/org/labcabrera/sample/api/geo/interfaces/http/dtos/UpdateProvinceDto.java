@@ -1,10 +1,10 @@
-package org.labcabrera.sample.api.geo.application.cqrs.commands;
+package org.labcabrera.sample.api.geo.interfaces.http.dtos;
 
 import java.util.Optional;
 
 import jakarta.validation.constraints.NotNull;
 
-public record UpdateProvinceCommand(
+public record UpdateProvinceDto(
     @NotNull String provinceId,
     Optional<String> code,
     Optional<String> name,

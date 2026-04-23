@@ -9,4 +9,8 @@ import org.springframework.stereotype.Repository;
 public interface ProvinceJpaRepository extends
     JpaRepository<ProvinceEntity, String>,
     JpaSpecificationExecutor<ProvinceEntity> {
+
+    java.util.Optional<ProvinceEntity> findByCodeIgnoreCase(String code);
+
+    java.util.Optional<ProvinceEntity> findByNameIgnoreCase(String name);
 }

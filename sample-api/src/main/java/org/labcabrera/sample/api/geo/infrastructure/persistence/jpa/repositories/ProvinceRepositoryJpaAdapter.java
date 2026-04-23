@@ -35,6 +35,23 @@ public class ProvinceRepositoryJpaAdapter implements ProvinceRepository {
     private final RSQLParser rsqlParser;
 
     @Override
+    public Optional<Province> findByCodeOrName(String code, String name) {
+        if (code != null && !code.isBlank()) {
+            var e = jpaRepository.findByCodeIgnoreCase(code);
+            if (e.isPresent()) {
+                return e.map(mapper::toDomain);
+            }
+        }
+        if (name != null && !name.isBlank()) {
+            var e = jpaRepository.findByNameIgnoreCase(name);
+            if (e.isPresent()) {
+                return e.map(mapper::toDomain);
+            }
+        }
+        return java.util.Optional.empty();
+    }
+
+    @Override
     @Cacheable(value = "province", key = "#provinceId", unless = "#result == null || #result.isEmpty()")
     public Optional<Province> findById(String provinceId) {
         return jpaRepository.findById(provinceId).map(mapper::toDomain);

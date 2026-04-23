@@ -11,6 +11,7 @@ import org.labcabrera.sample.api.geo.application.cqrs.queries.GetProvincesByRsql
 import org.labcabrera.sample.api.geo.domain.Province;
 import org.labcabrera.sample.api.geo.interfaces.http.dtos.CreateProvinceDto;
 import org.labcabrera.sample.api.geo.interfaces.http.dtos.ProvinceDto;
+import org.labcabrera.sample.api.geo.interfaces.http.dtos.UpdateProvinceDto;
 import org.labcabrera.sample.api.geo.interfaces.http.mappers.ProvinceDtoMapper;
 import org.labcabrera.sample.api.shared.application.CommandBus;
 import org.labcabrera.sample.api.shared.application.QueryBus;
@@ -21,6 +22,7 @@ import org.labcabrera.sample.api.shared.interfaces.http.PageResponse;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -114,6 +116,25 @@ public class ProvinceController {
         return ResponseEntity.ok(new PageResponse<>(pageDto));
     }
 
+    @Operation(
+        operationId = "createProvince",
+        summary = "Create province",
+        description = "Creates a new province with the provided data",
+        responses = {
+            @ApiResponse(responseCode = "201", description = "Province", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = Province.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Invalid province data", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
+            }),
+            @ApiResponse(responseCode = "409", description = "Province already exists (code or name)", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
+            })
+        },
+        security = {
+            @SecurityRequirement(name = "oidc")
+        }
+    )
     @PostMapping
     public ResponseEntity<ProvinceDto> create(@Validated @RequestBody CreateProvinceDto request) {
         var command = new CreateProvinceCommand(request.code(), request.name(), request.countryCode());
@@ -122,14 +143,15 @@ public class ProvinceController {
         return ResponseEntity.created(URI.create("/api/v1/provinces/" + province.getId())).body(dto);
     }
 
-    @PutMapping("/{provinceId}")
-    public ResponseEntity<ProvinceDto> update(@PathVariable String provinceId, @RequestBody UpdateProvinceCommand request) {
+    @PatchMapping("/{provinceId}")
+    public ResponseEntity<ProvinceDto> update(@PathVariable String provinceId, @RequestBody UpdateProvinceDto request) {
         var command = new UpdateProvinceCommand(provinceId, request.code(), request.name(), request.countryCode());
         Province province = commandBus.dispatch(command);
         var dto = mapper.toDto(province);
         return ResponseEntity.ok(dto);
     }
 
+    
     @DeleteMapping("/{provinceId}")
     public ResponseEntity<Void> delete(@PathVariable String provinceId) {
         var command = new DeleteProvinceCommand(provinceId);

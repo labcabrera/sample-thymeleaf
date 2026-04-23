@@ -11,8 +11,10 @@ import org.labcabrera.sample.api.geo.domain.events.ProvinceCreatedEvent;
 import org.labcabrera.sample.api.shared.application.CommandHandler;
 import org.labcabrera.sample.api.shared.application.Guard;
 import org.labcabrera.sample.api.shared.application.SecurityPort;
+import org.labcabrera.sample.api.shared.domain.exceptions.ConflictException;
 import org.springframework.stereotype.Component;
 
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,6 +34,10 @@ public class CreateProvinceCommandHandler implements CommandHandler<CreateProvin
         var user = securityPort.requireCurrentUser();
         provinceGuard.checkCreate(user);
         log.debug("Creating province (user: {})", user.username());
+        var current = provinceRepository.findByCodeOrName(command.code(), command.name());
+        if (current.isPresent()) {
+            throw new ConflictException("province.msg.err.already-exists");
+        }
         Province province = new Province();
         province.setId(UUID.randomUUID().toString());
         province.setCode(command.code());
