@@ -7,7 +7,6 @@ import org.springframework.cache.annotation.Cacheable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.labcabrera.sample.api.geo.application.ports.ProvinceRepository;
-import org.labcabrera.sample.api.geo.application.services.CaseFolderGuard;
 import org.labcabrera.sample.api.geo.domain.Province;
 import org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.entities.ProvinceEntity;
 import org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.mappers.ProvinceEntityMapper;
@@ -78,7 +77,7 @@ public class ProvinceRepositoryJpaAdapter implements ProvinceRepository {
             return mapper.toDomain(savedEntity);
         }
         catch (DataIntegrityViolationException ex) {
-            throw new BadRequestException("case-folder.msg.err.data-integrity", ex);
+            throw new BadRequestException("province.msg.err.data-integrity", ex);
         }
     }
 

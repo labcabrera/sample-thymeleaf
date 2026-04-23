@@ -9,6 +9,7 @@ import org.labcabrera.sample.api.geo.application.cqrs.commands.UpdateProvinceCom
 import org.labcabrera.sample.api.geo.application.cqrs.queries.GetProvinceByIdQuery;
 import org.labcabrera.sample.api.geo.application.cqrs.queries.GetProvincesByRsqlQuery;
 import org.labcabrera.sample.api.geo.domain.Province;
+import org.labcabrera.sample.api.geo.interfaces.http.dtos.CreateProvinceDto;
 import org.labcabrera.sample.api.geo.interfaces.http.dtos.ProvinceDto;
 import org.labcabrera.sample.api.geo.interfaces.http.mappers.ProvinceDtoMapper;
 import org.labcabrera.sample.api.shared.application.CommandBus;
@@ -16,6 +17,7 @@ import org.labcabrera.sample.api.shared.application.QueryBus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.labcabrera.sample.api.shared.interfaces.http.PageResponse;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +37,6 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import com.labcabrera.sample.archetype.generated.model.ApiError;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +53,22 @@ public class ProvinceController {
     private final QueryBus queryBus;
     private final ProvinceDtoMapper mapper;
 
+    @Operation(
+        operationId = "getProvinceById",
+        summary = "Get province by id",
+        description = "Get province by id",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Province", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ProvinceDto.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Not found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
+            })
+        },
+        security = {
+            @SecurityRequirement(name = "oidc")
+        }
+    )
     @GetMapping("/{provinceId}")
     public ResponseEntity<ProvinceDto> getById(@PathVariable String provinceId) {
         var query = new GetProvinceByIdQuery(provinceId);
@@ -64,7 +81,6 @@ public class ProvinceController {
         operationId = "getProvincesByRsql",
         summary = "Get provinces by RSQL",
         description = "Filter provinces using an RSQL expression with optional pagination",
-        tags = { "Provinces" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Paged provinces", content = {
                 @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProvinceDto.class)))
@@ -78,7 +94,7 @@ public class ProvinceController {
         }
     )
     @GetMapping
-    public ResponseEntity<Page<ProvinceDto>> getByRsql(
+    public ResponseEntity<PageResponse<ProvinceDto>> getByRsql(
         @Parameter(name = "q", description = "RSQL expression to filter provinces", in = ParameterIn.QUERY)
         @RequestParam(value = "q", required = false, defaultValue = "") String rsql,
 
@@ -95,12 +111,13 @@ public class ProvinceController {
         var query = new GetProvincesByRsqlQuery(rsql, pageable);
         Page<Province> resultPage = queryBus.dispatch(query);
         Page<ProvinceDto> pageDto = resultPage.map(mapper::toDto);
-        return ResponseEntity.ok(pageDto);
+        return ResponseEntity.ok(new PageResponse<>(pageDto));
     }
 
     @PostMapping
-    public ResponseEntity<ProvinceDto> create(@Validated @RequestBody CreateProvinceCommand request) {
-        Province province = commandBus.dispatch(request);
+    public ResponseEntity<ProvinceDto> create(@Validated @RequestBody CreateProvinceDto request) {
+        var command = new CreateProvinceCommand(request.code(), request.name(), request.countryCode());
+        Province province = commandBus.dispatch(command);
         var dto = mapper.toDto(province);
         return ResponseEntity.created(URI.create("/api/v1/provinces/" + province.getId())).body(dto);
     }

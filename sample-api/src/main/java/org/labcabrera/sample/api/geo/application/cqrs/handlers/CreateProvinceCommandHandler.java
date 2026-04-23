@@ -1,5 +1,7 @@
 package org.labcabrera.sample.api.geo.application.cqrs.handlers;
 
+import java.util.UUID;
+
 import org.labcabrera.sample.api.geo.application.cqrs.commands.CreateProvinceCommand;
 import org.labcabrera.sample.api.geo.application.ports.ProvinceEventBusPort;
 import org.labcabrera.sample.api.geo.application.ports.ProvinceMetricPort;
@@ -31,6 +33,7 @@ public class CreateProvinceCommandHandler implements CommandHandler<CreateProvin
         provinceGuard.checkCreate(user);
         log.debug("Creating province (user: {})", user.username());
         Province province = new Province();
+        province.setId(UUID.randomUUID().toString());
         province.setCode(command.code());
         province.setName(command.name());
         province.setCountryCode(command.countryCode());
