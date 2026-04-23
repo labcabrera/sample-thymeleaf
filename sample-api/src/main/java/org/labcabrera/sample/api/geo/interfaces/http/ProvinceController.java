@@ -72,7 +72,7 @@ public class ProvinceController {
         }
     )
     @GetMapping("/{provinceId}")
-    public ResponseEntity<ProvinceDto> getById(@PathVariable String provinceId) {
+    public ResponseEntity<ProvinceDto> getById(@PathVariable(name = "provinceId") String provinceId) {
         var query = new GetProvinceByIdQuery(provinceId);
         Province province = queryBus.dispatch(query);
         var dto = mapper.toDto(province);
@@ -144,7 +144,26 @@ public class ProvinceController {
     }
 
     @PatchMapping("/{provinceId}")
-    public ResponseEntity<ProvinceDto> update(@PathVariable String provinceId, @RequestBody UpdateProvinceDto request) {
+    @Operation(
+        operationId = "updateProvince",
+        summary = "Update province",
+        description = "Updates an existing province",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Province", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ProvinceDto.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Invalid province data", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Not found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
+            })
+        },
+        security = {
+            @SecurityRequirement(name = "oidc")
+        }
+    )
+    public ResponseEntity<ProvinceDto> update(@PathVariable(name = "provinceId") String provinceId, @RequestBody UpdateProvinceDto request) {
         var command = new UpdateProvinceCommand(provinceId, request.code(), request.name(), request.countryCode());
         Province province = commandBus.dispatch(command);
         var dto = mapper.toDto(province);
@@ -152,8 +171,22 @@ public class ProvinceController {
     }
 
     
+    @Operation(
+        operationId = "deleteProvince",
+        summary = "Delete province",
+        description = "Deletes a province by id",
+        responses = {
+            @ApiResponse(responseCode = "204", description = "No content"),
+            @ApiResponse(responseCode = "404", description = "Not found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
+            })
+        },
+        security = {
+            @SecurityRequirement(name = "oidc")
+        }
+    )
     @DeleteMapping("/{provinceId}")
-    public ResponseEntity<Void> delete(@PathVariable String provinceId) {
+    public ResponseEntity<Void> delete(@PathVariable(name = "provinceId") String provinceId) {
         var command = new DeleteProvinceCommand(provinceId);
         commandBus.dispatch(command);
         return ResponseEntity.noContent().build();

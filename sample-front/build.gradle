@@ -23,8 +23,8 @@ ext {
 	// mapstructVersion = '1.5.5.Final'
 	feignVersion = '13.5'
 	feignFormVersion = '3.8.0'
-	// scribejavaVersion = '8.0.0'
-	// migbase64Version = '2.2'
+	scribejavaVersion = '8.0.0'
+	migbase64Version = '2.2'
 }
 
 repositories {
@@ -34,6 +34,23 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+
+	// TODO update to Jackson 3 when feign supports it
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
+	
+	// Dependencies required by the generated OpenAPI Feign client
+	implementation "io.github.openfeign:feign-core:${feignVersion}"
+	implementation "io.github.openfeign:feign-jackson:${feignVersion}"
+	implementation "io.github.openfeign:feign-slf4j:${feignVersion}"
+	implementation "io.github.openfeign:feign-okhttp:${feignVersion}"
+	implementation "io.github.openfeign.form:feign-form:${feignFormVersion}"
+
+	// Dependencies required by generated OAuth helper classes
+	implementation "com.github.scribejava:scribejava-core:${scribejavaVersion}"
+	implementation "com.brsanthu:migbase64:${migbase64Version}"
+
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-thymeleaf-test'
@@ -41,12 +58,6 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testAnnotationProcessor 'org.projectlombok:lombok'
-
-	implementation "io.github.openfeign:feign-core:${feignVersion}"
-	implementation "io.github.openfeign:feign-jackson:${feignVersion}"
-	implementation "io.github.openfeign:feign-slf4j:${feignVersion}"
-	implementation "io.github.openfeign:feign-okhttp:${feignVersion}"
-	implementation "io.github.openfeign.form:feign-form:${feignFormVersion}"
 }
 
 // Additional OpenAPI Generator task: generate a Java REST client from api-clients/geo-api.yaml

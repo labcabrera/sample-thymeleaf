@@ -114,7 +114,12 @@ paths:
       summary: Get province by id
       description: Get province by id
       operationId: getProvinceById
-      parameters: []
+      parameters:
+        - name: provinceId
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Province
@@ -133,16 +138,38 @@ paths:
     delete:
       tags:
         - Provinces
-      operationId: delete
-      parameters: []
+      summary: Delete province
+      description: Deletes a province by id
+      operationId: deleteProvince
+      parameters:
+        - name: provinceId
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
-        '200':
-          description: OK
+        '204':
+          description: No content
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - oidc: []
     patch:
       tags:
         - Provinces
-      operationId: update
-      parameters: []
+      summary: Update province
+      description: Updates an existing province
+      operationId: updateProvince
+      parameters:
+        - name: provinceId
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -151,11 +178,25 @@ paths:
         required: true
       responses:
         '200':
-          description: OK
+          description: Province
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/ProvinceDto'
+        '400':
+          description: Invalid province data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - oidc: []
 components:
   schemas:
     Province:
@@ -228,19 +269,6 @@ components:
         - code
         - countryCode
         - name
-    UpdateProvinceDto:
-      type: object
-      properties:
-        provinceId:
-          type: string
-        code:
-          type: string
-        name:
-          type: string
-        countryCode:
-          type: string
-      required:
-        - provinceId
     ProvinceDto:
       type: object
       description: Province information
@@ -274,6 +302,19 @@ components:
         - countryCode
         - id
         - name
+    UpdateProvinceDto:
+      type: object
+      properties:
+        provinceId:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
+        countryCode:
+          type: string
+      required:
+        - provinceId
   securitySchemes:
     bearer-jwt:
       type: http
