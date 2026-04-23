@@ -2,10 +2,13 @@ package org.labcabrera.sample.api.geo.domain;
 
 import java.time.LocalDateTime;
 
+import lombok.Data;
+
+@Data
 public class PostalCode {
-    String id;
-    String code;
-    String municipalityId;
-    String provinceId;
-    LocalDateTime createdAt;
+    private String id;
+    private String code;
+    private String municipalityId;
+    private String provinceId;
+    private LocalDateTime createdAt;
 }
