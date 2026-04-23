@@ -26,7 +26,7 @@ public class ProvinceEntity {
     @Column(name = "id", length = 36)
     private String id;
 
-    @Column(name = "code", length = 20)
+    @Column(name = "code", length = 36)
     private String code;
 
     @Column(name = "name", length = 200)
