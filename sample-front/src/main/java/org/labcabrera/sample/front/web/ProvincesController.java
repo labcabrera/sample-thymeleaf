@@ -11,6 +11,7 @@ import org.labcabrera.sample.front.generated.client.geo.model.Pagination;
 import org.labcabrera.sample.front.generated.client.geo.model.Province;
 import org.labcabrera.sample.front.generated.client.geo.model.ProvinceDto;
 import org.labcabrera.sample.front.generated.client.geo.model.ProvincePage;
+import org.labcabrera.sample.front.generated.client.geo.model.UpdateProvinceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
 
@@ -69,34 +70,25 @@ public class ProvincesController {
 
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable String id, Model model) {
-        // String url = apiBaseUrl + "/provinces/" + id;
-        // ProvinceDto p = rest.getForObject(url, ProvinceDto.class);
-        // model.addAttribute("province", p);
-        // model.addAttribute("title", "Edit Province");
+        ProvinceDto province = provincesApi.getProvinceById(id);
+        if(province == null) {
+            log.error("Province not found with id: {}", id);
+            throw new RuntimeException("Province not found");
+        }
+        model.addAttribute("province", province);
+        model.addAttribute("title", "Edit Province");
         return "provinces/form";
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable String id, ProvinceDto province) {
-        // String url = apiBaseUrl + "/provinces/" + id;
-        // HttpEntity<ProvinceDto> entity = new HttpEntity<>(province);
-        // rest.exchange(url, HttpMethod.PATCH, entity, Map.class);
+    public String update(@PathVariable String id, UpdateProvinceDto province) {
+        provincesApi.updateProvince(id, province);
         return "redirect:/provinces";
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
-        // String url = apiBaseUrl + "/provinces/" + id;
-        // rest.delete(url);
+        provincesApi.deleteProvince(id);
         return "redirect:/provinces";
-    }
-
-    private ProvinceDto map(Map<String, Object> m) {
-        ProvinceDto p = new ProvinceDto();
-        p.setId((String) m.get("id"));
-        p.setCode((String) m.get("code"));
-        p.setName((String) m.get("name"));
-        p.setCountryCode((String) m.get("countryCode"));
-        return p;
     }
 }

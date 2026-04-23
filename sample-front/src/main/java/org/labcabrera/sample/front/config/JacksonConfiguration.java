@@ -6,7 +6,10 @@ import org.springframework.context.annotation.Primary;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Configuration
+@Slf4j
 public class JacksonConfiguration {
 
     @Bean
@@ -17,8 +20,8 @@ public class JacksonConfiguration {
         try {
             mapper.findAndRegisterModules();
         }
-        catch (Exception ex) {
-            // ignore: safe fallback to a plain ObjectMapper
+        catch (Exception ignore) {
+            log.warn("Could not register Jackson modules, falling back to default ObjectMapper", ignore);
         }
         return mapper;
     }
