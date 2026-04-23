@@ -4,9 +4,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.labcabrera.sample.front.web.dto.ProvinceDto;
+import org.labcabrera.sample.front.generated.client.geo.api.ProvincesApi;
+import org.labcabrera.sample.front.generated.client.geo.api.ProvincesApi.GetProvincesByRsqlQueryParams;
+import org.labcabrera.sample.front.generated.client.geo.model.ProvinceDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,24 +24,33 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestTemplate;
 
 @Controller
 @RequestMapping("/provinces")
+@Slf4j
 public class ProvincesController {
 
-    private final RestTemplate rest = new RestTemplate();
-
-    @Value("${api.base-url:http://localhost:8080/api/v1}")
-    private String apiBaseUrl;
+    @Autowired
+    private ProvincesApi provincesApi;
 
     @GetMapping
-    public String list(Model model, @RequestParam(value = "q", required = false, defaultValue = "") String q) {
-        String url = apiBaseUrl + "/provinces?q=" + q;
-        ResponseEntity<Map> resp = rest.getForEntity(url, Map.class);
-        List<Map<String, Object>> content = (List<Map<String, Object>>) resp.getBody().get("content");
-        List<ProvinceDto> provinces = content.stream().map(this::map).collect(Collectors.toList());
+    public String list(Model model, @RequestParam(value = "q", required = false, defaultValue = "") String q,
+        HttpSession session) {
+        String jwt = (String) session.getAttribute("jwt");
+        if (jwt == null) {
+            //TODO
+            throw new RuntimeException("User not authenticated");
+        }
+        this.log.info("Fetching provinces with query: {} ({})", q, jwt);
+        
+        GetProvincesByRsqlQueryParams query = new GetProvincesByRsqlQueryParams(); 
+        query.q(q);
+
+        //TODO fix pagination
+        List<ProvinceDto> provinces = provincesApi.getProvincesByRsql(query);
+
         model.addAttribute("provinces", provinces);
+        
         model.addAttribute("title", "Provinces - Sample Front");
         return "provinces/list";
     }
@@ -47,32 +64,32 @@ public class ProvincesController {
 
     @PostMapping
     public String create(ProvinceDto province) {
-        String url = apiBaseUrl + "/provinces";
-        rest.postForEntity(url, province, Map.class);
+        // String url = apiBaseUrl + "/provinces";
+        // rest.postForEntity(url, province, Map.class);
         return "redirect:/provinces";
     }
 
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable String id, Model model) {
-        String url = apiBaseUrl + "/provinces/" + id;
-        ProvinceDto p = rest.getForObject(url, ProvinceDto.class);
-        model.addAttribute("province", p);
-        model.addAttribute("title", "Edit Province");
+        // String url = apiBaseUrl + "/provinces/" + id;
+        // ProvinceDto p = rest.getForObject(url, ProvinceDto.class);
+        // model.addAttribute("province", p);
+        // model.addAttribute("title", "Edit Province");
         return "provinces/form";
     }
 
     @PostMapping("/{id}")
     public String update(@PathVariable String id, ProvinceDto province) {
-        String url = apiBaseUrl + "/provinces/" + id;
-        HttpEntity<ProvinceDto> entity = new HttpEntity<>(province);
-        rest.exchange(url, HttpMethod.PATCH, entity, Map.class);
+        // String url = apiBaseUrl + "/provinces/" + id;
+        // HttpEntity<ProvinceDto> entity = new HttpEntity<>(province);
+        // rest.exchange(url, HttpMethod.PATCH, entity, Map.class);
         return "redirect:/provinces";
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
-        String url = apiBaseUrl + "/provinces/" + id;
-        rest.delete(url);
+        // String url = apiBaseUrl + "/provinces/" + id;
+        // rest.delete(url);
         return "redirect:/provinces";
     }
 

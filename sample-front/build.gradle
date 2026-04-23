@@ -34,6 +34,7 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	implementation 'com.nimbusds:nimbus-jose-jwt:9.31'
 
 	// TODO update to Jackson 3 when feign supports it
 	implementation 'com.fasterxml.jackson.core:jackson-databind'

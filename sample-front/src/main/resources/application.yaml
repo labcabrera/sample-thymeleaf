@@ -1,14 +1,4 @@
 spring:
-  # config:
-  #   import:
-  #     - classpath:application-logging.yaml
-  #     - classpath:application-db.yaml
-  #     # - classpath:application-cloud-stream.yaml
-      # - classpath:application-springdoc.yaml
-      # - classpath:application-security.yaml
-      # - classpath:application-cache.yaml
-      # - classpath:application-client.yaml
-      # - classpath:application-resilience4j.yaml
   application:
     name: sample-front
   main:
@@ -26,3 +16,14 @@ management:
     health:
       show-details: always
 
+oidc:
+  keycloak:
+    base: http://localhost:8090
+    realm: sample
+    client-id: sample-client
+    client-secret: LddOn5YJ5nL5w7awnt4kJMbmz27t5Rf3
+    redirect-uri: http://localhost:8081/oidc/callback
+
+geo:
+  api:
+    base-path: http://localhost:8082/api/v1
