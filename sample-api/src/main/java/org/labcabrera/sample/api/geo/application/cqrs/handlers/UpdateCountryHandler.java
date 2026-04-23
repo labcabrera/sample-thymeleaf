@@ -31,11 +31,8 @@ public class UpdateCountryHandler implements CommandHandler<UpdateCountryCommand
         var existing = countryRepository.findById(countryId)
             .orElseThrow(() -> new NotFoundException("country.msg.not-found", countryId, Country.class));
         countryGuard.checkWrite(existing, user);
-
         String name = command.name().orElse(existing.name());
-
-        var updatedData = new Country(existing.id(), name);
-
+        var updatedData = new Country(existing.id(), name, existing.createdAt(), LocalDateTime.now());
         //TODO check conflict
         var updated = countryRepository.update(countryId, updatedData);
         return updated;
