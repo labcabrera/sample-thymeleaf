@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '4.0.6'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.openapi.generator' version '7.20.0'
 }
 
 group = 'org.labcabrera.sample.front'
@@ -11,6 +12,19 @@ java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)
 	}
+}
+
+ext {
+	// logstashLogbackVersion = '7.4'
+	// springdocVersion = '3.0.1'
+	// swaggerAnnotationsVersion = '2.2.13'
+	// springCloudVersion = '2025.1.0'
+	// rsqlParserVersion = '2.1.0'
+	// mapstructVersion = '1.5.5.Final'
+	feignVersion = '13.5'
+	feignFormVersion = '3.8.0'
+	// scribejavaVersion = '8.0.0'
+	// migbase64Version = '2.2'
 }
 
 repositories {
@@ -27,6 +41,12 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testAnnotationProcessor 'org.projectlombok:lombok'
+
+	implementation "io.github.openfeign:feign-core:${feignVersion}"
+	implementation "io.github.openfeign:feign-jackson:${feignVersion}"
+	implementation "io.github.openfeign:feign-slf4j:${feignVersion}"
+	implementation "io.github.openfeign:feign-okhttp:${feignVersion}"
+	implementation "io.github.openfeign.form:feign-form:${feignFormVersion}"
 }
 
 tasks.named('test') {
