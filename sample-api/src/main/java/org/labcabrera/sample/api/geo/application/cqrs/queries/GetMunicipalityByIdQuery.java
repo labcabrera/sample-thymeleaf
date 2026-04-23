@@ -1,5 +1,5 @@
 package org.labcabrera.sample.api.geo.application.cqrs.queries;
 
-public record GetMunicipalityByIdQuery (
+public record GetMunicipalityByIdQuery(
     String municipalityId) {
 }
