@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
+    <section th:fragment="content">
+        <div class="section">
+            <h4>OIDC Callback</h4>
+            <p th:if="${code}">Authorization code: <strong th:text="${code}"></strong></p>
+            <p th:if="${state}">State: <em th:text="${state}"></em></p>
+            <p th:unless="${code}">No code received.</p>
+        </div>
+    </section>
+</html>
