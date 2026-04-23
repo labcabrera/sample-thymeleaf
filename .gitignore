@@ -1,0 +1,11 @@
+**/.github
+**/.gradle
+**/.vscode
+**/build
+**/bin
+**/target
+**/logs
+**/tmp
+**/dist
+**/coverage
+**/bin
