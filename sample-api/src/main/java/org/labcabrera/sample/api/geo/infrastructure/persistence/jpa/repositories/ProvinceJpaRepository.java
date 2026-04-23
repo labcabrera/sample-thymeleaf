@@ -1,5 +1,7 @@
 package org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.repositories;
 
+import java.util.Optional;
+
 import org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.entities.ProvinceEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -10,7 +12,7 @@ public interface ProvinceJpaRepository extends
     JpaRepository<ProvinceEntity, String>,
     JpaSpecificationExecutor<ProvinceEntity> {
 
-    java.util.Optional<ProvinceEntity> findByCodeIgnoreCase(String code);
+    Optional<ProvinceEntity> findByCodeIgnoreCase(String code);
 
-    java.util.Optional<ProvinceEntity> findByNameIgnoreCase(String name);
+    Optional<ProvinceEntity> findByNameIgnoreCase(String name);
 }
