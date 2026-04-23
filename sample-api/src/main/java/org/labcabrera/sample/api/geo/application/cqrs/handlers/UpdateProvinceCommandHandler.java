@@ -29,15 +29,16 @@ public class UpdateProvinceCommandHandler implements CommandHandler<UpdateProvin
         var existing = provinceRepository.findById(provinceId)
             .orElseThrow(() -> new NotFoundException("province.msg.not-found", provinceId, Province.class));
         provinceGuard.checkWrite(existing, user);
-        if (command.code() != null) {
-            existing.setCode(command.code());
+        if(command.code().isPresent()) {
+            existing.setCode(command.code().get());
         }
-        if (command.name() != null) {
-            existing.setName(command.name());
+        if(command.name().isPresent()) {
+            existing.setName(command.name().get());
         }
-        if (command.countryCode() != null) {
-            existing.setCountryCode(command.countryCode());
+        if(command.countryCode().isPresent()) {
+            existing.setCountryCode(command.countryCode().get());
         }
+        //TODO check conflict
         var updated = provinceRepository.update(provinceId, existing);
         return updated;
     }

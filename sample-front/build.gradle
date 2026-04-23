@@ -49,6 +49,36 @@ dependencies {
 	implementation "io.github.openfeign.form:feign-form:${feignFormVersion}"
 }
 
+// Additional OpenAPI Generator task: generate a Java REST client from api-clients/geo-api.yaml
+tasks.register('openApiGenerateGeoApi', org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+	generatorName = 'java'
+	library = "feign"
+	inputSpec = "$rootDir/src/main/resources/api-clients/geo-api.yaml"
+	outputDir = "$buildDir/generated/sources/openapi/geo-client"
+	apiPackage = 'org.labcabrera.sample.front.generated.client.geo.api'
+	modelPackage = 'org.labcabrera.sample.front.generated.client.geo.model'
+	invokerPackage = 'org.labcabrera.sample.front.generated.client.geo'
+	configOptions = [
+		useSpringBoot3: 'true',
+		interfaceOnly: 'true',
+		useFeignClientUrls: 'true',
+		useFeignClientContextId: 'true',
+		useTags: 'true',
+		dateLibrary: 'java8',
+		useJakartaEe: 'true',
+		openApiNullable: 'false',
+	]
+	additionalProperties = [
+		serializableModel: 'true'
+	]
+}
+
+sourceSets.main.java.srcDir file("$buildDir/generated/sources/openapi/geo-client/src/main/java")
+
+tasks.named('compileJava') {
+	dependsOn tasks.named('openApiGenerateGeoApi')
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }

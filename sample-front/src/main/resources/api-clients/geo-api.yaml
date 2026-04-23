@@ -1,0 +1,293 @@
+openapi: 3.1.0
+info:
+  title: Sample Spring Cloud Stream Vertical Slices Archetype
+  description: >-
+    REST API for Case Folder and Case Steps management using Spring Cloud
+    Stream, CQRS and Vertical Slices.
+  contact:
+    name: Luis Cabrera
+    email: lab.cabrera@gmail.com
+  version: 1.0.0
+servers:
+  - url: http://localhost:8082
+security:
+  - oidc: []
+tags:
+  - name: Provinces
+    description: Endpoints for managing provinces
+paths:
+  /api/v1/provinces:
+    get:
+      tags:
+        - Provinces
+      summary: Get provinces by RSQL
+      description: Filter provinces using an RSQL expression with optional pagination
+      operationId: getProvincesByRsql
+      parameters:
+        - name: q
+          in: query
+          description: RSQL expression to filter provinces
+          required: false
+          schema:
+            type: string
+            default: ''
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 20
+        - name: sort
+          in: query
+          description: >-
+            Sorting criteria in the format: property,(asc|desc). Multiple sort
+            criteria supported.
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Paged provinces
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProvinceDto'
+        '400':
+          description: Invalid RSQL expression
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - oidc: []
+    post:
+      tags:
+        - Provinces
+      summary: Create province
+      description: Creates a new province with the provided data
+      operationId: createProvince
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProvinceDto'
+        required: true
+      responses:
+        '201':
+          description: Province
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Province'
+        '400':
+          description: Invalid province data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: Province already exists (code or name)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - oidc: []
+  /api/v1/provinces/{provinceId}:
+    get:
+      tags:
+        - Provinces
+      summary: Get province by id
+      description: Get province by id
+      operationId: getProvinceById
+      parameters: []
+      responses:
+        '200':
+          description: Province
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProvinceDto'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - oidc: []
+    delete:
+      tags:
+        - Provinces
+      operationId: delete
+      parameters: []
+      responses:
+        '200':
+          description: OK
+    patch:
+      tags:
+        - Provinces
+      operationId: update
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProvinceDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ProvinceDto'
+components:
+  schemas:
+    Province:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
+        countryCode:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    ApiError:
+      type: object
+      description: API error information
+      properties:
+        code:
+          type: string
+          description: Error code
+          example: case-folder.msg.err.not-found
+        message:
+          type: string
+          description: Detailed error message
+          example: Case folder not found
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp of the error
+        details:
+          type: array
+          description: Validation errors, if any
+          items:
+            $ref: '#/components/schemas/ApiErrorDetail'
+      required:
+        - code
+        - message
+        - timestamp
+    ApiErrorDetail:
+      type: object
+      description: API error detail
+      properties:
+        key:
+          type: string
+          description: Error key
+          example: name
+        message:
+          type: string
+          description: Error message
+          example: Field is required
+      required:
+        - key
+        - message
+    CreateProvinceDto:
+      type: object
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        countryCode:
+          type: string
+      required:
+        - code
+        - countryCode
+        - name
+    UpdateProvinceDto:
+      type: object
+      properties:
+        provinceId:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
+        countryCode:
+          type: string
+      required:
+        - provinceId
+    ProvinceDto:
+      type: object
+      description: Province information
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the province
+          example: 550e8400-e29b-41d4-a716-446655440000
+        code:
+          type: string
+          description: Province code
+          example: MD
+        name:
+          type: string
+          description: Province name
+          example: Madrid
+        countryCode:
+          type: string
+          description: ISO country code
+          example: ES
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+      required:
+        - code
+        - countryCode
+        - id
+        - name
+  securitySchemes:
+    bearer-jwt:
+      type: http
+      description: 'Enter JWT bearer token as: Bearer <token>'
+      scheme: bearer
+      bearerFormat: JWT
+    oidc:
+      type: oauth2
+      description: OAuth2 con OIDC contra IAM
+      flows:
+        authorizationCode:
+          authorizationUrl: http://localhost:8090/realms/sample/protocol/openid-connect/auth
+          tokenUrl: http://localhost:8090/realms/sample/protocol/openid-connect/token
+          scopes:
+            openid: OpenID scope
+            profile: User profile scope
+            api: API access scope
