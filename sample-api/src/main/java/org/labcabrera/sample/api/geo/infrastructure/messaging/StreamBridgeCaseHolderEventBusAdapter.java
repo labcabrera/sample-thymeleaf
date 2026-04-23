@@ -1,0 +1,43 @@
+package org.labcabrera.sample.api.geo.infrastructure.messaging;
+
+import org.labcabrera.sample.api.geo.application.ports.CaseFolderEventBusPort;
+import org.labcabrera.sample.api.geo.domain.events.CaseFolderCreatedEvent;
+import org.labcabrera.sample.api.geo.domain.events.CaseFolderDeletedEvent;
+import org.labcabrera.sample.api.geo.domain.events.CaseFolderUpdatedEvent;
+import org.labcabrera.sample.api.shared.application.SecurityPort;
+import org.labcabrera.sample.api.shared.infrastructure.messaging.kafka.StreamBridgeEventBusAdapter;
+import org.springframework.cloud.stream.function.StreamBridge;
+import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * Implementation of {@link CaseFolderEventBusPort} based on
+ * {@link StreamBridgeEventBusAdapter}.
+ */
+@Service
+@Slf4j
+public class StreamBridgeCaseHolderEventBusAdapter
+    extends StreamBridgeEventBusAdapter
+    implements CaseFolderEventBusPort {
+
+    public StreamBridgeCaseHolderEventBusAdapter(StreamBridge streamBridge, SecurityPort securityPort) {
+        super(streamBridge, securityPort);
+    }
+
+    @Override
+    public void publish(CaseFolderCreatedEvent event) {
+        sendNotification("caseFolderCreated-out-0", event);
+    }
+
+    @Override
+    public void publish(CaseFolderUpdatedEvent event) {
+        sendNotification("caseFolderUpdated-out-0", event);
+    }
+
+    @Override
+    public void publish(CaseFolderDeletedEvent event) {
+        sendNotification("caseFolderDeleted-out-0", event);
+    }
+
+}
