@@ -76,7 +76,7 @@ tasks.register('openApiGenerateGeoApi', org.openapitools.generator.gradle.plugin
 		useFeignClientUrls: 'true',
 		useFeignClientContextId: 'true',
 		useTags: 'true',
-		dateLibrary: 'java8',
+		dateLibrary: 'java8-localdatetime',
 		useJakartaEe: 'true',
 		openApiNullable: 'false',
 	]
