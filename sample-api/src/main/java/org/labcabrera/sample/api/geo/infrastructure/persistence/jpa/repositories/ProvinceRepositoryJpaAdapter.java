@@ -44,9 +44,9 @@ public class ProvinceRepositoryJpaAdapter implements ProvinceRepository {
     @Override
     public Page<Province> findByRsql(String rsql, Pageable pageable, AuthenticatedUser user) {
         Specification<ProvinceEntity> authSpec = (root, query, cb) -> {
-            if (!user.hasRole(CaseFolderGuard.ROLE_CASE_FOLDER_MANAGEMENT)) {
-                return cb.equal(root.get("owner"), user.username());
-            }
+            // if (!user.hasRole(CaseFolderGuard.ROLE_CASE_FOLDER_MANAGEMENT)) {
+            //     return cb.equal(root.get("owner"), user.username());
+            // }
             return cb.conjunction();
         };
         if (StringUtils.isBlank(rsql)) {

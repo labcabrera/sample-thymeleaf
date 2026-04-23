@@ -28,6 +28,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import com.labcabrera.sample.archetype.generated.model.ApiError;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,17 +60,41 @@ public class ProvinceController {
         return ResponseEntity.ok(dto);
     }
 
+    @Operation(
+        operationId = "getProvincesByRsql",
+        summary = "Get provinces by RSQL",
+        description = "Filter provinces using an RSQL expression with optional pagination",
+        tags = { "Provinces" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Paged provinces", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProvinceDto.class)))
+            }),
+            @ApiResponse(responseCode = "400", description = "Invalid RSQL expression", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
+            })
+        },
+        security = {
+            @SecurityRequirement(name = "oidc")
+        }
+    )
     @GetMapping
     public ResponseEntity<Page<ProvinceDto>> getByRsql(
-        @RequestParam(required = false) String rsql,
-        @RequestParam(required = false) Integer page,
-        @RequestParam(required = false) Integer size,
-        @RequestParam(required = false) List<String> sort) {
+        @Parameter(name = "q", description = "RSQL expression to filter provinces", in = ParameterIn.QUERY)
+        @RequestParam(value = "q", required = false, defaultValue = "") String rsql,
+
+        @Parameter(name = "page", description = "Zero-based page index (0..N)", in = ParameterIn.QUERY)
+        @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+
+        @Parameter(name = "size", description = "The size of the page to be returned", in = ParameterIn.QUERY)
+        @RequestParam(value = "size", required = false, defaultValue = "20")  Integer size,
+
+        @Parameter(name = "sort", description = "Sorting criteria in the format: property,(asc|desc). Multiple sort criteria supported.", in = ParameterIn.QUERY)
+        @RequestParam(value = "sort", required = false) List<String> sort) {
 
         Pageable pageable = Pageable.ofSize(size != null ? size : 20).withPage(page != null ? page : 0);
         var query = new GetProvincesByRsqlQuery(rsql, pageable);
         Page<Province> resultPage = queryBus.dispatch(query);
-        var pageDto = resultPage.map(mapper::toDto);
+        Page<ProvinceDto> pageDto = resultPage.map(mapper::toDto);
         return ResponseEntity.ok(pageDto);
     }
 

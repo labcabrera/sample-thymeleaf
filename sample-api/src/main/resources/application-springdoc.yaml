@@ -21,4 +21,4 @@ springdoc:
     contact:
       name: Luis Cabrera
       email: lab.cabrera@gmail.com
-  servers: ${SPRINGDOC_SERVERS:http://localhost:8080}
+  servers: ${SPRINGDOC_SERVERS:http://localhost:8082}
