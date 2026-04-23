@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class CreateProvinceCommandHandler implements CommandHandler<CreateProvinceCommand, Province> {
+public class CreateProvinceHandler implements CommandHandler<CreateProvinceCommand, Province> {
 
     private final ProvinceRepository provinceRepository;
     private final Guard<Province> provinceGuard;

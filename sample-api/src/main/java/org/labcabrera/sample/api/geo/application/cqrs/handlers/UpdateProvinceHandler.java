@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class UpdateProvinceCommandHandler implements CommandHandler<UpdateProvinceCommand, Province> {
+public class UpdateProvinceHandler implements CommandHandler<UpdateProvinceCommand, Province> {
 
     private final ProvinceRepository provinceRepository;
     private final Guard<Province> provinceGuard;

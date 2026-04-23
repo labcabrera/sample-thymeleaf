@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class DeleteProvinceCommandHandler implements CommandHandler<DeleteProvinceCommand, Void> {
+public class DeleteProvinceHandler implements CommandHandler<DeleteProvinceCommand, Void> {
 
     private final ProvinceRepository provinceRepository;
     private final Guard<Province> provinceGuard;

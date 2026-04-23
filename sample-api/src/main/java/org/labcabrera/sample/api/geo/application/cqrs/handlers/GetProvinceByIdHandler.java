@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class GetProvinceByIdQueryHandler implements QueryHandler<GetProvinceByIdQuery, Province> {
+public class GetProvinceByIdHandler implements QueryHandler<GetProvinceByIdQuery, Province> {
 
     private final ProvinceRepository provinceRepository;
     private final SecurityPort securityPort;
