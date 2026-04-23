@@ -21,7 +21,7 @@ import org.labcabrera.sample.api.geo.application.ports.CaseFolderRepository;
 import org.labcabrera.sample.api.geo.domain.CaseFolder;
 import org.labcabrera.sample.api.geo.domain.IdCard;
 import org.labcabrera.sample.api.geo.domain.IdCardType;
-import org.labcabrera.sample.api.geo.domain.events.CaseFolderDeletedEvent;
+import org.labcabrera.sample.api.geo.domain.events.ProvinceDeletedEvent;
 import org.labcabrera.sample.api.shared.application.Guard;
 import org.labcabrera.sample.api.shared.application.SecurityPort;
 import org.labcabrera.sample.api.shared.application.SecurityPort.AuthenticatedUser;
@@ -85,7 +85,7 @@ class DeleteCaseFolderCommandHandlerTest {
         verify(caseFolderRepository).findById(command.caseFolderId());
         verify(caseFolderGuard).checkWrite(caseFolder, authenticatedUser);
         verify(caseFolderRepository).deleteById(command.caseFolderId());
-        verify(caseFolderEventBusPort).publish(any(CaseFolderDeletedEvent.class));
+        verify(caseFolderEventBusPort).publish(any(ProvinceDeletedEvent.class));
         verify(caseFolderMetricPort).incrementCaseFolderDeletedCounter();
     }
 
@@ -99,6 +99,6 @@ class DeleteCaseFolderCommandHandlerTest {
         verify(caseFolderRepository).findById(command.caseFolderId());
         verify(caseFolderGuard, never()).checkWrite(any(), any());
         verify(caseFolderRepository, never()).deleteById(any());
-        verify(caseFolderEventBusPort, never()).publish(any(CaseFolderDeletedEvent.class));
+        verify(caseFolderEventBusPort, never()).publish(any(ProvinceDeletedEvent.class));
     }
 }

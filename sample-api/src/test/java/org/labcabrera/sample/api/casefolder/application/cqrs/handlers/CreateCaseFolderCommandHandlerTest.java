@@ -23,7 +23,7 @@ import org.labcabrera.sample.api.geo.domain.CaseFolder;
 import org.labcabrera.sample.api.geo.domain.IdCard;
 import org.labcabrera.sample.api.geo.domain.IdCardType;
 import org.labcabrera.sample.api.geo.domain.UserInfo;
-import org.labcabrera.sample.api.geo.domain.events.CaseFolderCreatedEvent;
+import org.labcabrera.sample.api.geo.domain.events.ProvinceCreatedEvent;
 import org.labcabrera.sample.api.shared.application.Guard;
 import org.labcabrera.sample.api.shared.application.SecurityPort;
 import org.labcabrera.sample.api.shared.application.SecurityPort.AuthenticatedUser;
@@ -113,7 +113,7 @@ class CreateCaseFolderCommandHandlerTest {
         verify(securityPort).requireCurrentUser();
         verify(caseFolderGuard).checkCreate(authenticatedUser);
         verify(caseFolderRepository).save(any(CaseFolder.class));
-        verify(caseFolderEventBusPort).publish(any(CaseFolderCreatedEvent.class));
+        verify(caseFolderEventBusPort).publish(any(ProvinceCreatedEvent.class));
     }
 
     @Test

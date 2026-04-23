@@ -4,8 +4,7 @@ import java.util.function.Consumer;
 
 import org.springframework.messaging.Message;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.labcabrera.sample.api.geo.application.cqrs.commands.CreateCaseFolderCommand;
-import org.labcabrera.sample.api.geo.application.cqrs.commands.UpdateCaseFolderStatusCommand;
+import org.labcabrera.sample.api.geo.application.cqrs.commands.CreateProvinceCommand;
 import org.labcabrera.sample.api.geo.domain.CaseFolderStatus;
 import org.labcabrera.sample.api.shared.application.CommandBus;
 import org.labcabrera.sample.api.shared.infrastructure.messaging.kafka.AuthenticatedConsumer;
@@ -18,14 +17,14 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
-public class KafkaCaseFolderController extends AuthenticatedConsumer {
+public class KafkaProvinceController extends AuthenticatedConsumer {
 
     private final CommandBus commandBus;
 
     @Bean
-    public Consumer<Message<CreateCaseFolderCommand>> onCaseFolderCreation() {
+    public Consumer<Message<CreateProvinceCommand>> onCaseFolderCreation() {
         return command -> {
-            log.debug("Received case folder creation command: {}", command.getPayload().idCardNumber());
+            log.debug("Received province creation command: {}", command.getPayload().name());
             try {
                 loadUserContext(command);
                 commandBus.dispatch(command);

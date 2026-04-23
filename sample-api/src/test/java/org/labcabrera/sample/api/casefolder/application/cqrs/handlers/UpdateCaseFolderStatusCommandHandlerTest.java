@@ -22,7 +22,7 @@ import org.labcabrera.sample.api.geo.domain.CaseFolder;
 import org.labcabrera.sample.api.geo.domain.IdCard;
 import org.labcabrera.sample.api.geo.domain.IdCardType;
 import org.labcabrera.sample.api.geo.domain.UserInfo;
-import org.labcabrera.sample.api.geo.domain.events.CaseFolderUpdatedEvent;
+import org.labcabrera.sample.api.geo.domain.events.ProvinceUpdatedEvent;
 import org.labcabrera.sample.api.shared.application.Guard;
 import org.labcabrera.sample.api.shared.application.SecurityPort;
 import org.labcabrera.sample.api.shared.application.SecurityPort.AuthenticatedUser;
@@ -86,7 +86,7 @@ class UpdateCaseFolderStatusCommandHandlerTest {
         verify(caseFolderRepository).findById(command.caseFolderId());
         verify(caseFolderGuard).checkWrite(caseFolder, authenticatedUser);
         verify(caseFolderRepository).update(eq(caseFolder.getId()), any(CaseFolder.class));
-        verify(caseFolderEventBusPort).publish(any(CaseFolderUpdatedEvent.class));
+        verify(caseFolderEventBusPort).publish(any(ProvinceUpdatedEvent.class));
         verify(caseFolderMetricPort).incrementCaseFolderUpdatedCounter();
     }
 
