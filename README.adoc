@@ -13,17 +13,21 @@ El proyecto está organizado en varios módulos:
 
 ## Sample API
 
-Este módulo expone una API REST para gestionar entidades geográficas como países, provincias y municipios. Utiliza el patrón CQRS para separar las operaciones de lectura y escritura y validación de tokens JWT contra un IdP externo.
+Este módulo expone una API REST para gestionar entidades geográficas como países, provincias y municipios. Utiliza una de arquitectura hexagonal aplicando el patrón CQRS para separar las operaciones de lectura y escritura.
 
-Utiliza Spring Data JPA para la persistencia de datos empleando RSQL para las consultas.
+Utiliza Spring Data JPA para la persistencia de datos empleando RSQL para las consultas empleando una base de datos PostgreSQL.
 
-La seguridad está basada en Spring Security utilizando la librería `spring-boot-starter-oauth2-resource-server`.
+La seguridad está basada en Spring Security utilizando la librería `spring-boot-starter-oauth2-resource-server` validando los tokens JWT a través de Keycloak.
 
 ## Sample Web
 
 Este módulo está basado en Spring Web MVC y Thymeleaf para renderizar las vistas. Proporciona una interfaz de usuario para interactuar con la API REST del módulo `sample-api`.
 
 El cliente de la API está generado a través del plugin `org.openapi.generator` de gradle utilizando la librería `feign`.
+
+Este proyecto define un layout base muy sencillo utilizando componentes de Materialize CSS para el diseño y estilo de la aplicación.
+
+Cada página está asociada a un _@Controller_ que es responsable de manejar las solicitudes HTTP, interactuar con el cliente de la API y devolver la vista correspondiente.
 
 ## Ejecución
 
@@ -46,4 +50,21 @@ Creamos un nuevo realm llamado `sample` y dentro de este un nuevo cliente llamad
 
 Después actualizaremos el secret generado del cliente en los ficheros de configuración tanto de la API como del frontal.
 
-TODO ...
+El proyecto `sample-api` durante el arranque crea una serie de datos de ejemplo.
+
+Para compilar y ejecutarmente la API haremos:
+
+[source,bash]
+----
+./gradlew clean build -x test
+
+java -jar sample-api/build/libs/*.jar
+----
+
+Esto levantará nuestra API en el puerto 8082. Podemos consultar la información de la API a través de la documentación Swagger UI disponible en http://localhost:8082/swagger-ui/index.html.
+
+Lo mismo haremos para el frontal ejecutando los mismos comandos.
+
+El frontal levantará la aplicación en el puerto 8081 de modo que podremos acceder a la aplicación en http://localhost:8081.
+
+Desde aquí podremos navegar por las diferentes páginas y realizar operaciones CRUD sobre las provincias utilizando la API REST del módulo `sample-api`.
