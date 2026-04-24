@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
+<section th:fragment="content">
+    <div class="section">
+        <div class="row">
+            <div class="col s12">
+                <h4>Countries</h4>
+                <a class="waves-effect waves-light btn" th:href="@{/countries/create}">Create Country</a>
+                <table class="striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="c : ${countries}">
+                            <td th:text="${c.id}"></td>
+                            <td th:text="${c.name}"></td>
+                            <td>
+                                <a class="btn-small" th:href="@{/countries/{id}/edit(id=${c.id})}">Edit</a>
+                                <form th:action="@{/countries/{id}/delete(id=${c.id})}" method="post"
+                                    style="display:inline">
+                                    <button class="btn-small red" type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+</html>

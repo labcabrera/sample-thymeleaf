@@ -1,0 +1,21 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
+<section th:fragment="content">
+    <div class="section">
+        <h4 th:text="${country.id} != null ? 'Edit Country' : 'Create Country'"></h4>
+        <form th:action="${country.id} != null ? @{/countries/{id}(id=${country.id})} : @{/countries}" method="post">
+            <div class="input-field" th:if="${country.id} == null">
+                <input id="id" name="id" type="text" th:value="${country.id}" />
+                <label for="id">Country ID</label>
+            </div>
+            <div class="input-field">
+                <input id="name" name="name" type="text" th:value="${country.name}" required />
+                <label for="name">Name</label>
+            </div>
+            <button class="waves-effect waves-light btn" type="submit">Save</button>
+            <a class="btn-flat" th:href="@{/countries}">Cancel</a>
+        </form>
+    </div>
+</section>
+
+</html>
