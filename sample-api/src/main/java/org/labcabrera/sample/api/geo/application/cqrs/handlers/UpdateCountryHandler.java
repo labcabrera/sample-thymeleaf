@@ -11,6 +11,7 @@ import org.labcabrera.sample.api.shared.application.CommandHandler;
 import org.labcabrera.sample.api.shared.application.Guard;
 import org.labcabrera.sample.api.shared.application.SecurityPort;
 import org.labcabrera.sample.api.shared.domain.exceptions.NotFoundException;
+import org.labcabrera.sample.api.shared.domain.exceptions.NotModifiedException;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -42,8 +43,15 @@ public class UpdateCountryHandler implements CommandHandler<UpdateCountryCommand
     }
 
     private void merge(Country existing, UpdateCountryCommand command) {
+        boolean updated = false;
         if (command.name() != null) {
-            existing.setName(command.name());
+            if (!command.name().equals(existing.getName())) {
+                existing.setName(command.name());
+                updated = true;
+            }
+        }
+        if (!updated) {
+            throw new NotModifiedException("No changes detected for country with id " + existing.getId());
         }
         existing.setUpdatedAt(LocalDateTime.now());
     }

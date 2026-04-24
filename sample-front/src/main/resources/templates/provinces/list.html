@@ -9,7 +9,7 @@
                     <table class="striped">
                         <thead>
                             <tr>
-                                <th>Code</th>
+                                <th>ID</th>
                                 <th>Name</th>
                                 <th>Country</th>
                                 <th>Actions</th>
@@ -17,7 +17,7 @@
                         </thead>
                         <tbody>
                             <tr th:each="p : ${provinces}">
-                                <td th:text="${p.code}"></td>
+                                <td th:text="${p.id}"></td>
                                 <td th:text="${p.name}"></td>
                                 <td th:text="${p.countryCode}"></td>
                                 <td>

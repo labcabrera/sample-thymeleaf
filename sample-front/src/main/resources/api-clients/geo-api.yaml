@@ -1,9 +1,7 @@
 openapi: 3.1.0
 info:
-  title: Sample Spring Cloud Stream Vertical Slices Archetype
-  description: >-
-    REST API for Case Folder and Case Steps management using Spring Cloud
-    Stream, CQRS and Vertical Slices.
+  title: Sample Geo API
+  description: REST API for Gepraphic data management
   contact:
     name: Luis Cabrera
     email: lab.cabrera@gmail.com
@@ -15,6 +13,10 @@ security:
 tags:
   - name: Provinces
     description: Endpoints for managing provinces
+  - name: Countries
+    description: Endpoints for managing countries
+  - name: Municipalities
+    description: Endpoints for managing municipalities
 paths:
   /api/v1/provinces:
     get:
@@ -22,7 +24,7 @@ paths:
         - Provinces
       summary: Get provinces by RSQL
       description: Filter provinces using an RSQL expression with optional pagination
-      operationId: getByRsql
+      operationId: getProvincesByRsql
       parameters:
         - name: q
           in: query
@@ -90,7 +92,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Province'
+                $ref: '#/components/schemas/ProvinceDto'
         '400':
           description: Invalid province data
           content:
@@ -99,6 +101,184 @@ paths:
                 $ref: '#/components/schemas/ApiError'
         '409':
           description: Province already exists (code or name)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - oidc: []
+  /api/v1/municipalities:
+    get:
+      tags:
+        - Municipalities
+      summary: Get municipalities by RSQL
+      description: Filter municipalities using an RSQL expression with optional pagination
+      operationId: getMunicipalitiesByRsql
+      parameters:
+        - name: q
+          in: query
+          description: RSQL expression to filter municipalities
+          required: false
+          schema:
+            type: string
+            default: ''
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 20
+        - name: sort
+          in: query
+          description: >-
+            Sorting criteria in the format: property,(asc|desc). Multiple sort
+            criteria supported.
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Paged municipalities
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MunicipalityPage'
+        '400':
+          description: Invalid RSQL expression
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - oidc: []
+    post:
+      tags:
+        - Municipalities
+      summary: Create municipality
+      description: Creates a new municipality with the provided data
+      operationId: createMunicipality
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMunicipalityDto'
+        required: true
+      responses:
+        '201':
+          description: Municipality
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MunicipalityDto'
+        '400':
+          description: Invalid municipality data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: Municipality already exists (code or name)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - oidc: []
+  /api/v1/countries:
+    get:
+      tags:
+        - Countries
+      summary: Get countries by RSQL
+      description: Filter countries using an RSQL expression with optional pagination
+      operationId: getCountriesByRsql
+      parameters:
+        - name: q
+          in: query
+          description: RSQL expression to filter countries
+          required: false
+          schema:
+            type: string
+            default: ''
+        - name: page
+          in: query
+          description: Zero-based page index (0..N)
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 20
+        - name: sort
+          in: query
+          description: >-
+            Sorting criteria in the format: property,(asc|desc). Multiple sort
+            criteria supported.
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Paged countries
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryPage'
+        '400':
+          description: Invalid RSQL expression
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - oidc: []
+    post:
+      tags:
+        - Countries
+      summary: Create country
+      description: Creates a new country with the provided data
+      operationId: createCountry
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCountryDto'
+        required: true
+      responses:
+        '201':
+          description: Country
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryDto'
+        '400':
+          description: Invalid country data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: Country already exists (id or name)
           content:
             application/json:
               schema:
@@ -133,6 +313,7 @@ paths:
                 $ref: '#/components/schemas/ApiError'
       security:
         - oidc: []
+        - bearerAuth: []
     delete:
       tags:
         - Provinces
@@ -195,25 +376,218 @@ paths:
                 $ref: '#/components/schemas/ApiError'
       security:
         - oidc: []
+  /api/v1/municipalities/{municipalityId}:
+    get:
+      tags:
+        - Municipalities
+      summary: Get municipality by id
+      description: Get municipality by id
+      operationId: getMunicipalityById
+      parameters:
+        - name: municipalityId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Municipality
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MunicipalityDto'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - oidc: []
+        - bearerAuth: []
+    delete:
+      tags:
+        - Municipalities
+      summary: Delete municipality
+      description: Deletes a municipality by id
+      operationId: deleteMunicipality
+      parameters:
+        - name: municipalityId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No content
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - oidc: []
+    patch:
+      tags:
+        - Municipalities
+      summary: Update municipality
+      description: Updates an existing municipality
+      operationId: updateMunicipality
+      parameters:
+        - name: municipalityId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMunicipalityDto'
+        required: true
+      responses:
+        '200':
+          description: Municipality
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MunicipalityDto'
+        '400':
+          description: Invalid municipality data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - oidc: []
+  /api/v1/countries/{countryId}:
+    get:
+      tags:
+        - Countries
+      summary: Get country by id
+      description: Get country by id
+      operationId: getCountryById
+      parameters:
+        - name: countryId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Country
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryDto'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - oidc: []
+        - bearerAuth: []
+    delete:
+      tags:
+        - Countries
+      summary: Delete country
+      description: Deletes a country by id
+      operationId: deleteCountry
+      parameters:
+        - name: countryId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No content
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - oidc: []
+    patch:
+      tags:
+        - Countries
+      summary: Update country
+      description: Updates an existing country
+      operationId: updateCountry
+      parameters:
+        - name: countryId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCountryDto'
+        required: true
+      responses:
+        '200':
+          description: Country
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryDto'
+        '400':
+          description: Invalid country data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - oidc: []
 components:
   schemas:
-    Province:
+    ProvinceDto:
       type: object
+      description: Province information
       properties:
         id:
           type: string
-        code:
-          type: string
+          description: Unique identifier of the province
+          example: ES-MAD
         name:
           type: string
-        countryCode:
+          description: Province name
+          example: MADRID
+        countryId:
           type: string
+          description: Country identifier
+          example: ES
         createdAt:
           type: string
           format: date-time
+          description: Creation timestamp
         updatedAt:
           type: string
           format: date-time
+          description: Last update timestamp
+      required:
+        - countryId
+        - id
+        - name
     ApiError:
       type: object
       description: API error information
@@ -257,36 +631,29 @@ components:
     CreateProvinceDto:
       type: object
       properties:
-        code:
-          type: string
         name:
           type: string
-        countryCode:
+        countryId:
           type: string
       required:
-        - code
-        - countryCode
+        - countryId
         - name
-    ProvinceDto:
+    MunicipalityDto:
       type: object
-      description: Province information
+      description: Municipality information
       properties:
         id:
           type: string
-          description: Unique identifier of the province
+          description: Unique identifier of the municipality
           example: 550e8400-e29b-41d4-a716-446655440000
-        code:
-          type: string
-          description: Province code
-          example: MD
         name:
           type: string
-          description: Province name
-          example: Madrid
-        countryCode:
+          description: Municipality name
+          example: Madrid Center
+        provinceId:
           type: string
-          description: ISO country code
-          example: ES
+          description: Province id this municipality belongs to
+          example: 550e8400-e29b-41d4-a716-446655440001
         createdAt:
           type: string
           format: date-time
@@ -296,8 +663,50 @@ components:
           format: date-time
           description: Last update timestamp
       required:
-        - code
-        - countryCode
+        - id
+        - name
+        - provinceId
+    CreateMunicipalityDto:
+      type: object
+      properties:
+        name:
+          type: string
+        provinceId:
+          type: string
+      required:
+        - name
+        - provinceId
+    CountryDto:
+      type: object
+      description: Country information
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the country
+          example: ES
+        name:
+          type: string
+          description: Country name
+          example: SPAIN
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+      required:
+        - id
+        - name
+    CreateCountryDto:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
         - id
         - name
     UpdateProvinceDto:
@@ -305,14 +714,28 @@ components:
       properties:
         provinceId:
           type: string
-        code:
-          type: string
         name:
           type: string
-        countryCode:
+        countryId:
           type: string
       required:
         - provinceId
+    UpdateMunicipalityDto:
+      type: object
+      properties:
+        municipalityId:
+          type: string
+        name:
+          type: string
+        provinceId:
+          type: string
+      required:
+        - municipalityId
+    UpdateCountryDto:
+      type: object
+      properties:
+        name:
+          type: string
     Pagination:
       type: object
       description: Pagination information
@@ -350,6 +773,34 @@ components:
           description: List of items in the current page
           items:
             $ref: '#/components/schemas/ProvinceDto'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+          description: Pagination details
+      required:
+        - content
+        - pagination
+    MunicipalityPage:
+      type: object
+      properties:
+        content:
+          type: array
+          description: List of items in the current page
+          items:
+            $ref: '#/components/schemas/MunicipalityDto'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+          description: Pagination details
+      required:
+        - content
+        - pagination
+    CountryPage:
+      type: object
+      properties:
+        content:
+          type: array
+          description: List of items in the current page
+          items:
+            $ref: '#/components/schemas/CountryDto'
         pagination:
           $ref: '#/components/schemas/Pagination'
           description: Pagination details

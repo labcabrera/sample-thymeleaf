@@ -5,10 +5,6 @@
             <h4 th:text="${province.id} != null ? 'Edit Province' : 'Create Province'"></h4>
             <form th:action="${province.id} != null ? @{/provinces/{id}(id=${province.id})} : @{/provinces}" method="post">
                 <div class="input-field">
-                    <input id="code" name="code" type="text" th:value="${province.code}" required>
-                    <label for="code">Code</label>
-                </div>
-                <div class="input-field">
                     <input id="name" name="name" type="text" th:value="${province.name}" required>
                     <label for="name">Name</label>
                 </div>

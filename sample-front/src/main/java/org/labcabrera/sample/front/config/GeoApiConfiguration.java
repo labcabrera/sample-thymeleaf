@@ -49,8 +49,7 @@ public class GeoApiConfiguration {
         apiClient.setFeignBuilder(
             apiClient.getFeignBuilder()
                 .encoder(new feign.form.FormEncoder(new feign.jackson.JacksonEncoder(objectMapper)))
-                .decoder(new org.labcabrera.sample.front.generated.client.geo.ApiResponseDecoder(objectMapper))
-        );
+                .decoder(new org.labcabrera.sample.front.generated.client.geo.ApiResponseDecoder(objectMapper)));
         return apiClient;
     }
 

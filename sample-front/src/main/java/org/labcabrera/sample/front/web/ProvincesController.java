@@ -1,14 +1,10 @@
 package org.labcabrera.sample.front.web;
 
 import java.util.List;
-import java.util.Map;
 
 import org.labcabrera.sample.front.generated.client.geo.api.ProvincesApi;
-import org.labcabrera.sample.front.generated.client.geo.api.ProvincesApi.GetByRsqlQueryParams;
-import org.labcabrera.sample.front.generated.client.geo.model.ApiResponse;
 import org.labcabrera.sample.front.generated.client.geo.model.CreateProvinceDto;
 import org.labcabrera.sample.front.generated.client.geo.model.Pagination;
-import org.labcabrera.sample.front.generated.client.geo.model.Province;
 import org.labcabrera.sample.front.generated.client.geo.model.ProvinceDto;
 import org.labcabrera.sample.front.generated.client.geo.model.ProvincePage;
 import org.labcabrera.sample.front.generated.client.geo.model.UpdateProvinceDto;
@@ -34,14 +30,7 @@ public class ProvincesController {
     @GetMapping
     public String list(Model model, @RequestParam(value = "q", required = false, defaultValue = "") String q) {
         log.trace("Fetching provinces with query: {}", q);
-        GetByRsqlQueryParams query = new GetByRsqlQueryParams();
-        query.q(q);
-        ApiResponse<ProvincePage> response = provincesApi.getByRsqlWithHttpInfo(query);
-        if(response.getStatusCode() != 200) {
-            log.error("Error fetching provinces: {}", response.getStatusCode());
-            throw new RuntimeException("Error fetching provinces");
-        }
-        ProvincePage page = response.getData();
+        ProvincePage page = this.provincesApi.getProvincesByRsql(q, null, null, null);
         List<ProvinceDto> provinces = page.getContent();
         Pagination pagination = page.getPagination();
         model.addAttribute("provinces", provinces);
@@ -60,8 +49,8 @@ public class ProvincesController {
 
     @PostMapping
     public String create(CreateProvinceDto province) {
-        Province response = provincesApi.createProvince(province);
-        if(response == null) {
+        var response = provincesApi.createProvince(province);
+        if (response == null) {
             log.error("Error creating province");
             throw new RuntimeException("Error creating province");
         }
@@ -70,8 +59,8 @@ public class ProvincesController {
 
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable String id, Model model) {
-        ProvinceDto province = provincesApi.getProvinceById(id);
-        if(province == null) {
+        var province = provincesApi.getProvinceById(id);
+        if (province == null) {
             log.error("Province not found with id: {}", id);
             throw new RuntimeException("Province not found");
         }

@@ -1,5 +1,6 @@
 package org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.repositories;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -86,9 +87,10 @@ public class CountryRepositoryJpaAdapter implements CountryRepository {
     @Transactional
     @CachePut(value = "country", key = "#p0")
     public Country update(String countryId, Country updated) {
-        var current = jpaRepository.findById(countryId)
+        CountryEntity current = jpaRepository.findById(countryId)
             .orElseThrow(() -> new BadRequestException("Country not found with id " + countryId));
-        //TODO merge
+        current.setName(updated.getName());
+        current.setUpdatedAt(updated.getUpdatedAt() != null ? updated.getUpdatedAt() : LocalDateTime.now());
         var savedEntity = jpaRepository.save(current);
         return mapper.toDomain(savedEntity);
     }
