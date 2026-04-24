@@ -114,7 +114,8 @@ public class CountryController {
         var command = new CreateCountryCommand(request.id(), request.name());
         Country country = commandBus.dispatch(command);
         var dto = mapper.toDto(country);
-        return ResponseEntity.created(URI.create("/api/v1/countries/" + country.id())).body(dto);
+        String location = String.format("/api/v1/countries/%s", country.getId());
+        return ResponseEntity.created(URI.create(location)).body(dto);
     }
 
     @PatchMapping("/{countryId}")

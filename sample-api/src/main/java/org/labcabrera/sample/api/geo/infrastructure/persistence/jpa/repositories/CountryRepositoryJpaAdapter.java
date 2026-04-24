@@ -34,14 +34,14 @@ public class CountryRepositoryJpaAdapter implements CountryRepository {
     private final RSQLParser rsqlParser;
 
     @Override
-    public Optional<Country> findByIdOrName(String id, String name) {
-        return jpaRepository.findByIdAndNameIgnoreCase(id, name).map(mapper::toDomain);
+    @Cacheable(value = "country", key = "#p0", unless = "#result == null || #result.isEmpty()")
+    public Optional<Country> findById(String countryId) {
+        return jpaRepository.findById(countryId).map(mapper::toDomain);
     }
 
     @Override
-    @Cacheable(value = "country", key = "#countryId", unless = "#result == null || #result.isEmpty()")
-    public Optional<Country> findById(String countryId) {
-        return jpaRepository.findById(countryId).map(mapper::toDomain);
+    public Optional<Country> findByIdOrName(String id, String name) {
+        return jpaRepository.findByIdAndNameIgnoreCase(id, name).map(mapper::toDomain);
     }
 
     @Override
@@ -70,8 +70,8 @@ public class CountryRepositoryJpaAdapter implements CountryRepository {
     @CachePut(value = "country", key = "#result.id")
     public Country save(Country country) {
         try {
-            if (country.id() != null && jpaRepository.existsById(country.id())) {
-                throw new BadRequestException("country.msg.err.already-exists", country.id());
+            if (country.getId() != null && jpaRepository.existsById(country.getId())) {
+                throw new BadRequestException("country.msg.err.already-exists", country.getId());
             }
             var entity = mapper.toEntity(country);
             var savedEntity = jpaRepository.save(entity);
@@ -84,7 +84,7 @@ public class CountryRepositoryJpaAdapter implements CountryRepository {
 
     @Override
     @Transactional
-    @CachePut(value = "country", key = "#countryId")
+    @CachePut(value = "country", key = "#p0")
     public Country update(String countryId, Country updated) {
         var current = jpaRepository.findById(countryId)
             .orElseThrow(() -> new BadRequestException("Country not found with id " + countryId));
@@ -95,7 +95,7 @@ public class CountryRepositoryJpaAdapter implements CountryRepository {
 
     @Override
     @Transactional
-    @CacheEvict(value = "country", key = "#countryId")
+    @CacheEvict(value = "country", key = "#p0")
     public void deleteById(String countryId) {
         jpaRepository.deleteById(countryId);
     }

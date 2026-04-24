@@ -37,7 +37,7 @@ public class CreateCountryHandler implements CommandHandler<CreateCountryCommand
         }
         Country country = new Country(command.id(), command.name(), LocalDateTime.now(), null);
         var saved = countryRepository.save(country);
-        eventBusPort.publish(new CountryCreatedEvent(saved.id(), saved.name(), LocalDateTime.now()));
+        eventBusPort.publish(new CountryCreatedEvent(saved.getId(), saved.getName(), LocalDateTime.now()));
         return saved;
     }
 

@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record UpdateMunicipalityDto(
     @NotNull String municipalityId,
-    Optional<String> code,
     Optional<String> name,
     Optional<String> provinceId) {
 }

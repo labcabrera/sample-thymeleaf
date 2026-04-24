@@ -33,11 +33,11 @@ public class CreateMunicipalityHandler implements CommandHandler<CreateMunicipal
         var user = securityPort.requireCurrentUser();
         municipalityGuard.checkCreate(user);
         log.debug("Creating municipality (user: {})", user.username());
-        var current = municipalityRepository.findByCodeOrName(command.code(), command.name());
+        var current = municipalityRepository.findByName(command.name());
         if (current.isPresent()) {
             throw new ConflictException("municipality.msg.err.already-exists");
         }
-        Municipality municipality = new Municipality(UUID.randomUUID().toString(), command.code(), command.name(), command.provinceId(),
+        Municipality municipality = new Municipality(UUID.randomUUID().toString(), command.name(), command.provinceId(),
             null, null);
         var saved = municipalityRepository.save(municipality);
         municipalityMetricPort.incrementCreatedCounter();

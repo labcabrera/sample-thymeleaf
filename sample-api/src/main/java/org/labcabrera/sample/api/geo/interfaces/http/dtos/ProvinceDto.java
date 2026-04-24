@@ -2,30 +2,18 @@ package org.labcabrera.sample.api.geo.interfaces.http.dtos;
 
 import java.time.LocalDateTime;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Schema(name = "ProvinceDto", description = "Province information")
-public class ProvinceDto {
+public record ProvinceDto(
 
-	@Schema(name = "id", example = "550e8400-e29b-41d4-a716-446655440000", description = "Unique identifier of the province", requiredMode = Schema.RequiredMode.REQUIRED)
-	private String id;
+	@Schema(name = "id", example = "ES-MAD", description = "Unique identifier of the province", requiredMode = Schema.RequiredMode.REQUIRED) String id,
 
-	@Schema(name = "name", example = "Madrid", description = "Province name", requiredMode = Schema.RequiredMode.REQUIRED)
-	private String name;
+	@Schema(name = "name", example = "MADRID", description = "Province name", requiredMode = Schema.RequiredMode.REQUIRED) String name,
 
-	@Schema(name = "countryId", example = "ES", description = "Country identifier", requiredMode = Schema.RequiredMode.REQUIRED)
-	private String countryId;
+	@Schema(name = "countryId", example = "ES", description = "Country identifier", requiredMode = Schema.RequiredMode.REQUIRED) String countryId,
 
-	@Schema(name = "createdAt", description = "Creation timestamp")
-	private LocalDateTime createdAt;
+	@Schema(name = "createdAt", description = "Creation timestamp") LocalDateTime createdAt,
 
-	@Schema(name = "updatedAt", description = "Last update timestamp")
-	private LocalDateTime updatedAt;
-
+	@Schema(name = "updatedAt", description = "Last update timestamp") LocalDateTime updatedAt) {
 }

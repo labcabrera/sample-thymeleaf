@@ -12,9 +12,7 @@ import org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.entities.Pro
 import org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.mappers.ProvinceEntityMapper;
 import org.labcabrera.sample.api.shared.application.SecurityPort.AuthenticatedUser;
 import org.labcabrera.sample.api.shared.domain.exceptions.BadRequestException;
-import org.labcabrera.sample.api.shared.domain.exceptions.NotModifiedException;
 import org.labcabrera.sample.api.shared.infrastructure.persistence.rsql.CustomRsqlVisitor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -79,29 +77,21 @@ public class ProvinceRepositoryJpaAdapter implements ProvinceRepository {
     @Transactional
     @CachePut(value = "province", key = "#result.id")
     public Province save(Province province) {
-        try {
-            if (province.id() != null && jpaRepository.existsById(province.id())) {
-                throw new BadRequestException("province.msg.err.already-exists", province.id());
-            }
-            var entity = mapper.toEntity(province);
-            var savedEntity = jpaRepository.save(entity);
-            return mapper.toDomain(savedEntity);
+        if (province.id() != null && jpaRepository.existsById(province.id())) {
+            throw new BadRequestException("province.msg.err.already-exists", province.id());
         }
-        catch (DataIntegrityViolationException ex) {
-            throw new BadRequestException("province.msg.err.data-integrity", ex);
-        }
+        var entity = mapper.toEntity(province);
+        var savedEntity = jpaRepository.save(entity);
+        return mapper.toDomain(savedEntity);
     }
 
     @Override
     @Transactional
     @CachePut(value = "province", key = "#provinceId")
-    public Province update(String provinceId, Province caseFolder) {
+    public Province update(String provinceId, Province province) {
         var current = jpaRepository.findById(provinceId)
-            .orElseThrow(() -> new BadRequestException("Province not found with id " + provinceId));
-        boolean modified = current.merge(caseFolder);
-        if (!modified) {
-            throw new NotModifiedException("province.msg.err.not-modified", provinceId);
-        }
+            .orElseThrow(() -> new BadRequestException(String.format("Province not found with id %s", provinceId)));
+        current.setName(province.name());
         var savedEntity = jpaRepository.save(current);
         return mapper.toDomain(savedEntity);
     }

@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 public record Municipality(
     String id,
-    String code,
     String name,
     String provinceId,
     LocalDateTime createdAt,

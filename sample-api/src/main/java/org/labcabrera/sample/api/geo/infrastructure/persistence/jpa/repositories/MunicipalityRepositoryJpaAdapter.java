@@ -1,20 +1,20 @@
 package org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.repositories;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.labcabrera.sample.api.geo.application.ports.MunicipalityRepository;
 import org.labcabrera.sample.api.geo.domain.Municipality;
 import org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.entities.MunicipalityEntity;
+import org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.entities.ProvinceEntity;
 import org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.mappers.MunicipalityEntityMapper;
 import org.labcabrera.sample.api.shared.application.SecurityPort.AuthenticatedUser;
 import org.labcabrera.sample.api.shared.domain.exceptions.BadRequestException;
-import org.labcabrera.sample.api.shared.domain.exceptions.NotModifiedException;
 import org.labcabrera.sample.api.shared.infrastructure.persistence.rsql.CustomRsqlVisitor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -35,13 +35,7 @@ public class MunicipalityRepositoryJpaAdapter implements MunicipalityRepository 
     private final RSQLParser rsqlParser;
 
     @Override
-    public Optional<Municipality> findByCodeOrName(String code, String name) {
-        if (code != null && !code.isBlank()) {
-            var e = jpaRepository.findByCodeIgnoreCase(code);
-            if (e.isPresent()) {
-                return e.map(mapper::toDomain);
-            }
-        }
+    public Optional<Municipality> findByName(String name) {
         if (name != null && !name.isBlank()) {
             var e = jpaRepository.findByNameIgnoreCase(name);
             if (e.isPresent()) {
@@ -85,29 +79,25 @@ public class MunicipalityRepositoryJpaAdapter implements MunicipalityRepository 
     @Transactional
     @CachePut(value = "municipality", key = "#result.id")
     public Municipality save(Municipality municipality) {
-        try {
-            if (municipality.id() != null && jpaRepository.existsById(municipality.id())) {
-                throw new BadRequestException("municipality.msg.err.already-exists", municipality.id());
-            }
-            var entity = mapper.toEntity(municipality);
-            var savedEntity = jpaRepository.save(entity);
-            return mapper.toDomain(savedEntity);
+        if (municipality.id() != null && jpaRepository.existsById(municipality.id())) {
+            throw new BadRequestException("municipality.msg.err.already-exists", municipality.id());
         }
-        catch (DataIntegrityViolationException ex) {
-            throw new BadRequestException("municipality.msg.err.data-integrity", ex);
-        }
+        var entity = mapper.toEntity(municipality);
+        var savedEntity = jpaRepository.save(entity);
+        return mapper.toDomain(savedEntity);
     }
 
     @Override
     @Transactional
     @CachePut(value = "municipality", key = "#municipalityId")
     public Municipality update(String municipalityId, Municipality updatedData) {
-        var current = jpaRepository.findById(municipalityId)
+        MunicipalityEntity current = jpaRepository.findById(municipalityId)
             .orElseThrow(() -> new BadRequestException("Province not found with id " + municipalityId));
-        boolean modified = current.merge(updatedData);
-        if (!modified) {
-            throw new NotModifiedException("municipality.msg.err.not-modified", municipalityId);
-        }
+        ProvinceEntity province = new ProvinceEntity();
+        province.setId(updatedData.provinceId());
+        current.setName(updatedData.name());
+        current.setProvince(province);
+        current.setUpdatedAt(updatedData.updatedAt() != null ? updatedData.updatedAt() : LocalDateTime.now());
         var savedEntity = jpaRepository.save(current);
         return mapper.toDomain(savedEntity);
     }

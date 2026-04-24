@@ -111,7 +111,7 @@ public class MunicipalityController {
     })
     @PostMapping
     public ResponseEntity<MunicipalityDto> create(@Validated @RequestBody CreateMunicipalityDto request) {
-        var command = new CreateMunicipalityCommand(request.code(), request.name(), request.provinceId());
+        var command = new CreateMunicipalityCommand(request.name(), request.provinceId());
         Municipality municipality = commandBus.dispatch(command);
         var dto = mapper.toDto(municipality);
         return ResponseEntity.created(URI.create("/api/v1/municipalities/" + municipality.id())).body(dto);
@@ -133,7 +133,7 @@ public class MunicipalityController {
     })
     public ResponseEntity<MunicipalityDto> update(@PathVariable(name = "municipalityId") String municipalityId,
         @RequestBody UpdateMunicipalityDto request) {
-        var command = new UpdateMunicipalityCommand(municipalityId, request.code(), request.name(), request.provinceId());
+        var command = new UpdateMunicipalityCommand(municipalityId, request.name(), request.provinceId());
         Municipality municipality = commandBus.dispatch(command);
         var dto = mapper.toDto(municipality);
         return ResponseEntity.ok(dto);

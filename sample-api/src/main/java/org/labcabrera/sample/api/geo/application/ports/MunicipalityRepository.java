@@ -13,7 +13,7 @@ public interface MunicipalityRepository {
 
     Page<Municipality> findByRsql(String rsql, Pageable pageable, AuthenticatedUser user);
 
-    Optional<Municipality> findByCodeOrName(String code, String name);
+    Optional<Municipality> findByName(String name);
 
     Municipality save(Municipality entity);
 

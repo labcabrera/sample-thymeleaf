@@ -29,11 +29,10 @@ public class UpdateMunicipalityHandler implements CommandHandler<UpdateMunicipal
         var existing = municipalityRepository.findById(municipalityId)
             .orElseThrow(() -> new NotFoundException("municipality.msg.not-found", municipalityId, Municipality.class));
         municipalityGuard.checkWrite(existing, user);
-        String code = command.code().orElse(existing.code());
         String name = command.name().orElse(existing.name());
         String provinceId = command.provinceId().orElse(existing.provinceId());
 
-        var updatedData = new Municipality(existing.id(), code, name, provinceId, existing.createdAt(), existing.updatedAt());
+        var updatedData = new Municipality(existing.id(), name, provinceId, existing.createdAt(), existing.updatedAt());
 
         //TODO check conflict
         var updated = municipalityRepository.update(municipalityId, updatedData);

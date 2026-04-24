@@ -8,11 +8,10 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MunicipalityJpaRepository  extends
+public interface MunicipalityJpaRepository extends
     JpaRepository<MunicipalityEntity, String>,
     JpaSpecificationExecutor<MunicipalityEntity> {
 
-    Optional<MunicipalityEntity> findByCodeIgnoreCase(String code);
-
     Optional<MunicipalityEntity> findByNameIgnoreCase(String name);
+
 }
