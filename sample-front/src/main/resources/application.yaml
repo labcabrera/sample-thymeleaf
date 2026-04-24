@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: sample-front
+  main:
+    banner-mode: off
+
+server:
+  port: ${SERVER_PORT:8081}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: always
+
+oidc:
+  base: http://localhost:8090
+  realm: sample
+  client-id: sample-client
+  client-secret: LddOn5YJ5nL5w7awnt4kJMbmz27t5Rf3
+  redirect-uri: http://localhost:8081/oidc/callback
+
+geo:
+  api:
+    base-path: http://localhost:8082

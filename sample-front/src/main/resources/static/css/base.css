@@ -1,0 +1,81 @@
+/* Base CSS for Sample Front - MC Mutual colors */
+:root {
+  --color-primary: #005b72;
+  --color-secondary: #f9b000;
+  --color-bg: #ffffff;
+  --color-text: #000000;
+  --color-accent: var(--color-primary);
+  --font-size-base: 1.15rem;
+}
+
+html, body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
+  height: 100%;
+}
+
+/* Make layout fill viewport: header/footer + main grows */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main.container {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Materialize overrides and theme */
+.nav-extended, nav, .sidenav, .brand-logo {
+  background-color: var(--color-primary) !important;
+  color: #ffffff !important;
+}
+
+a {
+  color: var(--color-primary);
+}
+
+.btn-primary {
+  background-color: var(--color-primary) !important;
+  color: #ffffff !important;
+}
+
+.btn-secondary {
+  background-color: var(--color-secondary) !important;
+  color: #000000 !important;
+}
+
+/* Tables and collections sizing */
+table.striped th,
+table.striped td {
+  font-size: var(--font-size-base);
+  padding: 14px 12px;
+}
+
+.collection,
+.collection-item,
+.collection .collection-item {
+  font-size: var(--font-size-base);
+  padding: 12px 16px;
+}
+
+.btn, .btn-small {
+  font-size: 1rem;
+  padding: 0 18px;
+}
+
+.section h4 {
+  font-size: 1.6rem;
+}
+
+/* Accent helpers */
+.text-accent { color: var(--color-accent); }
+.bg-accent { background-color: var(--color-accent); color: #fff; }
+
+/* Form inputs readability */
+.input-field input {
+  font-size: 1rem;
+}

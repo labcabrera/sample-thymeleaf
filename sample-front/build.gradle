@@ -1,0 +1,112 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '4.0.6'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.openapi.generator' version '7.20.0'
+	id 'jacoco'
+}
+
+group = 'org.labcabrera.sample.front'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+ext {
+	// logstashLogbackVersion = '7.4'
+	// springdocVersion = '3.0.1'
+	// swaggerAnnotationsVersion = '2.2.13'
+	// springCloudVersion = '2025.1.0'
+	// rsqlParserVersion = '2.1.0'
+	// mapstructVersion = '1.5.5.Final'
+	feignVersion = '13.5'
+	feignFormVersion = '3.8.0'
+	scribejavaVersion = '8.0.0'
+	migbase64Version = '2.2'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	implementation 'com.nimbusds:nimbus-jose-jwt:9.31'
+
+	// TODO update to Jackson 3 when feign supports it
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
+	
+	// Dependencies required by the generated OpenAPI Feign client
+	implementation "io.github.openfeign:feign-core:${feignVersion}"
+	implementation "io.github.openfeign:feign-jackson:${feignVersion}"
+	implementation "io.github.openfeign:feign-slf4j:${feignVersion}"
+	implementation "io.github.openfeign:feign-okhttp:${feignVersion}"
+	implementation "io.github.openfeign.form:feign-form:${feignFormVersion}"
+
+	// Dependencies required by generated OAuth helper classes
+	implementation "com.github.scribejava:scribejava-core:${scribejavaVersion}"
+	implementation "com.brsanthu:migbase64:${migbase64Version}"
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-thymeleaf-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	testCompileOnly 'org.projectlombok:lombok'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+}
+
+// Additional OpenAPI Generator task: generate a Java REST client from api-clients/geo-api.yaml
+tasks.register('openApiGenerateGeoApi', org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+	generatorName = 'java'
+	library = "feign"
+	inputSpec = "$rootDir/src/main/resources/api-clients/geo-api.yaml"
+	outputDir = "$buildDir/generated/sources/openapi/geo-client"
+	apiPackage = 'org.labcabrera.sample.front.generated.client.geo.api'
+	modelPackage = 'org.labcabrera.sample.front.generated.client.geo.model'
+	invokerPackage = 'org.labcabrera.sample.front.generated.client.geo'
+	configOptions = [
+		useSpringBoot3: 'true',
+		interfaceOnly: 'true',
+		useFeignClientUrls: 'true',
+		useFeignClientContextId: 'true',
+		useTags: 'true',
+		dateLibrary: 'java8-localdatetime',
+		useJakartaEe: 'true',
+		openApiNullable: 'false',
+	]
+	additionalProperties = [
+		serializableModel: 'true'
+	]
+}
+
+sourceSets.main.java.srcDir file("$buildDir/generated/sources/openapi/geo-client/src/main/java")
+
+tasks.named('compileJava') {
+	dependsOn tasks.named('openApiGenerateGeoApi')
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		xml.required = true
+		html.required = true
+	}
+}
+
+jar {
+	enabled = false
+	archiveClassifier = ''
+}
+

@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.labcabrera.sample.api.geo.domain.Address;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -60,26 +59,5 @@ public class AddressEntity {
     @Version
     @Column(name = "version")
     private Long version;
-
-    public boolean merge(Address updated) {
-        boolean modified = false;
-        if (updated.getStreetName() != null && !updated.getStreetName().equals(this.streetName)) {
-            this.streetName = updated.getStreetName();
-            modified = true;
-        }
-        if (updated.getStreetNumber() != null && !updated.getStreetNumber().equals(this.streetNumber)) {
-            this.streetNumber = updated.getStreetNumber();
-            modified = true;
-        }
-        if (updated.getAdditionalInfo() != null && !updated.getAdditionalInfo().equals(this.additionalInfo)) {
-            this.additionalInfo = updated.getAdditionalInfo();
-            modified = true;
-        }
-        if (updated.getCountryCode() != null && !updated.getCountryCode().equals(this.countryCode)) {
-            this.countryCode = updated.getCountryCode();
-            modified = true;
-        }
-        return modified;
-    }
 
 }

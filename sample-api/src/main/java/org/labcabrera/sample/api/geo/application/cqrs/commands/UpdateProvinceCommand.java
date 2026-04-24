@@ -1,9 +1,11 @@
 package org.labcabrera.sample.api.geo.application.cqrs.commands;
 
+import java.util.Optional;
+
+import jakarta.validation.constraints.NotNull;
+
 public record UpdateProvinceCommand(
-    String provinceId,
-    String code,
-    String name,
-    String countryCode
-) {
+    @NotNull String provinceId,
+    Optional<String> name,
+    Optional<String> countryId) {
 }

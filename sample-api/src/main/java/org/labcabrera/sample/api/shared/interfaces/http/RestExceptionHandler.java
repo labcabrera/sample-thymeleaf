@@ -27,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 @RequiredArgsConstructor
 @Slf4j
-@SuppressWarnings("null")
 public class RestExceptionHandler {
 
     private final MessageSource messageSource;

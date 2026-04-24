@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
+<section th:fragment="content">
+    <ul class="collection">
+        <li class="collection-item"><a th:href="@{/countries}">Countries</a></li>
+        <li class="collection-item"><a th:href="@{/provinces}">Provinces</a></li>
+        <li class="collection-item"><a th:href="@{/municipalities}">Municipalities</a></li>
+        <li class="collection-item"><a th:href="@{/postal-codes}">Postal codes</a></li>
+        <li class="collection-item"><a th:href="@{/addresses}">Addresses</a></li>
+
+    </ul>
+</section>
+
+</html>

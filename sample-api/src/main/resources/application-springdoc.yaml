@@ -15,10 +15,10 @@ springdoc:
     authorizationUrl: ${IAM_AUTHORIZATION_URL:http://localhost:8090/realms/sample/protocol/openid-connect/auth}
     tokenUrl: ${IAM_TOKEN_URL:http://localhost:8090/realms/sample/protocol/openid-connect/token}
   info:
-    title: Sample Spring Cloud Stream Vertical Slices Archetype
-    description: "REST API for Case Folder and Case Steps management using Spring Cloud Stream, CQRS and Vertical Slices."
+    title: Sample Geo API
+    description: "REST API for Gepraphic data management"
     version: 1.0.0
     contact:
       name: Luis Cabrera
       email: lab.cabrera@gmail.com
-  servers: ${SPRINGDOC_SERVERS:http://localhost:8080}
+  servers: ${SPRINGDOC_SERVERS:http://localhost:8082}

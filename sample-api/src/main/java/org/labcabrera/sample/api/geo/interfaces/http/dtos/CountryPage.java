@@ -1,0 +1,12 @@
+package org.labcabrera.sample.api.geo.interfaces.http.dtos;
+
+import org.labcabrera.sample.api.shared.interfaces.http.PageResponse;
+import org.springframework.data.domain.Page;
+
+public class CountryPage extends PageResponse<CountryDto> {
+
+    public CountryPage(Page<CountryDto> page) {
+        super(page);
+    }
+
+}

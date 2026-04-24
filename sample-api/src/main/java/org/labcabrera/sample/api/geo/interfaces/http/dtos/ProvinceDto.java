@@ -2,21 +2,18 @@ package org.labcabrera.sample.api.geo.interfaces.http.dtos;
 
 import java.time.LocalDateTime;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class ProvinceDto {
+@Schema(name = "ProvinceDto", description = "Province information")
+public record ProvinceDto(
 
-	private String id;
-	private String code;
-	private String name;
-	private String countryCode;
+	@Schema(name = "id", example = "ES-MAD", description = "Unique identifier of the province", requiredMode = Schema.RequiredMode.REQUIRED) String id,
 
-	private LocalDateTime createdAt;
-	private LocalDateTime updatedAt;
+	@Schema(name = "name", example = "MADRID", description = "Province name", requiredMode = Schema.RequiredMode.REQUIRED) String name,
 
+	@Schema(name = "countryId", example = "ES", description = "Country identifier", requiredMode = Schema.RequiredMode.REQUIRED) String countryId,
+
+	@Schema(name = "createdAt", description = "Creation timestamp") LocalDateTime createdAt,
+
+	@Schema(name = "updatedAt", description = "Last update timestamp") LocalDateTime updatedAt) {
 }

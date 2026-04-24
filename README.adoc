@@ -1,0 +1,49 @@
+# Sample Spring Boot Thymeleaf Application
+
+Esta aplicación es un ejemplo de una aplicación Spring Boot con Thymeleaf. Proporciona una estructura básica para desarrollar aplicaciones web utilizando estas tecnologías.
+
+Personalmente no recomendaría el uso de Thymeleaf para nuevos proyectos, ya que existen alternativas más modernas y eficientes como React, Angular u otros frameworks SPA. Sin embargo, Thymeleaf sigue siendo una opción válida para proyectos que requieren una integración estrecha con el backend de Spring Boot y para aquellos que prefieren una solución más tradicional basada en plantillas como evolución de proyectos legacy basados en patrones MVC.
+
+## Estructura del Proyecto
+
+El proyecto está organizado en varios módulos:
+
+- `sample-api`: Contiene la lógica de negocio y las capas de servicio y repositorio.
+- `sample-web`: Contiene los controladores y las vistas Thymeleaf.
+
+## Sample API
+
+Este módulo expone una API REST para gestionar entidades geográficas como países, provincias y municipios. Utiliza el patrón CQRS para separar las operaciones de lectura y escritura y validación de tokens JWT contra un IdP externo.
+
+Utiliza Spring Data JPA para la persistencia de datos empleando RSQL para las consultas.
+
+La seguridad está basada en Spring Security utilizando la librería `spring-boot-starter-oauth2-resource-server`.
+
+## Sample Web
+
+Este módulo está basado en Spring Web MVC y Thymeleaf para renderizar las vistas. Proporciona una interfaz de usuario para interactuar con la API REST del módulo `sample-api`.
+
+El cliente de la API está generado a través del plugin `org.openapi.generator` de gradle utilizando la librería `feign`.
+
+## Ejecución
+
+En este ejemplo se incluye un `docker-compose.yml` con diferentes recursos utilizados por la demo tales como PostgreSQL, Keycloak o Kafka.
+
+En primer lugar arrancaremos los servicios:
+
+[source, bash]
+----
+docker-compose up -d
+----
+
+En este punto tendremos que configurar Keycloak para crear un realm, un cliente y un usuario con el rol necesario para acceder a la API. Para ello accedemos a la consola de administración de Keycloak en `http://localhost:8090/auth` con las credenciales `admin:admin`.
+
+Creamos un nuevo realm llamado `sample` y dentro de este un nuevo cliente llamado `sample-client` con la siguiente configuración:
+
+- Client authentication: on
+- Authorization: on
+- PKCE Method: S256
+
+Después actualizaremos el secret generado del cliente en los ficheros de configuración tanto de la API como del frontal.
+
+TODO ...

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
+<section th:fragment="content">
+    <div class="section">
+        <h4 th:text="${municipality.id} != null ? 'Edit Municipality' : 'Create Municipality'"></h4>
+        <form
+            th:action="${municipality.id} != null ? @{/municipalities/{id}(id=${municipality.id})} : @{/municipalities}"
+            method="post">
+            <div class="input-field" th:if="${municipality.id} == null">
+                <input id="id" name="id" type="text" th:value="${municipality.id}">
+                <label for="id">Municipality ID</label>
+            </div>
+            <div class="input-field">
+                <input id="name" name="name" type="text" th:value="${municipality.name}" required>
+                <label for="name">Name</label>
+            </div>
+            <div class="input-field">
+                <input id="provinceId" name="provinceId" type="text" th:value="${municipality.provinceId}" required>
+                <label for="provinceId">Province ID</label>
+            </div>
+            <button class="waves-effect waves-light btn btn-primary" type="submit">Save</button>
+            <a class="btn-flat" th:href="@{/municipalities}">Cancel</a>
+        </form>
+    </div>
+</section>
+
+</html>

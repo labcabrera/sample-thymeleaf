@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
+<section th:fragment="content">
+    <div class="section">
+        <h4>Login</h4>
+        <p>Autenticarse usando OpenID Connect (Keycloak).</p>
+        <a class="waves-effect waves-light btn btn-primary" th:href="@{/oidc/login}">Login with Keycloak</a>
+    </div>
+</section>
+
+</html>
