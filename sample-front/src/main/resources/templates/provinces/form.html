@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
-    <section th:fragment="content">
-        <div class="section">
-            <h4 th:text="${province.id} != null ? 'Edit Province' : 'Create Province'"></h4>
-            <form th:action="${province.id} != null ? @{/provinces/{id}(id=${province.id})} : @{/provinces}" method="post">
-                <div class="input-field">
-                    <input id="name" name="name" type="text" th:value="${province.name}" required>
-                    <label for="name">Name</label>
-                </div>
-                <div class="input-field">
-                    <input id="countryId" name="countryId" type="text" th:value="${province.countryId}" required>
-                    <label for="countryId">Country</label>
-                </div>
-                <button class="waves-effect waves-light btn" type="submit">Save</button>
-                <a class="btn-flat" th:href="@{/provinces}">Cancel</a>
-            </form>
-        </div>
-    </section>
+<section th:fragment="content">
+    <div class="section">
+        <h4 th:text="${province.id} != null ? 'Edit Province' : 'Create Province'"></h4>
+        <form th:action="${province.id} != null ? @{/provinces/{id}(id=${province.id})} : @{/provinces}" method="post">
+            <div class="input-field">
+                <input id="name" name="name" type="text" th:value="${province.name}" required>
+                <label for="name">Name</label>
+            </div>
+            <div class="input-field">
+                <input id="countryId" name="countryId" type="text" th:value="${province.countryId}" required>
+                <label for="countryId">Country</label>
+            </div>
+            <button class="waves-effect waves-light btn btn-primary" type="submit">Save</button>
+            <a class="btn-flat" th:href="@{/provinces}">Cancel</a>
+        </form>
+    </div>
+</section>
+
 </html>

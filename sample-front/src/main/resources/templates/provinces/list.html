@@ -1,36 +1,38 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
-    <section th:fragment="content">
-        <div class="section">
-            <div class="row">
-                <div class="col s12">
-                    <h4>Provinces</h4>
-                    <a class="waves-effect waves-light btn" th:href="@{/provinces/create}">Create Province</a>
-                    <table class="striped">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Country</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="p : ${provinces}">
-                                <td th:text="${p.id}"></td>
-                                <td th:text="${p.name}"></td>
-                                <td th:text="${p.countryId}"></td>
-                                <td>
-                                    <a class="btn-small" th:href="@{/provinces/{id}/edit(id=${p.id})}">Edit</a>
-                                    <form th:action="@{/provinces/{id}/delete(id=${p.id})}" method="post" style="display:inline">
-                                        <button class="btn-small red" type="submit">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+<section th:fragment="content">
+    <div class="section">
+        <div class="row">
+            <div class="col s12">
+                <h4>Provinces</h4>
+                <a class="waves-effect waves-light btn btn-primary" th:href="@{/provinces/create}">Create Province</a>
+                <table class="striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Country</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="p : ${provinces}">
+                            <td th:text="${p.id}"></td>
+                            <td th:text="${p.name}"></td>
+                            <td th:text="${p.countryId}"></td>
+                            <td>
+                                <a class="btn-small" th:href="@{/provinces/{id}/edit(id=${p.id})}">Edit</a>
+                                <form th:action="@{/provinces/{id}/delete(id=${p.id})}" method="post"
+                                    style="display:inline">
+                                    <button class="btn-small red" type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+
 </html>
