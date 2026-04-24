@@ -2,6 +2,8 @@ package org.labcabrera.sample.front.config;
 
 import org.labcabrera.sample.front.generated.client.geo.ApiClient;
 import org.labcabrera.sample.front.generated.client.geo.api.ProvincesApi;
+import org.labcabrera.sample.front.generated.client.geo.api.CountriesApi;
+import org.labcabrera.sample.front.generated.client.geo.api.MunicipalitiesApi;
 import org.labcabrera.sample.front.generated.client.geo.auth.HttpBearerAuth;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -56,6 +58,16 @@ public class GeoApiConfiguration {
     @Bean
     ProvincesApi provincesApi(ApiClient apiClient) {
         return apiClient.buildClient(ProvincesApi.class);
+    }
+
+    @Bean
+    CountriesApi countriesApi(ApiClient apiClient) {
+        return apiClient.buildClient(CountriesApi.class);
+    }
+
+    @Bean
+    MunicipalitiesApi municipalitiesApi(ApiClient apiClient) {
+        return apiClient.buildClient(MunicipalitiesApi.class);
     }
 
 }

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
+    <section th:fragment="content">
+<section>
+    <h2>Countries</h2>
+    <ul>
+      <li th:each="c : ${countries}" th:text="${c.name}">Country</li>
+    </ul>
+  </section>
+  <section>
+    <h2>Provinces</h2>
+    <ul>
+      <li th:each="p : ${provinces}" th:text="${p.name}">Province</li>
+    </ul>
+  </section>
+  <section>
+    <h2>Municipalities</h2>
+    <ul>
+      <li th:each="m : ${municipalities}" th:text="${m.name}">Municipality</li>
+    </ul>
+  </section>
+  <section>
+    <h2>Postal Codes</h2>
+    <ul>
+      <li th:each="pc : ${postalCodes}" th:text="${pc}">PostalCode</li>
+    </ul>
+  </section>
+  <section>
+    <h2>Addresses</h2>
+    <ul>
+      <li th:each="a : ${addresses}" th:text="${a}">Address</li>
+    </ul>
+  </section>
+    </section>
+</html>
