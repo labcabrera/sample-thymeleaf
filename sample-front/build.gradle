@@ -16,12 +16,6 @@ java {
 }
 
 ext {
-	// logstashLogbackVersion = '7.4'
-	// springdocVersion = '3.0.1'
-	// swaggerAnnotationsVersion = '2.2.13'
-	// springCloudVersion = '2025.1.0'
-	// rsqlParserVersion = '2.1.0'
-	// mapstructVersion = '1.5.5.Final'
 	feignVersion = '13.5'
 	feignFormVersion = '3.8.0'
 	scribejavaVersion = '8.0.0'
@@ -62,7 +56,6 @@ dependencies {
 	testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
-// Additional OpenAPI Generator task: generate a Java REST client from api-clients/geo-api.yaml
 tasks.register('openApiGenerateGeoApi', org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
 	generatorName = 'java'
 	library = "feign"
