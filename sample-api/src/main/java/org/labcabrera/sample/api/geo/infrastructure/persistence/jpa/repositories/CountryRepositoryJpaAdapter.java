@@ -12,7 +12,6 @@ import org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.entities.Cou
 import org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.mappers.CountryEntityMapper;
 import org.labcabrera.sample.api.shared.application.SecurityPort.AuthenticatedUser;
 import org.labcabrera.sample.api.shared.domain.exceptions.BadRequestException;
-import org.labcabrera.sample.api.shared.domain.exceptions.NotModifiedException;
 import org.labcabrera.sample.api.shared.infrastructure.persistence.rsql.CustomRsqlVisitor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -89,10 +88,7 @@ public class CountryRepositoryJpaAdapter implements CountryRepository {
     public Country update(String countryId, Country updated) {
         var current = jpaRepository.findById(countryId)
             .orElseThrow(() -> new BadRequestException("Country not found with id " + countryId));
-        boolean modified = current.merge(updated);
-        if (!modified) {
-            throw new NotModifiedException("country.msg.err.not-modified", countryId);
-        }
+        //TODO merge
         var savedEntity = jpaRepository.save(current);
         return mapper.toDomain(savedEntity);
     }

@@ -61,7 +61,8 @@ public class CountryController {
             @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
         })
     }, security = {
-        @SecurityRequirement(name = "oidc")
+        @SecurityRequirement(name = "oidc"),
+        @SecurityRequirement(name = "bearerAuth")
     })
     @GetMapping("/{countryId}")
     public ResponseEntity<CountryDto> getById(@PathVariable(name = "countryId") String countryId) {

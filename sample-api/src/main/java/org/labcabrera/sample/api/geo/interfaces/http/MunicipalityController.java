@@ -61,7 +61,8 @@ public class MunicipalityController {
             @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))
         })
     }, security = {
-        @SecurityRequirement(name = "oidc")
+        @SecurityRequirement(name = "oidc"),
+        @SecurityRequirement(name = "bearerAuth")
     })
     @GetMapping("/{municipalityId}")
     public ResponseEntity<MunicipalityDto> getById(@PathVariable(name = "municipalityId") String municipalityId) {

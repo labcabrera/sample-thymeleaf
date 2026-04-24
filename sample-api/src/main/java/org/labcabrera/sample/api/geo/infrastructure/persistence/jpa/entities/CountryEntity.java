@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.labcabrera.sample.api.geo.domain.Country;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,14 +39,5 @@ public class CountryEntity {
     @Version
     @Column(name = "version")
     private Long version;
-
-    public boolean merge(Country updated) {
-        boolean modified = false;
-        if (updated.name() != null && !updated.name().equals(this.name)) {
-            this.name = updated.name();
-            modified = true;
-        }
-        return modified;
-    }
 
 }
