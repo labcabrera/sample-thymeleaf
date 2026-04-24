@@ -9,8 +9,8 @@
                     <label for="name">Name</label>
                 </div>
                 <div class="input-field">
-                    <input id="countryCode" name="countryCode" type="text" th:value="${province.countryCode}" required>
-                    <label for="countryCode">Country Code</label>
+                    <input id="countryId" name="countryId" type="text" th:value="${province.countryId}" required>
+                    <label for="countryId">Country</label>
                 </div>
                 <button class="waves-effect waves-light btn" type="submit">Save</button>
                 <a class="btn-flat" th:href="@{/provinces}">Cancel</a>

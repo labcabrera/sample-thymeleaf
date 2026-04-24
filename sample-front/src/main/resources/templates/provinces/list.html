@@ -19,7 +19,7 @@
                             <tr th:each="p : ${provinces}">
                                 <td th:text="${p.id}"></td>
                                 <td th:text="${p.name}"></td>
-                                <td th:text="${p.countryCode}"></td>
+                                <td th:text="${p.countryId}"></td>
                                 <td>
                                     <a class="btn-small" th:href="@{/provinces/{id}/edit(id=${p.id})}">Edit</a>
                                     <form th:action="@{/provinces/{id}/delete(id=${p.id})}" method="post" style="display:inline">
