@@ -77,8 +77,8 @@ public class OidcController {
     }
 
     @GetMapping("/oidc/callback")
-    public String callback(@RequestParam(required = false) String code,
-        @RequestParam(required = false) String state,
+    public String callback(@RequestParam(name = "code", required = false) String code,
+        @RequestParam(name = "state", required = false) String state,
         Model model,
         HttpSession session) throws Exception {
         model.addAttribute("title", "OIDC Callback");
