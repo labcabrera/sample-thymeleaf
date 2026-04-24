@@ -28,14 +28,19 @@ public class CountriesController {
     private CountriesApi countriesApi;
 
     @GetMapping
-    public String list(Model model, @RequestParam(value = "q", required = false, defaultValue = "") String q) {
-        log.trace("Fetching countries with query: {}", q);
-        CountryPage page = this.countriesApi.getCountriesByRsql(q, null, null, null);
+    public String list(Model model,
+        @RequestParam(value = "q", required = false, defaultValue = "") String q,
+        @RequestParam(value = "page", required = false, defaultValue = "0") Integer pageParam,
+        @RequestParam(value = "size", required = false, defaultValue = "10") Integer sizeParam) {
+        log.trace("Fetching countries with query: {} (page={}, size={})", q, pageParam, sizeParam);
+        CountryPage page = this.countriesApi.getCountriesByRsql(q, pageParam, sizeParam, null);
         List<CountryDto> countries = page.getContent();
         Pagination pagination = page.getPagination();
         model.addAttribute("countries", countries);
         model.addAttribute("page", pagination.getPage());
         model.addAttribute("size", pagination.getSize());
+        model.addAttribute("totalPages", pagination.getTotalPages());
+        model.addAttribute("q", q);
         model.addAttribute("title", "Countries - Sample Front");
         return "countries/list";
     }

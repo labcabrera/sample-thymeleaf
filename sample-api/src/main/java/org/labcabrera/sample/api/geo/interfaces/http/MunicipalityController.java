@@ -17,7 +17,9 @@ import org.labcabrera.sample.api.geo.interfaces.http.mappers.MunicipalityDtoMapp
 import org.labcabrera.sample.api.shared.application.CommandBus;
 import org.labcabrera.sample.api.shared.application.QueryBus;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -52,6 +54,7 @@ public class MunicipalityController {
     private final CommandBus commandBus;
     private final QueryBus queryBus;
     private final MunicipalityDtoMapper mapper;
+    private final SortBuilder sortBuilder;
 
     @Operation(operationId = "getMunicipalityById", summary = "Get municipality by id", description = "Get municipality by id", responses = {
         @ApiResponse(responseCode = "200", description = "Municipality", content = {
@@ -89,7 +92,7 @@ public class MunicipalityController {
         @Parameter(name = "size", description = "The size of the page to be returned", in = ParameterIn.QUERY) @RequestParam(value = "size", required = false, defaultValue = "20") Integer size,
         @Parameter(name = "sort", description = "Sorting criteria in the format: property,(asc|desc). Multiple sort criteria supported.", in = ParameterIn.QUERY) @RequestParam(value = "sort", required = false) List<String> sort) {
 
-        Pageable pageable = Pageable.ofSize(size != null ? size : 20).withPage(page != null ? page : 0);
+        Pageable pageable = PageRequest.of(page, size, sortBuilder.buildSort(sort));
         var query = new GetMunicipalitiesByRsqlQuery(rsql, pageable);
         Page<Municipality> resultPage = queryBus.dispatch(query);
         Page<MunicipalityDto> pageDto = resultPage.map(mapper::toDto);

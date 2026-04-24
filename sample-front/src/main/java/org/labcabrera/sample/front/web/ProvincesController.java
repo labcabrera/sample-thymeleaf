@@ -28,14 +28,19 @@ public class ProvincesController {
     private ProvincesApi provincesApi;
 
     @GetMapping
-    public String list(Model model, @RequestParam(value = "q", required = false, defaultValue = "") String q) {
-        log.trace("Fetching provinces with query: {}", q);
-        ProvincePage page = this.provincesApi.getProvincesByRsql(q, null, null, null);
+    public String list(Model model,
+        @RequestParam(value = "q", required = false, defaultValue = "") String q,
+        @RequestParam(value = "page", required = false, defaultValue = "0") Integer pageParam,
+        @RequestParam(value = "size", required = false, defaultValue = "10") Integer sizeParam) {
+        log.trace("Fetching provinces with query: {} (page={}, size={})", q, pageParam, sizeParam);
+        ProvincePage page = this.provincesApi.getProvincesByRsql(q, pageParam, sizeParam, null);
         List<ProvinceDto> provinces = page.getContent();
         Pagination pagination = page.getPagination();
         model.addAttribute("provinces", provinces);
         model.addAttribute("page", pagination.getPage());
         model.addAttribute("size", pagination.getSize());
+        model.addAttribute("totalPages", pagination.getTotalPages());
+        model.addAttribute("q", q);
         model.addAttribute("title", "Provinces - Sample Front");
         return "provinces/list";
     }

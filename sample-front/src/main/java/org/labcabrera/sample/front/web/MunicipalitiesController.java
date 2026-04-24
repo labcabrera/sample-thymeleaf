@@ -28,14 +28,19 @@ public class MunicipalitiesController {
     private MunicipalitiesApi municipalitiesApi;
 
     @GetMapping
-    public String list(Model model, @RequestParam(value = "q", required = false, defaultValue = "") String q) {
-        log.trace("Fetching municipalities with query: {}", q);
-        MunicipalityPage page = this.municipalitiesApi.getMunicipalitiesByRsql(q, null, null, null);
+    public String list(Model model,
+        @RequestParam(value = "q", required = false, defaultValue = "") String q,
+        @RequestParam(value = "page", required = false, defaultValue = "0") Integer pageParam,
+        @RequestParam(value = "size", required = false, defaultValue = "10") Integer sizeParam) {
+        log.trace("Fetching municipalities with query: {} (page={}, size={})", q, pageParam, sizeParam);
+        MunicipalityPage page = this.municipalitiesApi.getMunicipalitiesByRsql(q, pageParam, sizeParam, null);
         List<MunicipalityDto> municipalities = page.getContent();
         Pagination pagination = page.getPagination();
         model.addAttribute("municipalities", municipalities);
         model.addAttribute("page", pagination.getPage());
         model.addAttribute("size", pagination.getSize());
+        model.addAttribute("totalPages", pagination.getTotalPages());
+        model.addAttribute("q", q);
         model.addAttribute("title", "Municipalities - Sample Front");
         return "municipalities/list";
     }

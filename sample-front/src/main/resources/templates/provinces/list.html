@@ -31,6 +31,22 @@
                         </tr>
                     </tbody>
                 </table>
+                <div th:if="${totalPages} &gt; 1" class="section">
+                    <ul class="pagination">
+                        <li th:classappend="${page == 0} ? 'disabled' : 'waves-effect'">
+                            <a th:href="@{/provinces(q=${q}, page=${page - 1}, size=${size})}"><i
+                                    class="material-icons">chevron_left</i></a>
+                        </li>
+                        <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                            th:classappend="${i == page} ? 'active' : 'waves-effect'">
+                            <a th:href="@{/provinces(q=${q}, page=${i}, size=${size})}" th:text="${i + 1}">1</a>
+                        </li>
+                        <li th:classappend="${page + 1 == totalPages} ? 'disabled' : 'waves-effect'">
+                            <a th:href="@{/provinces(q=${q}, page=${page + 1}, size=${size})}"><i
+                                    class="material-icons">chevron_right</i></a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

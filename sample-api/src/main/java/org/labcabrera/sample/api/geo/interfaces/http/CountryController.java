@@ -17,6 +17,7 @@ import org.labcabrera.sample.api.geo.interfaces.http.mappers.CountryDtoMapper;
 import org.labcabrera.sample.api.shared.application.CommandBus;
 import org.labcabrera.sample.api.shared.application.QueryBus;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -52,6 +53,7 @@ public class CountryController {
     private final CommandBus commandBus;
     private final QueryBus queryBus;
     private final CountryDtoMapper mapper;
+    private final SortBuilder sortBuilder;
 
     @Operation(operationId = "getCountryById", summary = "Get country by id", description = "Get country by id", responses = {
         @ApiResponse(responseCode = "200", description = "Country", content = {
@@ -89,7 +91,7 @@ public class CountryController {
         @Parameter(name = "size", description = "The size of the page to be returned", in = ParameterIn.QUERY) @RequestParam(value = "size", required = false, defaultValue = "20") Integer size,
         @Parameter(name = "sort", description = "Sorting criteria in the format: property,(asc|desc). Multiple sort criteria supported.", in = ParameterIn.QUERY) @RequestParam(value = "sort", required = false) List<String> sort) {
 
-        Pageable pageable = Pageable.ofSize(size != null ? size : 20).withPage(page != null ? page : 0);
+        Pageable pageable = PageRequest.of(page, size, sortBuilder.buildSort(sort));
         var query = new GetCountriesByRsqlQuery(rsql, pageable);
         Page<Country> resultPage = queryBus.dispatch(query);
         Page<CountryDto> pageDto = resultPage.map(mapper::toDto);
