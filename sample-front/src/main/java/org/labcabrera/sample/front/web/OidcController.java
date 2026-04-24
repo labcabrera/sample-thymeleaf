@@ -115,8 +115,9 @@ public class OidcController {
                 valid = validateIdToken(idToken);
             }
             if (valid) {
-                // store JWT in session
-                session.setAttribute("jwt", idToken != null ? idToken : accessToken);
+                // store access token in session if available (backend expects access token)
+                String tokenToStore = accessToken != null && !accessToken.isBlank() ? accessToken : idToken;
+                session.setAttribute("jwt", tokenToStore);
                 model.addAttribute("message", "Token validated and stored in session.");
             }
             else {

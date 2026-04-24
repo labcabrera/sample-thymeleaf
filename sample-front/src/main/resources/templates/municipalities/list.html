@@ -4,28 +4,29 @@
     <div class="section">
         <div class="row">
             <div class="col s12">
-                <h4>Provinces</h4>
-                <a class="waves-effect waves-light btn btn-primary" th:href="@{/provinces/create}">Create Province</a>
+                <h4>Municipalities</h4>
+                <a class="waves-effect waves-light btn btn-primary" th:href="@{/municipalities/create}">Create
+                    Municipality</a>
                 <table class="striped">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
-                            <th>Country</th>
+                            <th>Province</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="p : ${provinces}">
-                            <td th:text="${p.id}"></td>
-                            <td th:text="${p.name}"></td>
-                            <td th:text="${p.countryId}"></td>
+                        <tr th:each="m : ${municipalities}">
+                            <td th:text="${m.id}"></td>
+                            <td th:text="${m.name}"></td>
+                            <td th:text="${m.provinceId}"></td>
                             <td>
-                                <a class="btn-small btn-secondary"
-                                    th:href="@{/provinces/{id}/edit(id=${p.id})}">Edit</a>
-                                <form th:action="@{/provinces/{id}/delete(id=${p.id})}" method="post"
+                                <a class="btn-small btn-primary"
+                                    th:href="@{/municipalities/{id}/edit(id=${m.id})}">Edit</a>
+                                <form th:action="@{/municipalities/{id}/delete(id=${m.id})}" method="post"
                                     style="display:inline">
-                                    <button class="btn-small btn-secondary" type="submit">Delete</button>
+                                    <button class="btn-small btn-primary red" type="submit">Delete</button>
                                 </form>
                             </td>
                         </tr>
