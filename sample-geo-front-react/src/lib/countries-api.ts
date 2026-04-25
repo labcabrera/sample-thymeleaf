@@ -1,3 +1,7 @@
+// import { useAuth, type AuthContextProps } from "react-oidc-context";
+import callApi from "./api";
+import { type AuthContextProps } from "react-oidc-context";
+
 export interface Country {
   id: string;
   name: string;
@@ -15,9 +19,6 @@ export interface Page<T> {
   pagination: Pagination;
 }
 
-import type { AuthContextProps } from "react-oidc-context";
-import callApi from "./api";
-
 export const fetchCountries = async (
   rsql: string,
   size: number,
@@ -30,4 +31,12 @@ export const fetchCountries = async (
     `/countries?q=${rsql}&page=${page}&size=${size}&sort=${sort}`,
   );
   return data as Page<Country>;
+};
+
+export const fetchCountry = async (
+  countryId: string,
+  auth: AuthContextProps,
+): Promise<Country> => {
+  const data = await callApi(auth, `/countries${countryId}`);
+  return data as Country;
 };

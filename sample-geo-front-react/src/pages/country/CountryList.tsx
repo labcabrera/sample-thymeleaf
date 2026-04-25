@@ -77,66 +77,61 @@ export default function CountryList() {
             <Typography color="text.primary">Countries</Typography>
           </Breadcrumbs>
         </Box>
-        <Typography variant="h5" gutterBottom>
-          Countries
-        </Typography>
-        <Paper sx={{ p: 2 }}>
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-            <Button variant="contained">Nuevo country</Button>
-          </Box>
-          <Box
-            component="form"
-            sx={{ display: "flex", gap: 2, mb: 2 }}
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <TextField
-              label="Nombre"
-              variant="outlined"
-              size="small"
-              value={nameFilter}
-              onChange={(e) => {
-                const v = e.target.value;
-                setNameFilter(v);
-                setRsql(v ? `name=re=${v}` : "");
-                setPage(0);
-              }}
-            />
-          </Box>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+          <Button variant="contained">Nuevo country</Button>
+        </Box>
+        <Box
+          component="form"
+          sx={{ display: "flex", gap: 2, mb: 2 }}
+          onSubmit={(e) => e.preventDefault()}
+        >
+          <TextField
+            label="Nombre"
+            variant="outlined"
+            size="small"
+            value={nameFilter}
+            onChange={(e) => {
+              const v = e.target.value;
+              setNameFilter(v);
+              setRsql(v ? `name=re=${v}` : "");
+              setPage(0);
+            }}
+          />
+        </Box>
 
-          {!pageData ? (
-            <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
-              <CircularProgress />
-            </Box>
-          ) : (
-            <TableContainer component={Paper}>
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Id</TableCell>
-                    <TableCell>Nombre</TableCell>
+        {!pageData ? (
+          <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <TableContainer component={Paper}>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Id</TableCell>
+                  <TableCell>Nombre</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map((r) => (
+                  <TableRow key={r.id} hover>
+                    <TableCell>{r.id}</TableCell>
+                    <TableCell>{r.name}</TableCell>
                   </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rows.map((r) => (
-                    <TableRow key={r.id} hover>
-                      <TableCell>{r.id}</TableCell>
-                      <TableCell>{r.name}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              <TablePagination
-                component="div"
-                count={pagination?.totalElements ?? 0}
-                page={pagination ? pagination.page : page}
-                onPageChange={handleChangePage}
-                rowsPerPage={pagination ? pagination.size : size}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                rowsPerPageOptions={[5, 10, 25, 50]}
-              />
-            </TableContainer>
-          )}
-        </Paper>
+                ))}
+              </TableBody>
+            </Table>
+            <TablePagination
+              component="div"
+              count={pagination?.totalElements ?? 0}
+              page={pagination ? pagination.page : page}
+              onPageChange={handleChangePage}
+              rowsPerPage={pagination ? pagination.size : size}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[5, 10, 25, 50]}
+            />
+          </TableContainer>
+        )}
       </Box>
     </Container>
   );
