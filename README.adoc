@@ -75,6 +75,9 @@ java -jar sample-api/build/libs/*.jar
 
 Esto levantará nuestra API en el puerto 8082. Podemos consultar la información de la API a través de la documentación Swagger UI disponible en http://localhost:8082/swagger-ui/index.html.
 
+A través del endpoint de actuator podremos comprobar el estado de la aplicación a través del endpoint
+http://localhost:8082/actuator/health.
+
 Lo mismo haremos para el frontal ejecutando los mismos comandos.
 
 El frontal levantará la aplicación en el puerto 8081 de modo que podremos acceder a la aplicación en http://localhost:8081.

@@ -3,14 +3,14 @@ spring:
     import:
       - classpath:application-logging.yaml
       - classpath:application-db.yaml
-      # - classpath:application-cloud-stream.yaml
+      - classpath:application-cloud-stream.yaml
       - classpath:application-springdoc.yaml
       - classpath:application-security.yaml
       # - classpath:application-cache.yaml
       # - classpath:application-client.yaml
       # - classpath:application-resilience4j.yaml
   application:
-    name: archetype-spring-cloud-stream
+    name: sample-api
   main:
     banner-mode: off
 
