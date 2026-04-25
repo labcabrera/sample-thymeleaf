@@ -19,17 +19,17 @@ public class StreamBridgeMunicipalityEventBusAdapter extends StreamBridgeEventBu
 
     @Override
     public void publish(MunicipalityCreatedEvent event) {
-        // TODO Auto-generated method stub
+        streamBridge.send("municipalityCreated-out-0", event);
     }
 
     @Override
     public void publish(MunicipalityUpdatedEvent event) {
-        // TODO Auto-generated method stub
+        streamBridge.send("municipalityUpdated-out-0", event);
     }
 
     @Override
     public void publish(MunicipalityDeletedEvent event) {
-        // TODO Auto-generated method stub
+        streamBridge.send("municipalityDeleted-out-0", event);
     }
 
 }

@@ -19,17 +19,17 @@ public class StreamBridgePostalCodeEventBusAdapter extends StreamBridgeEventBusA
 
     @Override
     public void publish(PostalCodeCreatedEvent event) {
-        // TODO: implement event publishing
+        streamBridge.send("postalCodeCreated-out-0", event);
     }
 
     @Override
     public void publish(PostalCodeUpdatedEvent event) {
-        // TODO: implement event publishing
+        streamBridge.send("postalCodeUpdated-out-0", event);
     }
 
     @Override
     public void publish(PostalCodeDeletedEvent event) {
-        // TODO: implement event publishing
+        streamBridge.send("postalCodeUpdated-out-0", event);
     }
 
 }

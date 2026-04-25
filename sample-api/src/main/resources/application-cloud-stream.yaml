@@ -27,14 +27,41 @@ spring:
         countryDeleted-out-0:
           destination: sample.countries.deleted.v1
           contentType: application/json
+        provinceCreated-out-0:
+          destination: sample.provinces.created.v1
+          contentType: application/json
+        provinceUpdated-out-0:
+          destination: sample.provinces.updated.v1
+          contentType: application/json
+        provinceDeleted-out-0:
+          destination: sample.provinces.deleted.v1
+          contentType: application/json
+        municipalityCreated-out-0:
+          destination: sample.municipalities.created.v1
+          contentType: application/json
+        municipalityUpdated-out-0:
+          destination: sample.municipalities.updated.v1
+          contentType: application/json
+        municipalitiesDeleted-out-0:
+          destination: sample.municipalities.deleted.v1
+          contentType: application/json
+        postalCodeCreated-out-0:
+          destination: sample.postal-codes.created.v1
+          contentType: application/json
+        postalCodeUpdated-out-0:
+          destination: sample.postal-codes.updated.v1
+          contentType: application/json
+        postalCodeDeleted-out-0:
+          destination: sample.postal-codes.deleted.v1
+          contentType: application/json
       kafka:
         binder:
           brokers: ${KAFKA_BROKERS:localhost:9092}
           autoCreateTopics: true
           minPartitionCount: 1
         bindings:
-          onCaseFolderCreated-in-0:
+          countryCreated-in-0:
             consumer:
               enable-dlq: true
-              dlq-name: sample.case-folders.created.dlq.v1
+              dlq-name: sample.countries.created.dlq.v1
               dlq-partitions: 1
