@@ -3,6 +3,7 @@ package org.labcabrera.sample.front.web;
 import java.util.List;
 
 import org.labcabrera.sample.front.generated.client.geo.api.MunicipalitiesApi;
+import org.labcabrera.sample.front.generated.client.geo.api.ProvincesApi;
 import org.labcabrera.sample.front.generated.client.geo.model.CreateMunicipalityDto;
 import org.labcabrera.sample.front.generated.client.geo.model.MunicipalityDto;
 import org.labcabrera.sample.front.generated.client.geo.model.MunicipalityPage;
@@ -27,6 +28,9 @@ public class MunicipalitiesController {
     @Autowired
     private MunicipalitiesApi municipalitiesApi;
 
+    @Autowired
+    private ProvincesApi provincesApi;
+
     @GetMapping
     public String list(Model model,
         @RequestParam(value = "q", required = false, defaultValue = "") String q,
@@ -48,6 +52,15 @@ public class MunicipalitiesController {
     @GetMapping("/create")
     public String createForm(Model model) {
         model.addAttribute("municipality", new MunicipalityDto());
+        // load provinces for select
+        try {
+            var pp = provincesApi.getProvincesByRsql("", 0, 1000, null);
+            model.addAttribute("provinces", pp != null ? pp.getContent() : java.util.List.of());
+        }
+        catch (Exception ex) {
+            log.warn("Could not fetch provinces for municipality form: {}", ex.getMessage());
+            model.addAttribute("provinces", java.util.List.of());
+        }
         model.addAttribute("title", "Create Municipality");
         return "municipalities/form";
     }
@@ -70,8 +83,42 @@ public class MunicipalitiesController {
             throw new RuntimeException("Municipality not found");
         }
         model.addAttribute("municipality", municipality);
+        // load provinces for select
+        try {
+            var pp = provincesApi.getProvincesByRsql("", 0, 1000, null);
+            model.addAttribute("provinces", pp != null ? pp.getContent() : java.util.List.of());
+        }
+        catch (Exception ex) {
+            log.warn("Could not fetch provinces for municipality form: {}", ex.getMessage());
+            model.addAttribute("provinces", java.util.List.of());
+        }
         model.addAttribute("title", "Edit Municipality");
         return "municipalities/form";
+    }
+
+    @GetMapping("/{id}")
+    public String view(@PathVariable(name = "id") String id, Model model) {
+        var municipality = municipalitiesApi.getMunicipalityById(id);
+        if (municipality == null) {
+            log.error("Municipality not found with id: {}", id);
+            throw new RuntimeException("Municipality not found");
+        }
+        String provinceName = null;
+        try {
+            if (municipality.getProvinceId() != null) {
+                var province = provincesApi.getProvinceById(municipality.getProvinceId());
+                if (province != null) {
+                    provinceName = province.getName();
+                }
+            }
+        }
+        catch (Exception ex) {
+            log.warn("Could not fetch province for municipality view: {}", ex.getMessage());
+        }
+        model.addAttribute("municipality", municipality);
+        model.addAttribute("provinceName", provinceName);
+        model.addAttribute("title", "Municipality - " + municipality.getName());
+        return "municipalities/view";
     }
 
     @PostMapping("/{id}")

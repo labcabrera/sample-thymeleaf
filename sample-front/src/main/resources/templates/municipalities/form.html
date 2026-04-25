@@ -2,21 +2,34 @@
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
 <section th:fragment="content">
     <div class="section">
-        <h4 th:text="${municipality.id} != null ? 'Edit Municipality' : 'Create Municipality'"></h4>
-        <form
-            th:action="${municipality.id} != null ? @{/municipalities/{id}(id=${municipality.id})} : @{/municipalities}"
-            method="post">
-            <div class="input-field" th:if="${municipality.id} == null">
-                <input id="id" name="id" type="text" th:value="${municipality.id}">
-                <label for="id">Municipality ID</label>
+        <div class="row">
+            <div class="col s12">
+                <nav style="margin-bottom:12px;">
+                    <div class="nav-wrapper">
+                        <div class="col s12">
+                            <a th:href="@{/geo}" class="breadcrumb">Geo</a>
+                            <a th:href="@{/municipalities}" class="breadcrumb">Municipalities</a>
+                            <a th:if="${municipality.id != null}" class="breadcrumb"
+                                th:href="@{/municipalities/{id}(id=${municipality.id})}" th:text="${municipality.name}"></a>
+                            <span th:if="${municipality.id != null}" class="breadcrumb" style="opacity:0.6;">Update</span>
+                            <span th:if="${municipality.id == null}" class="breadcrumb" style="opacity:0.6;">Create</span>
+                        </div>
+                    </div>
+                </nav>
             </div>
+        </div>
+        <form th:action="${municipality.id} != null ? @{/municipalities/{id}(id=${municipality.id})} : @{/municipalities}" method="post">
             <div class="input-field">
                 <input id="name" name="name" type="text" th:value="${municipality.name}" required>
                 <label for="name">Name</label>
             </div>
             <div class="input-field">
-                <input id="provinceId" name="provinceId" type="text" th:value="${municipality.provinceId}" required>
-                <label for="provinceId">Province ID</label>
+                <label for="provinceId">Province</label>
+                <select id="provinceId" name="provinceId" required>
+                    <option value="" th:if="${municipality.provinceId} == null" selected>-- Select province --</option>
+                    <option th:each="p : ${provinces}" th:value="${p.id}" th:text="${p.name} + ' (' + p.id + ')'"
+                        th:selected="${municipality.provinceId} == p.id"></option>
+                </select>
             </div>
             <button class="waves-effect waves-light btn btn-primary" type="submit">Save</button>
             <a class="btn-flat" th:href="@{/municipalities}">Cancel</a>
