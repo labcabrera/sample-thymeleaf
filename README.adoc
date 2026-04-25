@@ -1,6 +1,6 @@
-# Sample Spring Boot Thymeleaf Application
+# Sample Spring Boot Thymeleaf + React
 
-Esta aplicación es un ejemplo de una aplicación Spring Boot con Thymeleaf de cara a un ejemplo de arquitectura básica para una migración de aplicaciones legacy J2EE basadas en patrones MCV a una arquitectura más moderna basada en microservicios y arquitectura hexagonal.
+Esta aplicación es un ejemplo de una API basada en Spring Boot con dos frontales que la consumen. Uno con Spring Boot y Thymeleaf y otro con React. El objetivo es mostrar cómo se puede estructurar una estructura básica para una migración de aplicaciones legacy J2EE basadas en patrones MCV a una arquitectura más moderna basada en microservicios y arquitectura hexagonal.
 
 Personalmente no recomendaría el uso de Thymeleaf para nuevos proyectos, ya que existen alternativas más modernas y eficientes como React, Angular u otros frameworks SPA. Sin embargo, Thymeleaf sigue siendo una opción válida para proyectos que requieren una integración estrecha con el backend de Spring Boot y para aquellos que prefieren una solución más tradicional basada en plantillas como evolución de proyectos legacy basados en patrones MVC.
 
@@ -11,7 +11,7 @@ También, la estructura del proyecto evita el uso de patrones DDD tales como agr
 El proyecto está organizado en los siguientes módulos:
 
 - `sample-geo-api`: Contiene la lógica de negocio y las capas de servicio y repositorio.
-- `sample-geo-front`: Contiene los controladores y las vistas Thymeleaf.
+- `sample-geo-front-thymeleaf`: Contiene los controladores y las vistas Thymeleaf.
 
 ## Sample API
 
@@ -29,7 +29,7 @@ Se ha definido la interface `Guard` para implementar un mecanismo de autorizaci�
 
 Dentro de la paquetería `shared` se han definido diferentes componente que serían comunes a otros módulos como el cliente de la API, los DTOs, los mapeadores o las excepciones personalizadas. Estos componentes podrían ser extrañidos a módulos independientes equivalentes a los starters de Spring Boot.
 
-## Sample Front
+## Sample Front Thymeleaf
 
 Este módulo está basado en Spring Web MVC y Thymeleaf para renderizar las vistas. Proporciona una interfaz de usuario para interactuar con la API REST del módulo `sample-geo-api`.
 
@@ -38,6 +38,33 @@ El cliente de la API está generado a través del plugin `org.openapi.generator`
 Este proyecto define un layout base muy sencillo utilizando componentes de Materialize CSS para el diseño y estilo de la aplicación.
 
 Cada página está asociada a un `@Controller` que es responsable de manejar las solicitudes HTTP, interactuar con el cliente de la API y devolver la vista correspondiente.
+
+## Sample Front React
+
+Este módulo está basado en React utilizando TypeScript. Proporciona una interfaz de usuario moderna y dinámica para interactuar con la API REST del módulo `sample-geo-api`.
+
+Para generar el proyecto hemos utilizado Vite con el template de React y TypeScript. Para ello ejecutamos los siguientes comandos:
+
+[source, bash]
+----
+npm create vite@latest sample-geo-front-react -- --template react-ts
+cd sample-geo-front-react
+npm install
+npm install react-router-dom keycloak-js @react-keycloak/web
+npm install @mui/material @emotion/react @emotion/styled
+npm install @mui/icons-material
+----
+
+Esto creará la estructura base que hemos modificado para añadir los componentes de la demo.
+
+Para arrancar el proyecto en modo desarrollo ejecutamos:
+
+[source, bash]
+----
+npm run dev
+----
+
+TIP: Para el proyecto de React crearemos en Keycloak un nuevo cliente llamado `sample-client-react` con la autenticación de cliente desactivada.
 
 ## Ejecución
 
@@ -90,26 +117,3 @@ Desde aquí podremos navegar por las diferentes páginas y realizar operaciones 
 
 Docker compose incluye una imagen de Kafka UI a la que podemos acceder a través de  http://localhost:8091/ usando las credenciales `admin:admin` para comprobar los mensajes que se publican en los topics de Kafka cada vez que se crea, actualiza o elimina una entidad.
 
-## Ejemplo con React
-
-[source, bash]
-----
-npm create vite@latest sample-geo-front-react -- --template react-ts
-cd sample-geo-front-react
-npm install
-npm install react-router-dom keycloak-js @react-keycloak/web
-npm install @mui/material @emotion/react @emotion/styled
-npm install @mui/icons-material
-
-# Opcionalmente para el autocompletado de keycloak-js
-npm install -D @types/keycloak-js
-----
-
-Después arrancaremos el proyecto en modo desarrollo:
-
-[source, bash]
-----
-npm run dev
-----
-
-TIP: Para el proyecto de React crearemos en Keycloak un nuevo cliente llamado `sample-client-react` con la autenticación de cliente desactivada.
