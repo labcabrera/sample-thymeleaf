@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
+
+<div th:fragment="content">
+    <div class="container">
+        <h3>User information</h3>
+        <table class="striped">
+            <tbody>
+                <tr>
+                    <td><strong>Username</strong></td>
+                    <td><span th:text="${userName}">-</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Email</strong></td>
+                    <td><span th:text="${email}">-</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Email verified</strong></td>
+                    <td><span th:text="${emailVerified}">-</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</html>

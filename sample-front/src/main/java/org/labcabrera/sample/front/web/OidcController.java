@@ -4,6 +4,7 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
 import jakarta.servlet.http.HttpSession;
@@ -72,7 +73,10 @@ public class OidcController {
 
         String params = String.format(
             "response_type=code&client_id=%s&redirect_uri=%s&scope=%s&code_challenge=%s&code_challenge_method=S256",
-            urlEncode(clientId), urlEncode(redirectUri), urlEncode("openid profile email"), urlEncode(codeChallenge));
+            urlEncode(clientId),
+            urlEncode(redirectUri),
+            urlEncode("openid profile email"),
+            urlEncode(codeChallenge));
         return new RedirectView(authEndpoint + "?" + params);
     }
 
@@ -118,25 +122,8 @@ public class OidcController {
                 // try to extract a user display name from id token and store in session
                 try {
                     SignedJWT signedJWT = SignedJWT.parse(idToken);
-                    var claims = signedJWT.getJWTClaimsSet();
-                    String userName = null;
-                    try {
-                        userName = claims.getStringClaim("name");
-                    }
-                    catch (Exception e) {
-                        // ignore
-                    }
-                    if (userName == null || userName.isBlank()) {
-                        try {
-                            userName = claims.getStringClaim("preferred_username");
-                        }
-                        catch (Exception e) {
-                            // ignore
-                        }
-                    }
-                    if (userName != null && !userName.isBlank()) {
-                        session.setAttribute("userName", userName);
-                    }
+                    JWTClaimsSet claims = signedJWT.getJWTClaimsSet();
+                    loadSessionData(claims, session);
                 }
                 catch (ParseException e) {
                     // ignore parse errors
@@ -145,7 +132,8 @@ public class OidcController {
                 // store access token in session if available (backend expects access token)
                 String tokenToStore = accessToken != null && !accessToken.isBlank() ? accessToken : idToken;
                 session.setAttribute("jwt", tokenToStore);
-                model.addAttribute("message", "Token validated and stored in session.");
+                // Successful login - redirect to home
+                return "redirect:/";
             }
             else {
                 model.addAttribute("message", "Token validation failed.");
@@ -223,5 +211,11 @@ public class OidcController {
         catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void loadSessionData(JWTClaimsSet claims, HttpSession session) throws ParseException {
+        session.setAttribute("userName", claims.getStringClaim("name"));
+        session.setAttribute("email", claims.getStringClaim("email"));
+        session.setAttribute("emailVerified", claims.getBooleanClaim("email_verified"));
     }
 }
