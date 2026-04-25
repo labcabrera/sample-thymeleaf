@@ -18,7 +18,8 @@
                     <div>
                         <a class="waves-effect waves-light btn btn-primary" th:href="@{/countries/{id}/edit(id=${country.id})}">Edit</a>
                         <form th:action="@{/countries/{id}/delete(id=${country.id})}" method="post" style="display:inline">
-                            <button class="waves-effect waves-light btn btn-secondary" type="submit">Delete</button>
+                            <button type="submit" class="waves-effect waves-light btn btn-secondary"
+                                onclick="return confirm('Are you sure you want to delete this province?');">Delete</button>
                         </form>
                     </div>
                 </div>

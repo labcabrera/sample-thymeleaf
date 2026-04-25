@@ -18,7 +18,7 @@
                 </nav>
                 <form th:action="${province.id} != null ? @{/provinces/{id}(id=${province.id})} : @{/provinces}" method="post">
                     <div class="input-field" th:if="${province.id == null}">
-                        <input id="id" name="id" type="text" th:value="${province.id}" />
+                        <input id="id" name="id" type="text" th:value="${province.id}" required />
                         <label for="id">Province ID</label>
                     </div>
                     <div class="input-field" th:if="${province.id != null}">
@@ -26,7 +26,7 @@
                         <label for="id">Province ID</label>
                     </div>
                     <div class="input-field">
-                        <input id="name" name="name" type="text" th:value="${province.name}" required>
+                        <input id="name" name="name" type="text" th:value="${province.name}" required />
                         <label for="name">Name</label>
                     </div>
                     <div class="input-field">
