@@ -4,6 +4,7 @@ import AuthProvider from "./auth/AuthProvider";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import CountryView from "./pages/country/CountryView";
 import CountryList from "./pages/country/CountryList";
 import Provinces from "./pages/province/Provinces";
 import Municipalities from "./pages/municipality/Municipalities";
@@ -23,6 +24,7 @@ function App() {
               <Route index element={<Home />} />
               <Route path="geo" element={<GeoPage />} />
               <Route path="countries" element={<CountryList />} />
+              <Route path="countries/view/:id" element={<CountryView />} />
               <Route path="provinces" element={<Provinces />} />
               <Route path="municipalities" element={<Municipalities />} />
             </Route>
