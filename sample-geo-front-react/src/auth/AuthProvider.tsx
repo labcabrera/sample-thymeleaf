@@ -16,7 +16,9 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
       authClient={keycloak}
       initOptions={{
         onLoad: "check-sso",
-        silentCheckSsoRedirectUri: window.location.origin + "/silent-sso.html",
+        // Note: silentCheckSsoRedirectUri is omitted to avoid creating a sandboxed iframe
+        // that triggers the browser warning about allow-scripts + allow-same-origin.
+        // If you need silent SSO, consider a backend token refresh flow instead.
       }}
       onEvent={onEvent}
     >
