@@ -1,0 +1,4 @@
+<div th:fragment="countrySelect(name, value)">
+    <script src="/static/js/country-select.js"></script>
+    <country-select th:attr="name=${name}, value=${value}" api-url="/api/v1/countries?size=1000"></country-select>
+</div>
