@@ -7,6 +7,7 @@ import AppBreadcrumbs from "../../components/AppBreadcrumbs";
 import CountryForm from "./CountryForm";
 import SaveButton from "../../components/buttons/SaveButton";
 import CancelButton from "../../components/buttons/CancelButton";
+import { updateCountry } from "../../lib/countries-api";
 
 export default function CountryEdit() {
   const { id } = useParams<{ id: string }>();
@@ -20,11 +21,19 @@ export default function CountryEdit() {
     fetchCountry(id!, auth).then((response) => setCountry(response));
   };
 
-  const onUpdate = () => {};
+  const onUpdate = () => {
+    updateCountry(formData, auth).then((response) =>
+      navigate(`/countries/view/${response.id}`, {
+        state: { country: response },
+      }),
+    );
+  };
 
   useEffect(() => {
     console.log("use e 1");
-    setFormData(country);
+    if (country) {
+      setFormData(country);
+    }
   }, [country]);
 
   useEffect(() => {

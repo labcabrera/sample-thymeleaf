@@ -28,6 +28,9 @@ export async function callApi(
       `API request failed: ${res.status} ${res.statusText} ${text}`,
     );
   }
+  if (res.status === 204) {
+    return null;
+  }
   return res.json();
 }
 

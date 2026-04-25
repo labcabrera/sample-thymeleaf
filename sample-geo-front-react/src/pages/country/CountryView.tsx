@@ -28,17 +28,11 @@ export default function CountryView() {
   const [country, setCountry] = useState<Country>();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
-  const handleConfirmDelete = async () => {
+  const onDelete = async () => {
     if (!country?.id) return;
-    try {
-      await deleteCountry(country.id, auth);
-      setDeleteDialogOpen(false);
-      navigate("/countries");
-    } catch (err) {
-      // simple error handling: close dialog and log
-      console.error("Delete failed", err);
-      setDeleteDialogOpen(false);
-    }
+    deleteCountry(country.id, auth)
+      .then(() => navigate("/countries"))
+      .catch((err) => console.log("error deleting country", err));
   };
 
   const bindCountry = (id: string) => {
@@ -94,7 +88,7 @@ export default function CountryView() {
       <ConfirmDeleteDialog
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
-        onConfirm={handleConfirmDelete}
+        onConfirm={onDelete}
       />
     </Container>
   );

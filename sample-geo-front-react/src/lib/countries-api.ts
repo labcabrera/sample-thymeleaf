@@ -53,6 +53,19 @@ export const createCountry = async (
   return data as Country;
 };
 
+export const updateCountry = async (
+  country: Country,
+  auth: AuthContextProps,
+): Promise<Country> => {
+  const { id, ...rest } = country;
+  const data = await callApi(auth, `/countries/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(rest),
+  });
+  return data as Country;
+};
+
 export const deleteCountry = async (
   countryId: string,
   auth: AuthContextProps,
