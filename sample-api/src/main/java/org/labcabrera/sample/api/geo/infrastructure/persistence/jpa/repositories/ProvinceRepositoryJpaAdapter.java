@@ -1,5 +1,6 @@
 package org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.repositories;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -77,8 +78,9 @@ public class ProvinceRepositoryJpaAdapter implements ProvinceRepository {
     @Transactional
     @CachePut(value = "province", key = "#result.id")
     public Province save(Province province) {
-        if (province.id() != null && jpaRepository.existsById(province.id())) {
-            throw new BadRequestException("province.msg.err.already-exists", province.id());
+        String provinceId = province.getId();
+        if (province.getId() != null && jpaRepository.existsById(provinceId)) {
+            throw new BadRequestException("province.msg.err.already-exists", provinceId);
         }
         var entity = mapper.toEntity(province);
         var savedEntity = jpaRepository.save(entity);
@@ -91,7 +93,8 @@ public class ProvinceRepositoryJpaAdapter implements ProvinceRepository {
     public Province update(String provinceId, Province province) {
         var current = jpaRepository.findById(provinceId)
             .orElseThrow(() -> new BadRequestException(String.format("Province not found with id %s", provinceId)));
-        current.setName(province.name());
+        current.setName(province.getName());
+        current.setUpdatedAt(province.getUpdatedAt() != null ? province.getUpdatedAt() : LocalDateTime.now());
         var savedEntity = jpaRepository.save(current);
         return mapper.toDomain(savedEntity);
     }

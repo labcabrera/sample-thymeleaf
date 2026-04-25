@@ -3,8 +3,10 @@ package org.labcabrera.sample.api.geo.application.cqrs.handlers;
 import java.time.LocalDateTime;
 
 import org.labcabrera.sample.api.geo.application.cqrs.commands.UpdateProvinceCommand;
+import org.labcabrera.sample.api.geo.application.ports.ProvinceEventBusPort;
 import org.labcabrera.sample.api.geo.application.ports.ProvinceRepository;
 import org.labcabrera.sample.api.geo.domain.Province;
+import org.labcabrera.sample.api.geo.domain.events.ProvinceUpdatedEvent;
 import org.labcabrera.sample.api.shared.application.CommandHandler;
 import org.labcabrera.sample.api.shared.application.Guard;
 import org.labcabrera.sample.api.shared.application.SecurityPort;
@@ -22,6 +24,7 @@ public class UpdateProvinceHandler implements CommandHandler<UpdateProvinceComma
     private final ProvinceRepository provinceRepository;
     private final Guard<Province> provinceGuard;
     private final SecurityPort securityPort;
+    private final ProvinceEventBusPort eventBusPort;
 
     @Override
     public Province handle(UpdateProvinceCommand command) {
@@ -31,15 +34,21 @@ public class UpdateProvinceHandler implements CommandHandler<UpdateProvinceComma
         var existing = provinceRepository.findById(provinceId)
             .orElseThrow(() -> new NotFoundException("province.msg.not-found", provinceId, Province.class));
         provinceGuard.checkWrite(existing, user);
+        this.merge(existing, command);
+        var updated = provinceRepository.update(provinceId, existing);
+        eventBusPort.publish(ProvinceUpdatedEvent.of(updated));
 
-        String name = command.name().orElse(existing.name());
-        String countryId = command.countryId().orElse(existing.countryId());
-
-        var updatedData = new Province(existing.id(), name, countryId, existing.createdAt(), LocalDateTime.now());
-
-        //TODO check conflict
-        var updated = provinceRepository.update(provinceId, updatedData);
         return updated;
+    }
+
+    private void merge(Province existing, UpdateProvinceCommand command) {
+        if (command.name().isPresent()) {
+            existing.setName(command.name().get());
+        }
+        if (command.countryId().isPresent()) {
+            existing.setCountryId(command.countryId().get());
+        }
+        existing.setUpdatedAt(LocalDateTime.now());
     }
 
 }

@@ -17,6 +17,7 @@ import org.labcabrera.sample.api.geo.interfaces.http.mappers.ProvinceDtoMapper;
 import org.labcabrera.sample.api.shared.application.CommandBus;
 import org.labcabrera.sample.api.shared.application.QueryBus;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -52,6 +53,7 @@ public class ProvinceController {
     private final CommandBus commandBus;
     private final QueryBus queryBus;
     private final ProvinceDtoMapper mapper;
+    private final SortBuilder sortBuilder;
 
     @Operation(operationId = "getProvinceById", summary = "Get province by id", description = "Get province by id", responses = {
         @ApiResponse(responseCode = "200", description = "Province", content = {
@@ -89,7 +91,7 @@ public class ProvinceController {
         @Parameter(name = "size", description = "The size of the page to be returned", in = ParameterIn.QUERY) @RequestParam(value = "size", required = false, defaultValue = "20") Integer size,
         @Parameter(name = "sort", description = "Sorting criteria in the format: property,(asc|desc). Multiple sort criteria supported.", in = ParameterIn.QUERY) @RequestParam(value = "sort", required = false) List<String> sort) {
 
-        Pageable pageable = Pageable.ofSize(size != null ? size : 20).withPage(page != null ? page : 0);
+        Pageable pageable = PageRequest.of(page, size, sortBuilder.buildSort(sort));
         var query = new GetProvincesByRsqlQuery(rsql, pageable);
         Page<Province> resultPage = queryBus.dispatch(query);
         Page<ProvinceDto> pageDto = resultPage.map(mapper::toDto);
@@ -114,7 +116,7 @@ public class ProvinceController {
         var command = new CreateProvinceCommand(request.name(), request.countryId());
         Province province = commandBus.dispatch(command);
         var dto = mapper.toDto(province);
-        return ResponseEntity.created(URI.create("/api/v1/provinces/" + province.id())).body(dto);
+        return ResponseEntity.created(URI.create("/api/v1/provinces/" + province.getId())).body(dto);
     }
 
     @PatchMapping("/{provinceId}")

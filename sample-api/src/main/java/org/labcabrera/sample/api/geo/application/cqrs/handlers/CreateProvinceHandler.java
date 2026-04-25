@@ -37,10 +37,14 @@ public class CreateProvinceHandler implements CommandHandler<CreateProvinceComma
         if (current.isPresent()) {
             throw new ConflictException("province.msg.err.already-exists");
         }
-        Province province = new Province(UUID.randomUUID().toString(), command.name(), command.countryId(), null, null);
+        Province province = Province.builder()
+            .id(UUID.randomUUID().toString())
+            .name(command.name())
+            .countryId(command.countryId())
+            .build();
         var saved = provinceRepository.save(province);
         provinceMetricPort.incrementCreatedCounter();
-        eventBusPort.publish(new ProvinceCreatedEvent(saved.id(), saved.name(), saved.createdAt()));
+        eventBusPort.publish(ProvinceCreatedEvent.of(province));
         return saved;
     }
 

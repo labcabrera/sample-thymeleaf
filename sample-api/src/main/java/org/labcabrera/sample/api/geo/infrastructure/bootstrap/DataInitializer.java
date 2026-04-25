@@ -90,14 +90,14 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
             provinceRepository.save(province);
         }
         Municipality[] municipalities = new Municipality[] {
-            new Municipality(UUID.randomUUID().toString(), "MADRID", provinces[0].id(), now, null),
-            new Municipality(UUID.randomUUID().toString(), "BARCELONA", provinces[1].id(), now, null),
-            new Municipality(UUID.randomUUID().toString(), "PARIS", provinces[2].id(), now, null),
-            new Municipality(UUID.randomUUID().toString(), "MARSEILLE", provinces[3].id(), now, null),
-            new Municipality(UUID.randomUUID().toString(), "LISBON", provinces[4].id(), now, null),
-            new Municipality(UUID.randomUUID().toString(), "PORTO", provinces[5].id(), now, null),
-            new Municipality(UUID.randomUUID().toString(), "ROME", provinces[6].id(), now, null),
-            new Municipality(UUID.randomUUID().toString(), "MILAN", provinces[7].id(), now, null)
+            new Municipality(UUID.randomUUID().toString(), "MADRID", provinces[0].getId(), now, null),
+            new Municipality(UUID.randomUUID().toString(), "BARCELONA", provinces[1].getId(), now, null),
+            new Municipality(UUID.randomUUID().toString(), "PARIS", provinces[2].getId(), now, null),
+            new Municipality(UUID.randomUUID().toString(), "MARSEILLE", provinces[3].getId(), now, null),
+            new Municipality(UUID.randomUUID().toString(), "LISBON", provinces[4].getId(), now, null),
+            new Municipality(UUID.randomUUID().toString(), "PORTO", provinces[5].getId(), now, null),
+            new Municipality(UUID.randomUUID().toString(), "ROME", provinces[6].getId(), now, null),
+            new Municipality(UUID.randomUUID().toString(), "MILAN", provinces[7].getId(), now, null)
         };
         for (Municipality municipality : municipalities) {
             municipalityRepository.save(municipality);
