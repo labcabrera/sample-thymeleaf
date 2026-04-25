@@ -40,18 +40,9 @@ public class ProvincesController {
         log.trace("Fetching provinces with query: {} (page={}, size={})", q, pageParam, sizeParam);
         ProvincePage page = this.provincesApi.getProvincesByRsql(q, pageParam, sizeParam, Arrays.asList("name", "asc"));
         List<ProvinceDto> provinces = page.getContent();
-        // load countries for the filter select
-        List<org.labcabrera.sample.front.generated.client.geo.model.CountryDto> countries = java.util.List.of();
-        try {
-            var cp = countriesApi.getCountriesByRsql("", 0, 1000, Arrays.asList("name", "asc"));
-            countries = cp != null ? cp.getContent() : java.util.List.of();
-        }
-        catch (Exception ex) {
-            log.warn("Could not fetch countries for provinces filter: {}", ex.getMessage());
-        }
+        loadCountries(model);
         Pagination pagination = page.getPagination();
         model.addAttribute("provinces", provinces);
-        model.addAttribute("countries", countries);
         model.addAttribute("page", pagination.getPage());
         model.addAttribute("size", pagination.getSize());
         model.addAttribute("totalPages", pagination.getTotalPages());
@@ -63,16 +54,7 @@ public class ProvincesController {
     @GetMapping("/create")
     public String createForm(Model model) {
         model.addAttribute("province", new ProvinceDto());
-        // load countries for select
-        try {
-            var cp = countriesApi.getCountriesByRsql("", 0, 1000, Arrays.asList("name", "asc"));
-            var countries = cp != null ? cp.getContent() : java.util.List.of();
-            model.addAttribute("countries", countries);
-        }
-        catch (Exception ex) {
-            log.warn("Could not fetch countries for province form: {}", ex.getMessage());
-            model.addAttribute("countries", java.util.List.of());
-        }
+        loadCountries(model);
         model.addAttribute("title", "Create Province");
         return "provinces/form";
     }
@@ -95,16 +77,7 @@ public class ProvincesController {
             throw new RuntimeException("Province not found");
         }
         model.addAttribute("province", province);
-        // load countries for select
-        try {
-            var cp = countriesApi.getCountriesByRsql("", 0, 1000, Arrays.asList("name", "asc"));
-            var countries = cp != null ? cp.getContent() : java.util.List.of();
-            model.addAttribute("countries", countries);
-        }
-        catch (Exception ex) {
-            log.warn("Could not fetch countries for province form: {}", ex.getMessage());
-            model.addAttribute("countries", java.util.List.of());
-        }
+        loadCountries(model);
         model.addAttribute("title", "Edit Province");
         return "provinces/form";
     }
@@ -145,5 +118,17 @@ public class ProvincesController {
         model.addAttribute("countryName", countryName);
         model.addAttribute("title", "Province - " + province.getName());
         return "provinces/view";
+    }
+
+    private void loadCountries(Model model) {
+        try {
+            var cp = countriesApi.getCountriesByRsql("", 0, 1000, Arrays.asList("name", "asc"));
+            var countries = cp != null ? cp.getContent() : java.util.List.of();
+            model.addAttribute("countries", countries);
+        }
+        catch (Exception ex) {
+            log.warn("Could not fetch countries for province form: {}", ex.getMessage());
+            model.addAttribute("countries", java.util.List.of());
+        }
     }
 }
