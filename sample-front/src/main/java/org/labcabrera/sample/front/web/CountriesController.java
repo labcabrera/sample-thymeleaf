@@ -1,5 +1,6 @@
 package org.labcabrera.sample.front.web;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.labcabrera.sample.front.generated.client.geo.api.CountriesApi;
@@ -33,7 +34,7 @@ public class CountriesController {
         @RequestParam(value = "page", required = false, defaultValue = "0") Integer pageParam,
         @RequestParam(value = "size", required = false, defaultValue = "10") Integer sizeParam) {
         log.trace("Fetching countries with query: {} (page={}, size={})", q, pageParam, sizeParam);
-        CountryPage page = this.countriesApi.getCountriesByRsql(q, pageParam, sizeParam, null);
+        CountryPage page = this.countriesApi.getCountriesByRsql(q, pageParam, sizeParam, Arrays.asList("name", "asc"));
         List<CountryDto> countries = page.getContent();
         Pagination pagination = page.getPagination();
         model.addAttribute("countries", countries);

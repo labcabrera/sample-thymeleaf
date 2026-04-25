@@ -11,7 +11,7 @@ import lombok.Data;
 public class PostalCode {
     private String id;
     private String code;
-    private String municipalityId;
     private String provinceId;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

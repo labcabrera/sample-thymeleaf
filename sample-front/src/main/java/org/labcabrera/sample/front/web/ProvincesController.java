@@ -1,5 +1,6 @@
 package org.labcabrera.sample.front.web;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.labcabrera.sample.front.generated.client.geo.api.ProvincesApi;
@@ -33,7 +34,7 @@ public class ProvincesController {
         @RequestParam(value = "page", required = false, defaultValue = "0") Integer pageParam,
         @RequestParam(value = "size", required = false, defaultValue = "10") Integer sizeParam) {
         log.trace("Fetching provinces with query: {} (page={}, size={})", q, pageParam, sizeParam);
-        ProvincePage page = this.provincesApi.getProvincesByRsql(q, pageParam, sizeParam, null);
+        ProvincePage page = this.provincesApi.getProvincesByRsql(q, pageParam, sizeParam, Arrays.asList("name", "asc"));
         List<ProvinceDto> provinces = page.getContent();
         Pagination pagination = page.getPagination();
         model.addAttribute("provinces", provinces);

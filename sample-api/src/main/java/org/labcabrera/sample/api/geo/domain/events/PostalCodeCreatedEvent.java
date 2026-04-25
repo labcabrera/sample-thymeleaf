@@ -7,14 +7,14 @@ import org.labcabrera.sample.api.geo.domain.PostalCode;
 public record PostalCodeCreatedEvent(
     String postalCodeId,
     String code,
-    String municipalityId,
+    String provinceId,
     LocalDateTime createdAt) {
 
     public static PostalCodeCreatedEvent of(PostalCode postalCode) {
         return new PostalCodeCreatedEvent(
             postalCode.getId(),
             postalCode.getCode(),
-            postalCode.getMunicipalityId(),
+            postalCode.getProvinceId(),
             postalCode.getCreatedAt());
     }
 }

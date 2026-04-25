@@ -1,0 +1,64 @@
+@startuml class-diagram
+title Diagrama de clases
+
+class Country {
+  - String id
+  - String name
+  - String iso3Code
+  - String isoNumericCode
+  - LocalDateTime createdAt
+  - LocalDateTime updatedAt
+}
+
+class Province {
+  - String id
+  - String name
+  - String countryId
+  - LocalDateTime createdAt
+  - LocalDateTime updatedAt
+}
+
+class Municipality {
+  - String id
+  - String name
+  - String provinceId
+  - LocalDateTime createdAt
+  - LocalDateTime updatedAt
+}
+
+class PostalCode {
+  - String id
+  - String code
+  - String provinceId
+  - LocalDateTime createdAt
+  - LocalDateTime updatedAt
+}
+
+class Address {
+  - String id
+  - String streetName
+  - String streetNumber
+  - String additionalInfo
+  - String postalCode
+  - String municipalityId
+  - String provinceId
+  - LocalDateTime createdAt
+  - LocalDateTime updatedAt
+}
+
+' Country "1" --> "0..*" Province : contains
+' Province "1" --> "0..*" Municipality : contains
+' Province "1" --> "0..*" PostalCode : contains
+' Address "*" --> "1" PostalCode : has
+' Address "*" --> "1" Municipality : has
+' Address "*" --> "1" Province : has
+
+Country "1" -down-> "0..*" Province
+Province "1" -down-> "0..*" Municipality
+Province "1" -down-> "0..*" PostalCode
+Address "*" -left-> "1" Country
+Address "*" --> "1" Province
+Address "*" --> "1" Municipality
+Address "*" --> "1" PostalCode
+
+@enduml

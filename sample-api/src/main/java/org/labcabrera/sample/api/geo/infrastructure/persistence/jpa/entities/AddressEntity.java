@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
@@ -27,6 +28,22 @@ public class AddressEntity {
     @Column(name = "id", length = 36)
     private String id;
 
+    @ManyToOne(cascade = { CascadeType.ALL })
+    @JoinColumn(name = "country_id")
+    private PostalCodeEntity country;
+
+    @ManyToOne(cascade = { CascadeType.ALL })
+    @JoinColumn(name = "municipality_id")
+    private MunicipalityEntity municipality;
+
+    @ManyToOne(cascade = { CascadeType.ALL })
+    @JoinColumn(name = "province_id")
+    private ProvinceEntity province;
+
+    @ManyToOne(cascade = { CascadeType.ALL })
+    @JoinColumn(name = "postal_code_id")
+    private PostalCodeEntity postalCode;
+
     @Column(name = "street_name", length = 200)
     private String streetName;
 
@@ -36,24 +53,12 @@ public class AddressEntity {
     @Column(name = "additional_info", length = 400)
     private String additionalInfo;
 
-    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    private PostalCodeEntity postalCode;
-
-    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    private MunicipalityEntity municipality;
-
-    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    private ProvinceEntity province;
-
-    @Column(name = "country_code", length = 10)
-    private String countryCode;
-
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at", nullable = true)
     private LocalDateTime updatedAt;
 
     @Version

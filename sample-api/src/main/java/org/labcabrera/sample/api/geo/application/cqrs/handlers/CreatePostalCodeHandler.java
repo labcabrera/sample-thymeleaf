@@ -39,7 +39,6 @@ public class CreatePostalCodeHandler implements CommandHandler<CreatePostalCodeC
         PostalCode postalCode = new PostalCode();
         postalCode.setId(UUID.randomUUID().toString());
         postalCode.setCode(command.code());
-        postalCode.setMunicipalityId(command.municipalityId());
         postalCode.setProvinceId(command.provinceId());
         var saved = postalCodeRepository.save(postalCode);
         postalCodeMetricPort.incrementCreatedCounter();

@@ -4,6 +4,5 @@ import jakarta.validation.constraints.NotNull;
 
 public record CreatePostalCodeCommand(
     @NotNull String code,
-    String municipalityId,
     String provinceId) {
 }

@@ -29,7 +29,6 @@ public class UpdatePostalCodeHandler implements CommandHandler<UpdatePostalCodeC
             .orElseThrow(() -> new NotFoundException("postalcode.msg.not-found", postalCodeId, PostalCode.class));
         postalCodeGuard.checkWrite(existing, user);
         existing.setCode(command.code());
-        existing.setMunicipalityId(command.municipalityId());
         existing.setProvinceId(command.provinceId());
         return postalCodeRepository.save(existing);
     }

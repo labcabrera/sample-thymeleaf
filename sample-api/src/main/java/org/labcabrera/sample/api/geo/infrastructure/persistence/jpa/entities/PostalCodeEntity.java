@@ -27,8 +27,8 @@ public class PostalCodeEntity {
     @Column(name = "code", length = 20)
     private String code;
 
-    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    private MunicipalityEntity municipality;
+    @ManyToOne(cascade = { CascadeType.ALL })
+    private ProvinceEntity province;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

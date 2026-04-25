@@ -79,7 +79,12 @@ public class PostalCodeRepositoryJpaAdapter implements PostalCodeRepository {
         PostalCodeEntity current = jpaRepository.findById(id)
             .orElseThrow(() -> new BadRequestException("Postal code not found with id " + id));
         current.setCode(updatedData.getCode());
-        current.setUpdatedAt(updatedData.getCreatedAt() != null ? updatedData.getCreatedAt() : LocalDateTime.now());
+        if (updatedData.getProvinceId() != null) {
+            var province = new org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.entities.ProvinceEntity();
+            province.setId(updatedData.getProvinceId());
+            current.setProvince(province);
+        }
+        current.setUpdatedAt(LocalDateTime.now());
         var savedEntity = jpaRepository.save(current);
         return mapper.toDomain(savedEntity);
     }

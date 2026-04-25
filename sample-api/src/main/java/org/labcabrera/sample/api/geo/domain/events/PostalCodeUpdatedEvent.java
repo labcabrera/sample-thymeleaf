@@ -5,6 +5,6 @@ import java.time.LocalDateTime;
 public record PostalCodeUpdatedEvent(
     String postalCodeId,
     String code,
-    String municipalityId,
+    String provinceId,
     LocalDateTime updatedAt) {
 }
