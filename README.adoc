@@ -1,8 +1,10 @@
 # Sample Spring Boot Thymeleaf Application
 
-Esta aplicación es un ejemplo de una aplicación Spring Boot con Thymeleaf. Proporciona una estructura básica para desarrollar aplicaciones web utilizando estas tecnologías.
+Esta aplicación es un ejemplo de una aplicación Spring Boot con Thymeleaf de cara a un ejemplo de arquitectura básica para una migración de aplicaciones legacy J2EE basadas en patrones MCV a una arquitectura más moderna basada en microservicios y arquitectura hexagonal.
 
 Personalmente no recomendaría el uso de Thymeleaf para nuevos proyectos, ya que existen alternativas más modernas y eficientes como React, Angular u otros frameworks SPA. Sin embargo, Thymeleaf sigue siendo una opción válida para proyectos que requieren una integración estrecha con el backend de Spring Boot y para aquellos que prefieren una solución más tradicional basada en plantillas como evolución de proyectos legacy basados en patrones MVC.
+
+También, la estructura del proyecto evita el uso de patrones DDD tales como agregados y en lugar de eso la lógica de negocio estaría organizada dentro de la capa de aplicación dentro de los manejadores CQRS. De este modo el dominio simlemente devolvería objetos de valor y entidades sin lógica de negocio.
 
 ## Estructura del Proyecto
 
@@ -24,6 +26,8 @@ Utiliza Spring Data JPA para la persistencia de datos empleando RSQL para las co
 La seguridad está basada en Spring Security utilizando la librería `spring-boot-starter-oauth2-resource-server` validando los tokens JWT a través de Keycloak.
 
 Se ha definido la interface `Guard` para implementar un mecanismo de autorización basado en roles y permisos a nivel de operación en lugar de usar las anotaciones de Spring Security a nivel de método. Esto permite una mayor flexibilidad y control dentro de la logica de negocio y encaja más con el enfoque de arquitectura hexagonal.
+
+Dentro de la paquetería `shared` se han definido diferentes componente que serían comunes a otros módulos como el cliente de la API, los DTOs, los mapeadores o las excepciones personalizadas. Estos componentes podrían ser extrañidos a módulos independientes equivalentes a los starters de Spring Boot.
 
 ## Sample Web
 

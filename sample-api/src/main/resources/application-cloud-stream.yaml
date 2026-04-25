@@ -1,7 +1,7 @@
 spring:
   cloud:
     function:
-      definition: onCaseFolderCreation;onCaseFolderCreated;onCaseFolderDeleted;onCaseStepCreated
+      definition: onCountryCreation
     stream:
       bindings:
         # input bindings
@@ -16,7 +16,7 @@ spring:
             back-off-multiplier: 2.0
             default-retryable: true
             retryable-exceptions:
-              org.labcabrera.sample.archetype.shared.domain.exceptions.BadRequestException: false
+              org.labcabrera.sample.api.shared.domain.exceptions.BadRequestException: false
         # output bindings
         countryCreated-out-0:
           destination: sample.countries.created.v1
@@ -60,7 +60,7 @@ spring:
           autoCreateTopics: true
           minPartitionCount: 1
         bindings:
-          countryCreated-in-0:
+          onCountryCreation-in-0:
             consumer:
               enable-dlq: true
               dlq-name: sample.countries.created.dlq.v1
