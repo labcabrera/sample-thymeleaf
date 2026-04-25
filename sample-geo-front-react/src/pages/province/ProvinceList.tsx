@@ -40,7 +40,7 @@ export default function ProvinceList() {
           { label: "Provinces" },
         ]}
       >
-        <AddButton onClick={() => navigate("/countries/create")} />
+        <AddButton onClick={() => navigate("/provinces/create")} />
       </AppBreadcrumbs>
       <Box sx={{ my: 2 }}>
         <Box
