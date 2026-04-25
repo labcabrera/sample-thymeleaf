@@ -27,17 +27,8 @@ export default function Layout() {
             <ListItem component={RouterLink} to="/">
               <ListItemText primary="Home" />
             </ListItem>
-            <ListItem component={RouterLink} to="/countries">
-              <ListItemText primary="Countries" />
-            </ListItem>
-            <ListItem component={RouterLink} to="/provinces">
-              <ListItemText primary="Provinces" />
-            </ListItem>
-            <ListItem component={RouterLink} to="/municipalities">
-              <ListItemText primary="Municipalities" />
-            </ListItem>
-            <ListItem component={RouterLink} to="/login">
-              <ListItemText primary="Login" />
+            <ListItem component={RouterLink} to="/geo">
+              <ListItemText primary="Geo" />
             </ListItem>
           </List>
         </Box>

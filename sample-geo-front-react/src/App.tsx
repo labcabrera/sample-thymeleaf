@@ -4,9 +4,10 @@ import AuthProvider from "./auth/AuthProvider";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Countries from "./pages/country/Countries";
+import Countries from "./pages/country/CountryList";
 import Provinces from "./pages/province/Provinces";
 import Municipalities from "./pages/municipality/Municipalities";
+import GeoPage from "./pages/GeoPage";
 
 const theme = createTheme();
 
@@ -20,6 +21,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
+              <Route path="geo" element={<GeoPage />} />
               <Route path="countries" element={<Countries />} />
               <Route path="provinces" element={<Provinces />} />
               <Route path="municipalities" element={<Municipalities />} />

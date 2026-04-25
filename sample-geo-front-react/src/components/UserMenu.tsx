@@ -17,8 +17,8 @@ export default function UserMenu() {
 
   if (auth?.isAuthenticated) {
     const username =
-      (auth.user as any)?.profile?.preferred_username ||
-      (auth.user as any)?.profile?.name ||
+      auth.user?.profile?.preferred_username ||
+      auth.user?.profile?.name ||
       "User";
     const initial = (username as string).charAt(0).toUpperCase();
     return (
