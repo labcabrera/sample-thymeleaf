@@ -63,6 +63,16 @@ public class ProvincesController {
     @GetMapping("/create")
     public String createForm(Model model) {
         model.addAttribute("province", new ProvinceDto());
+        // load countries for select
+        try {
+            var cp = countriesApi.getCountriesByRsql("", 0, 1000, Arrays.asList("name", "asc"));
+            var countries = cp != null ? cp.getContent() : java.util.List.of();
+            model.addAttribute("countries", countries);
+        }
+        catch (Exception ex) {
+            log.warn("Could not fetch countries for province form: {}", ex.getMessage());
+            model.addAttribute("countries", java.util.List.of());
+        }
         model.addAttribute("title", "Create Province");
         return "provinces/form";
     }
@@ -85,6 +95,16 @@ public class ProvincesController {
             throw new RuntimeException("Province not found");
         }
         model.addAttribute("province", province);
+        // load countries for select
+        try {
+            var cp = countriesApi.getCountriesByRsql("", 0, 1000, Arrays.asList("name", "asc"));
+            var countries = cp != null ? cp.getContent() : java.util.List.of();
+            model.addAttribute("countries", countries);
+        }
+        catch (Exception ex) {
+            log.warn("Could not fetch countries for province form: {}", ex.getMessage());
+            model.addAttribute("countries", java.util.List.of());
+        }
         model.addAttribute("title", "Edit Province");
         return "provinces/form";
     }

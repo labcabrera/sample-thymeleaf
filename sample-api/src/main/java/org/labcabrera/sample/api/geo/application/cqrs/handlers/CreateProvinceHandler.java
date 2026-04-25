@@ -1,9 +1,9 @@
 package org.labcabrera.sample.api.geo.application.cqrs.handlers;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import org.labcabrera.sample.api.geo.application.cqrs.commands.CreateProvinceCommand;
+import org.labcabrera.sample.api.geo.application.ports.CountryRepository;
 import org.labcabrera.sample.api.geo.application.ports.ProvinceEventBusPort;
 import org.labcabrera.sample.api.geo.application.ports.ProvinceMetricPort;
 import org.labcabrera.sample.api.geo.application.ports.ProvinceRepository;
@@ -12,11 +12,11 @@ import org.labcabrera.sample.api.geo.domain.events.ProvinceCreatedEvent;
 import org.labcabrera.sample.api.shared.application.CommandHandler;
 import org.labcabrera.sample.api.shared.application.Guard;
 import org.labcabrera.sample.api.shared.application.SecurityPort;
+import org.labcabrera.sample.api.shared.domain.exceptions.BadRequestException;
 import org.labcabrera.sample.api.shared.domain.exceptions.ConflictException;
 import org.springframework.stereotype.Component;
 
 import jakarta.validation.Valid;
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CreateProvinceHandler implements CommandHandler<CreateProvinceCommand, Province> {
 
     private final ProvinceRepository provinceRepository;
+    private final CountryRepository countryRepository;
     private final Guard<Province> provinceGuard;
     private final SecurityPort securityPort;
     private final ProvinceEventBusPort eventBusPort;
@@ -36,12 +37,13 @@ public class CreateProvinceHandler implements CommandHandler<CreateProvinceComma
         var user = securityPort.requireCurrentUser();
         provinceGuard.checkCreate(user);
         log.debug("Creating province (user: {})", user.username());
-        var current = provinceRepository.findByName(command.name());
-        if (current.isPresent()) {
+        provinceRepository.findByName(command.name()).ifPresent(p -> {
             throw new ConflictException("province.msg.err.already-exists");
-        }
+        });
+        countryRepository.findById(command.countryId())
+            .orElseThrow(() -> new BadRequestException("province.msg.err.country-not-found", command.countryId()));
         Province province = Province.builder()
-            .id(UUID.randomUUID().toString())
+            .id(command.id())
             .name(command.name())
             .countryId(command.countryId())
             .createdAt(LocalDateTime.now())
