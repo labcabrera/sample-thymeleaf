@@ -27,6 +27,10 @@
             if (typeof M !== 'undefined' && M && M.Sidenav) {
                 M.Sidenav.init(elems);
             }
+            var selects = document.querySelectorAll('select');
+            if (typeof M !== 'undefined' && M && M.FormSelect) {
+                M.FormSelect.init(selects);
+            }
         });
     </script>
 </body>

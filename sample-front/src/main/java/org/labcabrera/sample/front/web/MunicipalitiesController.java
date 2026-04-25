@@ -1,6 +1,7 @@
 package org.labcabrera.sample.front.web;
 
 import java.util.List;
+import java.util.Arrays;
 
 import org.labcabrera.sample.front.generated.client.geo.api.MunicipalitiesApi;
 import org.labcabrera.sample.front.generated.client.geo.api.ProvincesApi;
@@ -54,7 +55,7 @@ public class MunicipalitiesController {
         model.addAttribute("municipality", new MunicipalityDto());
         // load provinces for select
         try {
-            var pp = provincesApi.getProvincesByRsql("", 0, 1000, null);
+            var pp = provincesApi.getProvincesByRsql("", 0, 1000, Arrays.asList("name", "asc"));
             model.addAttribute("provinces", pp != null ? pp.getContent() : java.util.List.of());
         }
         catch (Exception ex) {
@@ -85,7 +86,7 @@ public class MunicipalitiesController {
         model.addAttribute("municipality", municipality);
         // load provinces for select
         try {
-            var pp = provincesApi.getProvincesByRsql("", 0, 1000, null);
+            var pp = provincesApi.getProvincesByRsql("", 0, 1000, Arrays.asList("name", "asc"));
             model.addAttribute("provinces", pp != null ? pp.getContent() : java.util.List.of());
         }
         catch (Exception ex) {

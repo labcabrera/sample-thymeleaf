@@ -19,17 +19,17 @@
             </div>
         </div>
         <form th:action="${municipality.id} != null ? @{/municipalities/{id}(id=${municipality.id})} : @{/municipalities}" method="post">
-            <div class="input-field">
+            <div class="input-field col s6">
                 <input id="name" name="name" type="text" th:value="${municipality.name}" required>
                 <label for="name">Name</label>
             </div>
-            <div class="input-field">
-                <label for="provinceId">Province</label>
+            <div class="input-field col s6">
                 <select id="provinceId" name="provinceId" required>
-                    <option value="" th:if="${municipality.provinceId} == null" selected>-- Select province --</option>
-                    <option th:each="p : ${provinces}" th:value="${p.id}" th:text="${p.name} + ' (' + p.id + ')'"
+                    <option value="" th:if="${municipality.provinceId} == null" disabled selected>-- Select province --</option>
+                    <option th:each="p : ${provinces}" th:value="${p.id}" th:text="${p.name}"
                         th:selected="${municipality.provinceId} == p.id"></option>
                 </select>
+                <label for="provinceId">Province</label>
             </div>
             <button class="waves-effect waves-light btn btn-primary" type="submit">Save</button>
             <a class="btn-flat" th:href="@{/municipalities}">Cancel</a>
