@@ -6,11 +6,12 @@
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li><a th:href="@{/}">Home</a></li>
                 <li><a th:href="@{/geo}">Geo</a></li>
-                <li><a th:href="@{/login}">Login</a></li>
+                <li><a th:if="${userName == null}" th:href="@{/login}">Login</a></li>
+                <li><a th:if="${userName != null}" th:href="@{/user}" th:text="${userName}"></a></li>
+                <li><a th:if="${userName != null}" th:href="@{/logout}">Logout</a></li>
             </ul>
         </div>
     </nav>
-
     <ul class="sidenav" id="mobile-menu">
         <li><a th:href="@{/}">Home</a></li>
         <li><a th:href="@{/geo}">Geo</a></li>

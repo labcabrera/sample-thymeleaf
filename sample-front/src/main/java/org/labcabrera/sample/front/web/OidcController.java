@@ -115,6 +115,33 @@ public class OidcController {
                 valid = validateIdToken(idToken);
             }
             if (valid) {
+                // try to extract a user display name from id token and store in session
+                try {
+                    SignedJWT signedJWT = SignedJWT.parse(idToken);
+                    var claims = signedJWT.getJWTClaimsSet();
+                    String userName = null;
+                    try {
+                        userName = claims.getStringClaim("name");
+                    }
+                    catch (Exception e) {
+                        // ignore
+                    }
+                    if (userName == null || userName.isBlank()) {
+                        try {
+                            userName = claims.getStringClaim("preferred_username");
+                        }
+                        catch (Exception e) {
+                            // ignore
+                        }
+                    }
+                    if (userName != null && !userName.isBlank()) {
+                        session.setAttribute("userName", userName);
+                    }
+                }
+                catch (ParseException e) {
+                    // ignore parse errors
+                }
+
                 // store access token in session if available (backend expects access token)
                 String tokenToStore = accessToken != null && !accessToken.isBlank() ? accessToken : idToken;
                 session.setAttribute("jwt", tokenToStore);

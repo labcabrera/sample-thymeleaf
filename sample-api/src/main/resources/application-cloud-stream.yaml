@@ -5,13 +5,9 @@ spring:
     stream:
       bindings:
         # input bindings
-        onCaseFolderCreation-in-0:
-          destination: sample.case-folders.creation.v1
-          group: case-folders-svc
-          contentType: application/json
-        onCaseFolderCreated-in-0:
-          destination: sample.case-folders.created.v1
-          group: case-folders-svc
+        onCountryCreation-in-0:
+          destination: sample.countries.creation.v1
+          group: sample-svc
           contentType: application/json
           consumer:
             max-attempts: 5
@@ -21,26 +17,15 @@ spring:
             default-retryable: true
             retryable-exceptions:
               org.labcabrera.sample.archetype.shared.domain.exceptions.BadRequestException: false
-        onCaseFolderDeleted-in-0:
-          destination: sample.case-folders.deleted.v1
-          group: case-folders-svc
-          contentType: application/json
-        onCaseStepCreated-in-0:
-          destination: sample.case-steps.created.v1
-          group: case-folders-svc
-          contentType: application/json
         # output bindings
-        caseFolderCreated-out-0:
-          destination: sample.case-folders.created.v1
+        countryCreated-out-0:
+          destination: sample.countries.created.v1
           contentType: application/json
-        caseFolderUpdated-out-0:
-          destination: sample.case-folders.updated.v1
+        countryUpdated-out-0:
+          destination: sample.countries.updated.v1
           contentType: application/json
-        caseFolderDeleted-out-0:
-          destination: sample.case-folders.deleted.v1
-          contentType: application/json
-        caseStepCreated-out-0:
-          destination: sample.case-steps.created.v1
+        countryDeleted-out-0:
+          destination: sample.countries.deleted.v1
           contentType: application/json
       kafka:
         binder:

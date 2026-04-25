@@ -22,16 +22,16 @@ public class StreamBridgeCountryEventBusAdapter extends StreamBridgeEventBusAdap
 
     @Override
     public void publish(CountryCreatedEvent event) {
-        // TODO Auto-generated method stub
+        streamBridge.send("countryCreated-out-0", event);
     }
 
     @Override
     public void publish(CountryUpdatedEvent event) {
-        // TODO Auto-generated method stub
+        streamBridge.send("countryUpdated-out-0", event);
     }
 
     @Override
     public void publish(CountryDeletedEvent event) {
-        // TODO Auto-generated method stub
+        streamBridge.send("countryDeleted-out-0", event);
     }
 }

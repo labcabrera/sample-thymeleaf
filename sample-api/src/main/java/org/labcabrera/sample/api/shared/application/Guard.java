@@ -4,10 +4,17 @@ import org.labcabrera.sample.api.shared.application.SecurityPort.AuthenticatedUs
 
 public interface Guard<T> {
 
-    void checkRead(T domain, AuthenticatedUser user);
+    default void checkRead(T domain, AuthenticatedUser user) {
+    }
 
     void checkWrite(T domain, AuthenticatedUser user);
 
     void checkCreate(AuthenticatedUser user);
+
+    default void checkRole(AuthenticatedUser user, String role) {
+        if (!user.hasRole(role)) {
+            throw new SecurityException("User does not have required role: " + role);
+        }
+    }
 
 }

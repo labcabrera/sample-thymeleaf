@@ -26,3 +26,6 @@ management:
     health:
       show-details: always
 
+app:
+  security:
+    geo-admin-role: geo-admin
