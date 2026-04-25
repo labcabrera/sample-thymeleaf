@@ -4,7 +4,7 @@ import AuthProvider from "./auth/AuthProvider";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Countries from "./pages/country/CountryList";
+import CountryList from "./pages/country/CountryList";
 import Provinces from "./pages/province/Provinces";
 import Municipalities from "./pages/municipality/Municipalities";
 import GeoPage from "./pages/GeoPage";
@@ -22,7 +22,7 @@ function App() {
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
               <Route path="geo" element={<GeoPage />} />
-              <Route path="countries" element={<Countries />} />
+              <Route path="countries" element={<CountryList />} />
               <Route path="provinces" element={<Provinces />} />
               <Route path="municipalities" element={<Municipalities />} />
             </Route>

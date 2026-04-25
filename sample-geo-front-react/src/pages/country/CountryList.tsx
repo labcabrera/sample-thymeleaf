@@ -13,6 +13,7 @@ import {
   TableContainer,
   TablePagination,
   CircularProgress,
+  TextField,
 } from "@mui/material";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
@@ -25,36 +26,19 @@ import {
   type Pagination,
 } from "../../lib/countries-api";
 
-export default function Countries() {
+export default function CountryList() {
   const auth = useAuth();
   const [pageData, setPageData] = useState<Page<Country> | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<number>(0);
   const [size, setSize] = useState<number>(10);
   const [sort, setSort] = useState<string>("name,asc");
   const [rsql, setRsql] = useState<string>("");
+  const [nameFilter, setNameFilter] = useState<string>("");
 
   useEffect(() => {
-    let mounted = true;
-    const load = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await fetchCountries(rsql, size, page, sort, auth as any);
-        if (!mounted) return;
-        setPageData(data);
-      } catch (e: any) {
-        if (!mounted) return;
-        setError(e?.message ?? String(e));
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    };
-    load();
-    return () => {
-      mounted = false;
-    };
+    fetchCountries(rsql, size, page, sort, auth).then((response) =>
+      setPageData(response),
+    );
   }, [auth, page, size, sort, rsql]);
 
   const handleChangePage = (_: unknown, newPage: number) => {
@@ -101,18 +85,32 @@ export default function Countries() {
           <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
             <Button variant="contained">Nuevo country</Button>
           </Box>
+          <Box
+            component="form"
+            sx={{ display: "flex", gap: 2, mb: 2 }}
+            onSubmit={(e) => e.preventDefault()}
+          >
+            <TextField
+              label="Nombre"
+              variant="outlined"
+              size="small"
+              value={nameFilter}
+              onChange={(e) => {
+                const v = e.target.value;
+                setNameFilter(v);
+                setRsql(v ? `name=re=${v}` : "");
+                setPage(0);
+              }}
+            />
+          </Box>
 
-          {loading ? (
+          {!pageData ? (
             <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
               <CircularProgress />
             </Box>
-          ) : error ? (
-            <Box sx={{ p: 2 }}>
-              <Typography color="error">{error}</Typography>
-            </Box>
           ) : (
             <TableContainer component={Paper}>
-              <Table>
+              <Table size="small">
                 <TableHead>
                   <TableRow>
                     <TableCell>Id</TableCell>
