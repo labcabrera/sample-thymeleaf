@@ -12,6 +12,7 @@ public interface ProvinceEntityMapper {
     Province toDomain(ProvinceEntity entity);
 
     @Mapping(target = "version", ignore = true)
+    @Mapping(target = "id", source = "id")
     @Mapping(target = "code", source = "id")
     @Mapping(target = "countryCode", source = "countryId")
     ProvinceEntity toEntity(Province domain);

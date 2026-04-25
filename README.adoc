@@ -15,6 +15,10 @@ El proyecto está organizado en varios módulos:
 
 Este módulo expone una API REST para gestionar entidades geográficas como países, provincias y municipios. Utiliza una de arquitectura hexagonal aplicando el patrón CQRS para separar las operaciones de lectura y escritura.
 
+El modelo utilizado es:
+
+image:./images/class-diagram.png[]
+
 Utiliza Spring Data JPA para la persistencia de datos empleando RSQL para las consultas empleando una base de datos PostgreSQL.
 
 La seguridad está basada en Spring Security utilizando la librería `spring-boot-starter-oauth2-resource-server` validando los tokens JWT a través de Keycloak.

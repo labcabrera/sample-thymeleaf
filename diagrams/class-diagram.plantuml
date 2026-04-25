@@ -46,13 +46,6 @@ class Address {
   - LocalDateTime updatedAt
 }
 
-' Country "1" --> "0..*" Province : contains
-' Province "1" --> "0..*" Municipality : contains
-' Province "1" --> "0..*" PostalCode : contains
-' Address "*" --> "1" PostalCode : has
-' Address "*" --> "1" Municipality : has
-' Address "*" --> "1" Province : has
-
 Country "1" -down-> "0..*" Province
 Province "1" -down-> "0..*" Municipality
 Province "1" -down-> "0..*" PostalCode

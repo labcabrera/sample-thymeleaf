@@ -4,8 +4,19 @@
     <div class="section">
         <div class="row">
             <div class="col s12">
-                <h4>Provinces</h4>
-                <a class="waves-effect waves-light btn btn-primary" th:href="@{/provinces/create}">Create Province</a>
+                <nav style="margin-bottom:12px; width:100%;">
+                    <div class="nav-wrapper">
+                        <div class="col s12" style="display:flex; align-items:center; justify-content:space-between;">
+                            <div>
+                                <a th:href="@{/geo}" class="breadcrumb">Geo</a>
+                                <span class="breadcrumb" style="opacity:0.6;">Provinces</span>
+                            </div>
+                            <div>
+                                <a class="waves-effect waves-light btn btn-primary" th:href="@{/provinces/create}">Create Province</a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
                 <form id="provinceSearchForm" th:action="@{/provinces}" method="get">
                     <div class="input-field" style="display:flex; align-items:center; gap:8px; margin-top:12px; margin-bottom:12px;">
                         <i class="material-icons prefix" style="margin-right:4px">search</i>

@@ -76,6 +76,7 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
         for (Country country : countries) {
             countryRepository.save(country);
         }
+        log.info("Seeded {} countries", countries.length);
         Province[] provinces = new Province[] {
             new Province("ES-ACO", "A CORUÑA", "ES", now, null),
             new Province("ES-ALA", "ÁLAVA (ARABA)", "ES", now, null),
@@ -133,12 +134,18 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
             new Province("IT-LOM", "LOMBARDY", "IT", now, null)
         };
         for (Province province : provinces) {
-            provinceRepository.save(province);
+            try {
+                provinceRepository.save(province);
+            }
+            catch (Exception ex) {
+                log.warn("Could not save province {}: {}", province.getId(), ex.getMessage());
+            }
         }
+        log.info("Seeded {} provinces", provinces.length);
         Municipality[] municipalities = new Municipality[] {
             new Municipality(UUID.randomUUID().toString(), "MADRID", "ES-MAD", now, null),
             new Municipality(UUID.randomUUID().toString(), "BARCELONA", "ES-BAR", now, null),
-            new Municipality(UUID.randomUUID().toString(), "PARIS", "FRA-PRO", now, null),
+            new Municipality(UUID.randomUUID().toString(), "PARIS", "FR-PRO", now, null),
             new Municipality(UUID.randomUUID().toString(), "MARSEILLE", "FR-PRO", now, null),
             new Municipality(UUID.randomUUID().toString(), "LISBON", "PT-LIB", now, null),
             new Municipality(UUID.randomUUID().toString(), "PORTO", "PT-POR", now, null),
@@ -146,8 +153,14 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
             new Municipality(UUID.randomUUID().toString(), "MILAN", "IT-LOM", now, null)
         };
         for (Municipality municipality : municipalities) {
-            municipalityRepository.save(municipality);
+            try {
+                municipalityRepository.save(municipality);
+            }
+            catch (Exception ex) {
+                log.warn("Could not save municipality {}: {}", municipality, ex.getMessage());
+            }
         }
+        log.info("Seeded {} municipalities", municipalities.length);
         log.info("Seeded countries, provinces and municipalities");
     }
 
