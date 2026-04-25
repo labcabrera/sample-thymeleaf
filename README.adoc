@@ -78,3 +78,5 @@ Lo mismo haremos para el frontal ejecutando los mismos comandos.
 El frontal levantará la aplicación en el puerto 8081 de modo que podremos acceder a la aplicación en http://localhost:8081.
 
 Desde aquí podremos navegar por las diferentes páginas y realizar operaciones CRUD sobre las provincias utilizando la API REST del módulo `sample-api`.
+
+Docker compose incluye una imagen de Kafka UI a la que podemos acceder a través de  http://localhost:8091/ usando las credenciales `admin:admin` para comprobar los mensajes que se publican en los topics de Kafka cada vez que se crea, actualiza o elimina una entidad.
