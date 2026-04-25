@@ -4,7 +4,14 @@
     <div class="section">
         <div class="row">
             <div class="col s12">
-                <h4>Countries</h4>
+                <nav style="margin-bottom:12px;">
+                    <div class="nav-wrapper">
+                        <div class="col s12">
+                            <a th:href="@{/countries}" class="breadcrumb">Geo</a>
+                            <span class="breadcrumb" style="opacity:0.6;">Countries</span>
+                        </div>
+                    </div>
+                </nav>
                 <a class="waves-effect waves-light btn btn-primary" th:href="@{/countries/create}">Create Country</a>
                 <form id="searchForm" th:action="@{/countries}" method="get"
                     onsubmit="document.getElementById('q').value='name=re='+encodeURIComponent(document.getElementById('nameSearch').value);">
@@ -16,8 +23,7 @@
                         <button class="btn-small btn-primary" type="submit" style="height:36px;">
                             <i class="material-icons">search</i>
                         </button>
-                        <button class="btn-small btn-primary" type="button" style="height:36px; margin-left:4px;"
-                            onclick="var f=document.getElementById('searchForm'); f.onsubmit=null; document.getElementById('nameSearch').value=''; document.getElementById('q').value=''; f.submit();">
+                        <button id="resetBtn" class="btn-small btn-primary" type="button" style="height:36px; margin-left:4px;">
                             Reset
                         </button>
                     </div>
@@ -57,5 +63,22 @@
         </div>
     </div>
 </section>
+
+<script>
+    (function () {
+        var resetBtn = document.getElementById('resetBtn');
+        if (!resetBtn) return;
+        resetBtn.addEventListener('click', function () {
+            var f = document.getElementById('searchForm');
+            if (!f) return;
+            f.onsubmit = null;
+            var nameInput = document.getElementById('nameSearch');
+            if (nameInput) { nameInput.value = ''; }
+            var qInput = document.getElementById('q');
+            if (qInput) { qInput.value = ''; }
+            f.submit();
+        });
+    })();
+</script>
 
 </html>

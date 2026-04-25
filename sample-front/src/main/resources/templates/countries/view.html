@@ -4,6 +4,15 @@
     <div class="section">
         <div class="row">
             <div class="col s12">
+                <nav style="margin-bottom:12px; width:100%;">
+                    <div class="nav-wrapper">
+                        <div class="col s12">
+                            <a th:href="@{/geo}" class="breadcrumb">Geo</a>
+                            <a th:href="@{/countries}" class="breadcrumb">Countries</a>
+                            <span class="breadcrumb" style="opacity:0.6;" th:text="${country.name}">Country</span>
+                        </div>
+                    </div>
+                </nav>
                 <div style="display:flex; align-items:center; justify-content:space-between;">
                     <h4 th:text="${country.name}">Country</h4>
                     <div>

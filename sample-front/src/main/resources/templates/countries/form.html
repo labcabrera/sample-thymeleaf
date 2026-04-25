@@ -2,19 +2,34 @@
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
 <section th:fragment="content">
     <div class="section">
-        <h4 th:text="${country.id} != null ? 'Edit Country' : 'Create Country'"></h4>
-        <form th:action="${country.id} != null ? @{/countries/{id}(id=${country.id})} : @{/countries}" method="post">
-            <div class="input-field" th:if="${country.id} == null">
-                <input id="id" name="id" type="text" th:value="${country.id}" />
-                <label for="id">Country ID</label>
+        <div class="row">
+            <div class="col s12">
+                <nav style="margin-bottom:12px;">
+                    <div class="nav-wrapper">
+                        <div class="col s12">
+                            <a th:href="@{/geo}" class="breadcrumb">Geo</a>
+                            <a th:href="@{/countries}" class="breadcrumb">Countries</a>
+                            <a th:if="${country.id != null}" class="breadcrumb" th:href="@{/countries/{id}(id=${country.id})}"
+                                th:text="${country.name}"></a>
+                            <span th:if="${country.id != null}" class="breadcrumb" style="opacity:0.6;">Update</span>
+                            <span th:if="${country.id == null}" class="breadcrumb" style="opacity:0.6;">Create</span>
+                        </div>
+                    </div>
+                </nav>
+                <form th:action="${country.id} != null ? @{/countries/{id}(id=${country.id})} : @{/countries}" method="post">
+                    <div class="input-field" th:if="${country.id} == null">
+                        <input id="id" name="id" type="text" th:value="${country.id}" />
+                        <label for="id">Country ID</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="name" name="name" type="text" th:value="${country.name}" required />
+                        <label for="name">Name</label>
+                    </div>
+                    <button class="waves-effect waves-light btn btn-primary" type="submit">Save</button>
+                    <a class="btn-flat" th:href="@{/countries}">Cancel</a>
+                </form>
             </div>
-            <div class="input-field">
-                <input id="name" name="name" type="text" th:value="${country.name}" required />
-                <label for="name">Name</label>
-            </div>
-            <button class="waves-effect waves-light btn btn-primary" type="submit">Save</button>
-            <a class="btn-flat" th:href="@{/countries}">Cancel</a>
-        </form>
+        </div>
     </div>
 </section>
 
