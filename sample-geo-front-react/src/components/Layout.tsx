@@ -1,11 +1,8 @@
 import React from "react";
 import { Outlet, Link as RouterLink } from "react-router-dom";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import Typography from "@mui/material/Typography";
 import Drawer from "@mui/material/Drawer";
+import Toolbar from "@mui/material/Toolbar";
+import Header from "./Header";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -18,21 +15,7 @@ export default function Layout() {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <AppBar position="fixed">
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            edge="start"
-            onClick={() => setOpen(true)}
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Sample Geo
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <Header onDrawerToggle={() => setOpen(true)} />
 
       <Drawer open={open} onClose={() => setOpen(false)}>
         <Box

@@ -1,0 +1,5 @@
+[
+  { "label": "Countries", "path": "/countries" },
+  { "label": "Provinces", "path": "/provinces" },
+  { "label": "Municipalities", "path": "/municipalities" }
+]

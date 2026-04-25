@@ -111,3 +111,5 @@ Después arrancaremos el proyecto en modo desarrollo:
 ----
 npm run dev
 ----
+
+TIP: Para el proyecto de React crearemos en Keycloak un nuevo cliente llamado `sample-client-react` con la autenticación de cliente desactivada.
