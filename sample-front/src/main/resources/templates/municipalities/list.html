@@ -6,12 +6,15 @@
             <div class="col s12">
                 <nav style="margin-bottom:12px; width:100%;">
                     <div class="nav-wrapper">
-                        <div class="col s12">
-                            <a th:href="@{/geo}" class="breadcrumb">Geo</a>
-                            <span class="breadcrumb" style="opacity:0.6;">Municipalities</span>
+                        <div class="col s12" style="display:flex; align-items:center; justify-content:space-between;">
+                            <div>
+                                <a th:href="@{/geo}" class="breadcrumb">Geo</a>
+                                <span class="breadcrumb" style="opacity:0.6;">Municipalities</span>
+                            </div>
                         </div>
                     </div>
                 </nav>
+                <a class="waves-effect waves-light btn btn-primary" th:href="@{/municipalities/create}">Create Municipality</a>
                 <table class="striped">
                     <thead>
                         <tr>
