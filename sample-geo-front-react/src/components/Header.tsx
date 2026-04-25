@@ -1,3 +1,4 @@
+import { Link as RouterLink } from "react-router-dom";
 import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -7,7 +8,8 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
-import { Link as RouterLink } from "react-router-dom";
+import Box from "@mui/material/Box";
+import UserMenu from "./UserMenu";
 
 const MENU_OPTIONS: Array<{ label: string; path: string }> = [
   { label: "Countries", path: "/countries" },
@@ -29,6 +31,8 @@ export default function Header({ onDrawerToggle }: Props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  // user menu is handled by UserMenu component
 
   return (
     <AppBar position="fixed">
@@ -70,6 +74,9 @@ export default function Header({ onDrawerToggle }: Props) {
             </MenuItem>
           ))}
         </Menu>
+
+        <Box sx={{ flex: 1 }} />
+        <UserMenu />
       </Toolbar>
     </AppBar>
   );

@@ -1,4 +1,3 @@
-import React from "react";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -8,11 +7,11 @@ export default function Home() {
     <Container>
       <Box sx={{ my: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Bienvenido a Sample Geo
+          Sample Geo React
         </Typography>
         <Typography>
-          Este es el portal de gestión de entidades: Country, Province y
-          Municipality.
+          An example of a front-end application using React and MUI for managing
+          geographical entities such as countries and regions.
         </Typography>
       </Box>
     </Container>
