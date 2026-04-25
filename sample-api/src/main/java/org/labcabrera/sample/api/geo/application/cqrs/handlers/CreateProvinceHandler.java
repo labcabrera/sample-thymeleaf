@@ -1,5 +1,6 @@
 package org.labcabrera.sample.api.geo.application.cqrs.handlers;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.labcabrera.sample.api.geo.application.cqrs.commands.CreateProvinceCommand;
@@ -14,6 +15,8 @@ import org.labcabrera.sample.api.shared.application.SecurityPort;
 import org.labcabrera.sample.api.shared.domain.exceptions.ConflictException;
 import org.springframework.stereotype.Component;
 
+import jakarta.validation.Valid;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,7 +32,7 @@ public class CreateProvinceHandler implements CommandHandler<CreateProvinceComma
     private final ProvinceMetricPort provinceMetricPort;
 
     @Override
-    public Province handle(CreateProvinceCommand command) {
+    public Province handle(@Valid CreateProvinceCommand command) {
         var user = securityPort.requireCurrentUser();
         provinceGuard.checkCreate(user);
         log.debug("Creating province (user: {})", user.username());
@@ -41,6 +44,7 @@ public class CreateProvinceHandler implements CommandHandler<CreateProvinceComma
             .id(UUID.randomUUID().toString())
             .name(command.name())
             .countryId(command.countryId())
+            .createdAt(LocalDateTime.now())
             .build();
         var saved = provinceRepository.save(province);
         provinceMetricPort.incrementCreatedCounter();
