@@ -1,28 +1,16 @@
 import { useState, useEffect } from "react";
 import {
   Container,
-  Typography,
-  Paper,
   Box,
-  Button,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  TableContainer,
   TablePagination,
   CircularProgress,
   TextField,
-  Stack,
   IconButton,
   List,
   ListItemText,
   ListItemButton,
 } from "@mui/material";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Link from "@mui/material/Link";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import {
@@ -31,6 +19,7 @@ import {
   type Page,
   type Pagination,
 } from "../../lib/countries-api";
+import AppBreadcrumbs from "../../components/AppBreadcrumbs";
 
 export default function CountryList() {
   const auth = useAuth();
@@ -64,33 +53,17 @@ export default function CountryList() {
     <Container>
       <Box sx={{ my: 2 }}>
         <Box sx={{ mb: 1 }}>
-          <Stack direction="row">
-            <Breadcrumbs aria-label="breadcrumb">
-              <Link
-                component={RouterLink}
-                underline="hover"
-                color="inherit"
-                to="/"
-              >
-                Home
-              </Link>
-              <Link
-                component={RouterLink}
-                underline="hover"
-                color="inherit"
-                to="/geo"
-              >
-                Geo
-              </Link>
-              <Typography color="text.primary">Countries</Typography>
-            </Breadcrumbs>
+          <AppBreadcrumbs
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Geo", href: "/geo" },
+              { label: "Countries" },
+            ]}
+          >
             <IconButton onClick={() => navigate("/countries/create")}>
               <AddCircleIcon />
             </IconButton>
-          </Stack>
-        </Box>
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-          <Button variant="contained">Nuevo country</Button>
+          </AppBreadcrumbs>
         </Box>
         <Box
           component="form"

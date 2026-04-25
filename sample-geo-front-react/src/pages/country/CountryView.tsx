@@ -20,7 +20,7 @@ export default function CountryView() {
 
   useEffect(() => {
     if (location.state.country) {
-      setCountry(location.state.country as Country);
+      setCountry(location.state.country);
     } else if (id) {
       fetchCountry(id, auth).then((response) => setCountry(response));
     }

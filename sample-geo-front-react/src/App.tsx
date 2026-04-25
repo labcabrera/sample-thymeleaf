@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ThemeProvider, CssBaseline, createTheme } from "@mui/material";
+import { ThemeProvider, CssBaseline } from "@mui/material";
+import theme from "./theme";
 import AuthProvider from "./auth/AuthProvider";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
@@ -9,8 +10,6 @@ import CountryList from "./pages/country/CountryList";
 import Provinces from "./pages/province/Provinces";
 import Municipalities from "./pages/municipality/Municipalities";
 import GeoPage from "./pages/GeoPage";
-
-const theme = createTheme();
 
 function App() {
   return (
