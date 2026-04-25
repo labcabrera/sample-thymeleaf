@@ -36,7 +36,9 @@ export default function UserMenu() {
           <MenuItem
             onClick={() => {
               handleClose();
-              auth.signoutRedirect();
+              auth.signoutRedirect({
+                post_logout_redirect_uri: window.location.origin + "/",
+              });
             }}
           >
             Logout

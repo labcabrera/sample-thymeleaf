@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import {
   Container,
@@ -9,6 +10,7 @@ import {
   ListItemButton,
   Pagination,
   Paper,
+  Autocomplete,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
@@ -16,6 +18,7 @@ import AppBreadcrumbs from "../../components/AppBreadcrumbs";
 import AddButton from "../../components/buttons/AddButton";
 import type { Page } from "../../lib/api";
 import { fetchProvinces, type Province } from "../../lib/provinces-api";
+import { fetchCountries, type Country } from "../../lib/countries-api";
 
 export default function ProvinceList() {
   const auth = useAuth();
@@ -23,13 +26,35 @@ export default function ProvinceList() {
   const [pageData, setPageData] = useState<Page<Province> | null>(null);
   const [page, setPage] = useState<number>(0);
   const [rsql, setRsql] = useState<string>("");
-  const [nameFilter, setNameFilter] = useState<string>("");
+
+  const [nameFilter, setNameFilter] = useState<string>();
+  const [countryFilter, setCountryFilter] = useState<string>();
+
+  const [countries, setCountries] = useState<Country[]>([]);
+  const [countriesLoading, setCountriesLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    let rsql = "";
+    if (nameFilter && nameFilter !== "") rsql = `name=re=${name}`;
+    if (countryFilter && countryFilter !== "") {
+      if (rsql !== "") rsql += ";";
+      rsql += `countryId==${countryFilter}`;
+    }
+    setRsql(rsql);
+  }, [nameFilter, countryFilter]);
 
   useEffect(() => {
     fetchProvinces(rsql, 10, page, "name,asc", auth).then((response) =>
       setPageData(response),
     );
   }, [auth, page, rsql]);
+
+  useEffect(() => {
+    setCountriesLoading(true);
+    fetchCountries("", 200, 0, "name,asc", auth)
+      .then((res) => setCountries(res.content))
+      .finally(() => setCountriesLoading(false));
+  }, [auth]);
 
   return (
     <Container>
@@ -52,12 +77,18 @@ export default function ProvinceList() {
             label="Name"
             size="small"
             value={nameFilter}
-            onChange={(e) => {
-              const v = e.target.value;
-              setNameFilter(v);
-              setRsql(v ? `name=re=${v}` : "");
-              setPage(0);
-            }}
+            onChange={(e) => setNameFilter(e.target.value)}
+          />
+          <Autocomplete
+            options={countries}
+            getOptionLabel={(option) => option.name}
+            loading={countriesLoading}
+            size="small"
+            sx={{ minWidth: 240 }}
+            onChange={(_, value) => setCountryFilter(value?.id)}
+            renderInput={(params) => (
+              <TextField {...params} label="Country" size="small" />
+            )}
           />
         </Box>
 
