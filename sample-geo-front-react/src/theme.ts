@@ -1,11 +1,16 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme, lighten, darken } from "@mui/material/styles";
 
+const primaryMain = "#005b72";
 const theme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#005b72",
+      main: primaryMain,
+      light: lighten(primaryMain, 0.15),
+      dark: darken(primaryMain, 0.15),
+      contrastText: "#ffffff",
     },
+    // Additional palette configuration
     secondary: {
       main: "#f9b000",
     },
@@ -13,6 +18,9 @@ const theme = createTheme({
     error: {
       main: "#d32f2f",
     },
+    // improve contrast handling
+    tonalOffset: 0.2,
+    contrastThreshold: 3,
   },
   typography: {
     fontFamily: "Inter, Roboto, Arial, sans-serif",

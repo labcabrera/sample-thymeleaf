@@ -52,3 +52,10 @@ export const createCountry = async (
   });
   return data as Country;
 };
+
+export const deleteCountry = async (
+  countryId: string,
+  auth: AuthContextProps,
+): Promise<void> => {
+  await callApi(auth, `/countries/${countryId}`, { method: "DELETE" });
+};

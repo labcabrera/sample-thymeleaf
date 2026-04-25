@@ -46,7 +46,7 @@ export default function CountryCreate() {
           <SaveIcon />
         </IconButton>
       </AppBreadcrumbs>
-      <CountryForm formData={formData} setFormData={setFormData} />
+      <CountryForm formData={formData} setFormData={setFormData} create />
     </Container>
   );
 }

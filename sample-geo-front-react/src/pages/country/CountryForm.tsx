@@ -3,11 +3,12 @@ import { Grid, TextField } from "@mui/material";
 import type { Country } from "../../lib/countries-api";
 
 type Props = {
+  create: boolean;
   formData: Country;
   setFormData: Dispatch<SetStateAction<Country>>;
 };
 
-export default function CountryForm({ formData, setFormData }: Props) {
+export default function CountryForm({ create, formData, setFormData }: Props) {
   return (
     <Grid container spacing={1}>
       <Grid size={4}>
@@ -15,6 +16,7 @@ export default function CountryForm({ formData, setFormData }: Props) {
           label="Id"
           value={formData.id}
           onChange={(e) => setFormData({ ...formData, id: e.target.value })}
+          disabled={!create}
           required
           fullWidth
         />

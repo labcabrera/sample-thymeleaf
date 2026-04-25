@@ -6,16 +6,19 @@ import {
   Paper,
   Box,
   Typography,
-  Button,
   CircularProgress,
-  IconButton,
   Stack,
-  Tooltip,
 } from "@mui/material";
-import { fetchCountry, type Country } from "../../lib/countries-api";
+import ConfirmDeleteDialog from "../../components/ConfirmDeleteDialog";
+import {
+  fetchCountry,
+  deleteCountry,
+  type Country,
+} from "../../lib/countries-api";
 import AppBreadcrumbs from "../../components/AppBreadcrumbs";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import EditIcon from "@mui/icons-material/Edit";
+import DeleteButon from "../../components/buttons/DeleteButton";
+import EditButton from "../../components/buttons/EditButton";
+import RefreshButton from "../../components/buttons/RefreshButton";
 
 export default function CountryView() {
   const { id } = useParams<{ id: string }>();
@@ -23,6 +26,20 @@ export default function CountryView() {
   const navigate = useNavigate();
   const auth = useAuth();
   const [country, setCountry] = useState<Country>();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
+
+  const handleConfirmDelete = async () => {
+    if (!country?.id) return;
+    try {
+      await deleteCountry(country.id, auth);
+      setDeleteDialogOpen(false);
+      navigate("/countries");
+    } catch (err) {
+      // simple error handling: close dialog and log
+      console.error("Delete failed", err);
+      setDeleteDialogOpen(false);
+    }
+  };
 
   const bindCountry = (id: string) => {
     fetchCountry(id!, auth).then((response) => setCountry(response));
@@ -47,21 +64,13 @@ export default function CountryView() {
         ]}
       >
         <Stack direction="row">
-          <Tooltip title="Refresh">
-            <IconButton onClick={() => bindCountry(id!)} color="primary">
-              <RefreshIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Edit">
-            <IconButton
-              onClick={() =>
-                navigate(`/countries/edit/${id}`, { state: country })
-              }
-              color="primary"
-            >
-              <EditIcon />
-            </IconButton>
-          </Tooltip>
+          <RefreshButton onClick={() => bindCountry(id!)} />
+          <EditButton
+            onClick={() =>
+              navigate(`/countries/edit/${id}`, { state: country })
+            }
+          />
+          <DeleteButon onClick={() => setDeleteDialogOpen(true)} />
         </Stack>
       </AppBreadcrumbs>
       <Box sx={{ my: 2 }}>
@@ -82,6 +91,11 @@ export default function CountryView() {
           )}
         </Paper>
       </Box>
+      <ConfirmDeleteDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDelete}
+      />
     </Container>
   );
 }

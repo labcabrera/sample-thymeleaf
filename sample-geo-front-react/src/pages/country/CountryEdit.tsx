@@ -1,20 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
-import {
-  Container,
-  Paper,
-  Box,
-  Typography,
-  CircularProgress,
-  IconButton,
-  Stack,
-  Tooltip,
-} from "@mui/material";
+import { Container, Box, CircularProgress, Stack } from "@mui/material";
 import { fetchCountry, type Country } from "../../lib/countries-api";
 import AppBreadcrumbs from "../../components/AppBreadcrumbs";
-import SaveIcon from "@mui/icons-material/Save";
-import CancelIcon from "@mui/icons-material/Cancel";
+import CountryForm from "./CountryForm";
+import SaveButton from "../../components/buttons/SaveButton";
+import CancelButton from "../../components/buttons/CancelButton";
 
 export default function CountryEdit() {
   const { id } = useParams<{ id: string }>();
@@ -22,6 +14,7 @@ export default function CountryEdit() {
   const navigate = useNavigate();
   const auth = useAuth();
   const [country, setCountry] = useState<Country>();
+  const [formData, setFormData] = useState<Country>({} as Country);
 
   const bindCountry = (id: string) => {
     fetchCountry(id!, auth).then((response) => setCountry(response));
@@ -30,12 +23,18 @@ export default function CountryEdit() {
   const onUpdate = () => {};
 
   useEffect(() => {
+    console.log("use e 1");
+    setFormData(country);
+  }, [country]);
+
+  useEffect(() => {
+    console.log("use e 0");
     if (location.state.country) {
       setCountry(location.state.country);
     } else if (id) {
       bindCountry(id);
     }
-  }, [id, auth, country, location]);
+  }, [id, auth, location]);
 
   return (
     <Container>
@@ -48,24 +47,25 @@ export default function CountryEdit() {
         ]}
       >
         <Stack direction="row">
-          <Tooltip title="Refresh">
-            <IconButton onClick={onUpdate} color="primary">
-              <SaveIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Edit">
-            <IconButton
-              onClick={() =>
-                navigate(`/countries/view/${id}`, { state: country })
-              }
-              color="primary"
-            >
-              <CancelIcon />
-            </IconButton>
-          </Tooltip>
+          <SaveButton onClick={onUpdate} />
+          <CancelButton
+            onClick={() =>
+              navigate(`/countries/view/${id}`, { state: country })
+            }
+          />
         </Stack>
       </AppBreadcrumbs>
-      <Box sx={{ my: 2 }}>TODO</Box>
+      {!formData ? (
+        <CircularProgress />
+      ) : (
+        <Box sx={{ my: 2 }}>
+          <CountryForm
+            formData={formData}
+            setFormData={setFormData}
+            create={false}
+          />
+        </Box>
+      )}
     </Container>
   );
 }

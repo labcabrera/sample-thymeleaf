@@ -4,21 +4,21 @@ import {
   Box,
   CircularProgress,
   TextField,
-  IconButton,
   List,
   ListItemText,
   ListItemButton,
   Pagination,
+  Paper,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import {
   fetchCountries,
   type Country,
   type Page,
 } from "../../lib/countries-api";
 import AppBreadcrumbs from "../../components/AppBreadcrumbs";
+import AddButton from "../../components/buttons/AddButton";
 
 export default function CountryList() {
   const auth = useAuth();
@@ -45,14 +45,12 @@ export default function CountryList() {
           { label: "Countries" },
         ]}
       >
-        <IconButton onClick={() => navigate("/countries/create")}>
-          <AddCircleIcon />
-        </IconButton>
+        <AddButton onClick={() => navigate("/countries/create")} />
       </AppBreadcrumbs>
       <Box sx={{ my: 2 }}>
         <Box
           component="form"
-          sx={{ display: "flex", gap: 2, mb: 2 }}
+          sx={{ display: "flex", gap: 2, my: 2 }}
           onSubmit={(e) => e.preventDefault()}
         >
           <TextField
@@ -74,27 +72,28 @@ export default function CountryList() {
           </Box>
         ) : (
           <>
-            <List dense>
-              {rows.map((r) => (
-                <ListItemButton
-                  key={r.id}
-                  onClick={() =>
-                    navigate(`/countries/view/${r.id}`, {
-                      state: { country: r },
-                    })
-                  }
-                  sx={{
-                    border: 1,
-                    borderColor: "primary.light",
-                    borderRadius: 1,
-                    mb: 1,
-                  }}
-                >
-                  <ListItemText primary={`${r.name}`} />
-                </ListItemButton>
-              ))}
-            </List>
-            <Box>
+            <Paper>
+              <List dense>
+                {rows.map((r) => (
+                  <ListItemButton
+                    key={r.id}
+                    onClick={() =>
+                      navigate(`/countries/view/${r.id}`, {
+                        state: { country: r },
+                      })
+                    }
+                  >
+                    <ListItemText primary={`${r.name}`} />
+                  </ListItemButton>
+                ))}
+              </List>
+            </Paper>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
               <Pagination
                 count={pageData.pagination.totalPages}
                 page={pageData.pagination.page + 1}
