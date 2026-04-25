@@ -8,10 +8,10 @@ También, la estructura del proyecto evita el uso de patrones DDD tales como agr
 
 ## Estructura del Proyecto
 
-El proyecto está organizado en varios módulos:
+El proyecto está organizado en los siguientes módulos:
 
-- `sample-api`: Contiene la lógica de negocio y las capas de servicio y repositorio.
-- `sample-web`: Contiene los controladores y las vistas Thymeleaf.
+- `sample-geo-api`: Contiene la lógica de negocio y las capas de servicio y repositorio.
+- `sample-geo-front`: Contiene los controladores y las vistas Thymeleaf.
 
 ## Sample API
 
@@ -29,9 +29,9 @@ Se ha definido la interface `Guard` para implementar un mecanismo de autorizaci�
 
 Dentro de la paquetería `shared` se han definido diferentes componente que serían comunes a otros módulos como el cliente de la API, los DTOs, los mapeadores o las excepciones personalizadas. Estos componentes podrían ser extrañidos a módulos independientes equivalentes a los starters de Spring Boot.
 
-## Sample Web
+## Sample Front
 
-Este módulo está basado en Spring Web MVC y Thymeleaf para renderizar las vistas. Proporciona una interfaz de usuario para interactuar con la API REST del módulo `sample-api`.
+Este módulo está basado en Spring Web MVC y Thymeleaf para renderizar las vistas. Proporciona una interfaz de usuario para interactuar con la API REST del módulo `sample-geo-api`.
 
 El cliente de la API está generado a través del plugin `org.openapi.generator` de gradle utilizando la librería `feign`.
 
@@ -86,6 +86,18 @@ Lo mismo haremos para el frontal ejecutando los mismos comandos.
 
 El frontal levantará la aplicación en el puerto 8081 de modo que podremos acceder a la aplicación en http://localhost:8081.
 
-Desde aquí podremos navegar por las diferentes páginas y realizar operaciones CRUD sobre las provincias utilizando la API REST del módulo `sample-api`.
+Desde aquí podremos navegar por las diferentes páginas y realizar operaciones CRUD sobre las provincias utilizando la API REST del módulo `sample-geo-api`.
 
 Docker compose incluye una imagen de Kafka UI a la que podemos acceder a través de  http://localhost:8091/ usando las credenciales `admin:admin` para comprobar los mensajes que se publican en los topics de Kafka cada vez que se crea, actualiza o elimina una entidad.
+
+## Ejemplo con React
+
+[source, bash]
+----
+npm create vite@latest sample-geo-front-react -- --template react-ts
+cd sample-geo-front-react
+npm install
+npm install @mui/material @emotion/react @emotion/styled
+npm install @mui/icons-material
+
+----

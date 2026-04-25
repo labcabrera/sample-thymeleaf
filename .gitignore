@@ -9,4 +9,5 @@
 **/dist
 **/coverage
 **/bin
+**/node_modules
 out/
