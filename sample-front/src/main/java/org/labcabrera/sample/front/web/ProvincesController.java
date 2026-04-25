@@ -78,7 +78,7 @@ public class ProvincesController {
     }
 
     @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable String id, Model model) {
+    public String editForm(@PathVariable(name = "id") String id, Model model) {
         var province = provincesApi.getProvinceById(id);
         if (province == null) {
             log.error("Province not found with id: {}", id);
@@ -90,14 +90,40 @@ public class ProvincesController {
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable String id, UpdateProvinceDto province) {
+    public String update(@PathVariable(name = "id") String id, UpdateProvinceDto province) {
         provincesApi.updateProvince(id, province);
         return "redirect:/provinces";
     }
 
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable String id) {
+    public String delete(@PathVariable(name = "id") String id) {
         provincesApi.deleteProvince(id);
         return "redirect:/provinces";
+    }
+
+    @GetMapping("/{id}")
+    public String view(@PathVariable(name = "id") String id, Model model) {
+        var province = provincesApi.getProvinceById(id);
+        if (province == null) {
+            log.error("Province not found with id: {}", id);
+            throw new RuntimeException("Province not found");
+        }
+        // try to fetch country name for display
+        String countryName = null;
+        try {
+            if (province.getCountryId() != null) {
+                var country = countriesApi.getCountryById(province.getCountryId());
+                if (country != null) {
+                    countryName = country.getName();
+                }
+            }
+        }
+        catch (Exception ex) {
+            log.warn("Could not fetch country for province view: {}", ex.getMessage());
+        }
+        model.addAttribute("province", province);
+        model.addAttribute("countryName", countryName);
+        model.addAttribute("title", "Province - " + province.getName());
+        return "provinces/view";
     }
 }

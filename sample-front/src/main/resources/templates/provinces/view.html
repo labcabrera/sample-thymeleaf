@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
+<section th:fragment="content">
+    <div class="section">
+        <div class="row">
+            <div class="col s12">
+                <nav style="margin-bottom:12px; width:100%;">
+                    <div class="nav-wrapper">
+                        <div class="col s12">
+                            <a th:href="@{/geo}" class="breadcrumb">Geo</a>
+                            <a th:href="@{/provinces}" class="breadcrumb">Provinces</a>
+                            <span class="breadcrumb" style="opacity:0.6;" th:text="${province.name}">Province</span>
+                        </div>
+                    </div>
+                </nav>
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                    <h4 th:text="${province.name}">Province</h4>
+                    <div>
+                        <a class="waves-effect waves-light btn btn-primary" th:href="@{/provinces/{id}/edit(id=${province.id})}">Edit</a>
+                        <form th:action="@{/provinces/{id}/delete(id=${province.id})}" method="post" style="display:inline">
+                            <button type="submit" class="waves-effect waves-light btn btn-secondary"
+                                onclick="return confirm('Are you sure you want to delete this province?');">Delete</button>
+                        </form>
+                    </div>
+                </div>
+
+                <table class="striped">
+                    <tbody>
+                        <tr>
+                            <th>ID</th>
+                            <td th:text="${province.id}"></td>
+                        </tr>
+                        <tr>
+                            <th>Name</th>
+                            <td th:text="${province.name}"></td>
+                        </tr>
+                        <tr>
+                            <th>Country</th>
+                            <td>
+                                <a th:if="${province.countryId} != null" th:href="@{/countries/{id}(id=${province.countryId})}"
+                                    th:text="${countryName != null ? countryName : province.countryId}"></a>
+                                <span th:if="${province.countryId} == null" th:text="${countryName}"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Created</th>
+                            <td th:text="${province.createdAt}"></td>
+                        </tr>
+                        <tr>
+                            <th>Updated</th>
+                            <td th:text="${province.updatedAt}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+</html>

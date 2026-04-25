@@ -7,21 +7,15 @@
                 <h4>Provinces</h4>
                 <a class="waves-effect waves-light btn btn-primary" th:href="@{/provinces/create}">Create Province</a>
                 <form id="provinceSearchForm" th:action="@{/provinces}" method="get">
-                    <script src="/static/js/country-select.js"></script>
                     <div class="input-field" style="display:flex; align-items:center; gap:8px; margin-top:12px; margin-bottom:12px;">
                         <i class="material-icons prefix" style="margin-right:4px">search</i>
                         <input id="provinceNameSearch" type="text" name="name" placeholder="Province name" th:value="${param.name}" />
-                        <select id="countrySelect" name="countryId" style="min-width:220px; padding:6px 8px;">
-                            <option value="">All countries</option>
-                            <option th:each="c : ${countries}" th:value="${c.id}" th:text="${c.name}"
-                                th:selected="${param.countryId} == ${c.id}"></option>
-                        </select>
                         <input type="hidden" id="q" name="q" th:value="${q}" />
                         <input type="hidden" name="size" th:value="${size}" />
                         <button class="btn-small btn-primary" type="submit" style="height:36px;">
                             <i class="material-icons">search</i>
                         </button>
-                        <button id="provinceResetBtn" class="btn-small btn-secondary" type="button" style="height:36px; margin-left:4px;">
+                        <button id="provinceResetBtn" class="btn-small btn-primary" type="button" style="height:36px; margin-left:4px;">
                             Reset
                         </button>
                     </div>
@@ -34,11 +28,8 @@
                             if (form.dataset.skipHandler) { delete form.dataset.skipHandler; return; }
                             var nameEl = document.getElementById('provinceNameSearch');
                             var name = nameEl ? nameEl.value.trim() : '';
-                            var cs = document.getElementById('countrySelect');
-                            var countryId = cs ? cs.value : '';
                             var parts = [];
                             if (name) parts.push('name=re=' + encodeURIComponent(name));
-                            if (countryId) parts.push('countryId=="' + encodeURIComponent(countryId) + '"');
                             var q = document.getElementById('q');
                             if (q) q.value = parts.join(';');
                         });
@@ -47,33 +38,30 @@
                             resetBtn.addEventListener('click', function () {
                                 form.dataset.skipHandler = 'true';
                                 var nameEl = document.getElementById('provinceNameSearch'); if (nameEl) nameEl.value = '';
-                                var cs = document.getElementById('countrySelect'); if (cs) cs.value = '';
                                 var q = document.getElementById('q'); if (q) q.value = '';
                                 // ensure page reset if present
                                 var pageInput = form.querySelector('input[name=page]'); if (pageInput) pageInput.value = '0';
                                 form.submit();
                             });
                         }
+                    })();
                 </script>
                 <table class="striped">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Name</th>
                             <th>Country</th>
-                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="p : ${provinces}">
-                            <td th:text="${p.id}"></td>
-                            <td th:text="${p.name}"></td>
-                            <td th:text="${p.countryId}"></td>
                             <td>
-                                <a class="btn-small btn-secondary" th:href="@{/provinces/{id}/edit(id=${p.id})}">Edit</a>
-                                <form th:action="@{/provinces/{id}/delete(id=${p.id})}" method="post" style="display:inline">
-                                    <button class="btn-small btn-secondary" type="submit">Delete</button>
-                                </form>
+                                <a th:href="@{/provinces/{id}(id=${p.id})}" th:text="${p.name}"></a>
+                            </td>
+                            <td>
+                                <a th:if="${p.countryId} != null" th:href="@{/countries/{id}(id=${p.countryId})}"
+                                    th:text="${p.countryId}"></a>
+                                <span th:if="${p.countryId} == null">-</span>
                             </td>
                         </tr>
                     </tbody>

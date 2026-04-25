@@ -33,6 +33,12 @@ public class ProvinceRepositoryJpaAdapter implements ProvinceRepository {
     private final RSQLParser rsqlParser;
 
     @Override
+    @Cacheable(value = "province", key = "#p0", unless = "#result == null || #result.isEmpty()")
+    public Optional<Province> findById(String provinceId) {
+        return jpaRepository.findById(provinceId).map(mapper::toDomain);
+    }
+
+    @Override
     public Optional<Province> findByName(String name) {
         if (name != null && !name.isBlank()) {
             var e = jpaRepository.findByNameIgnoreCase(name);
@@ -41,12 +47,6 @@ public class ProvinceRepositoryJpaAdapter implements ProvinceRepository {
             }
         }
         return java.util.Optional.empty();
-    }
-
-    @Override
-    @Cacheable(value = "province", key = "#provinceId", unless = "#result == null || #result.isEmpty()")
-    public Optional<Province> findById(String provinceId) {
-        return jpaRepository.findById(provinceId).map(mapper::toDomain);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class ProvinceRepositoryJpaAdapter implements ProvinceRepository {
 
     @Override
     @Transactional
-    @CachePut(value = "province", key = "#provinceId")
+    @CachePut(value = "province", key = "#p0")
     public Province update(String provinceId, Province province) {
         var current = jpaRepository.findById(provinceId)
             .orElseThrow(() -> new BadRequestException(String.format("Province not found with id %s", provinceId)));
@@ -98,7 +98,7 @@ public class ProvinceRepositoryJpaAdapter implements ProvinceRepository {
 
     @Override
     @Transactional
-    @CacheEvict(value = "province", key = "#provinceId")
+    @CacheEvict(value = "province", key = "#p0")
     public void deleteById(String provinceId) {
         jpaRepository.deleteById(provinceId);
     }
