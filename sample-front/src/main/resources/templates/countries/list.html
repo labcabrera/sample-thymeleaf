@@ -27,19 +27,12 @@
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
-                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="c : ${countries}">
                             <td th:text="${c.id}"></td>
-                            <td th:text="${c.name}"></td>
-                            <td>
-                                <a class="btn-small btn-secondary" th:href="@{/countries/{id}/edit(id=${c.id})}">Edit</a>
-                                <form th:action="@{/countries/{id}/delete(id=${c.id})}" method="post" style="display:inline">
-                                    <button class="btn-small btn-secondary" type="submit">Delete</button>
-                                </form>
-                            </td>
+                            <td><a th:href="@{/countries/{id}(id=${c.id})}" th:text="${c.name}"></a></td>
                         </tr>
                     </tbody>
                 </table>

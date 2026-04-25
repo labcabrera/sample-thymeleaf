@@ -6,6 +6,55 @@
             <div class="col s12">
                 <h4>Provinces</h4>
                 <a class="waves-effect waves-light btn btn-primary" th:href="@{/provinces/create}">Create Province</a>
+                <form id="provinceSearchForm" th:action="@{/provinces}" method="get">
+                    <script src="/static/js/country-select.js"></script>
+                    <div class="input-field" style="display:flex; align-items:center; gap:8px; margin-top:12px; margin-bottom:12px;">
+                        <i class="material-icons prefix" style="margin-right:4px">search</i>
+                        <input id="provinceNameSearch" type="text" name="name" placeholder="Province name" th:value="${param.name}" />
+                        <select id="countrySelect" name="countryId" style="min-width:220px; padding:6px 8px;">
+                            <option value="">All countries</option>
+                            <option th:each="c : ${countries}" th:value="${c.id}" th:text="${c.name}"
+                                th:selected="${param.countryId} == ${c.id}"></option>
+                        </select>
+                        <input type="hidden" id="q" name="q" th:value="${q}" />
+                        <input type="hidden" name="size" th:value="${size}" />
+                        <button class="btn-small btn-primary" type="submit" style="height:36px;">
+                            <i class="material-icons">search</i>
+                        </button>
+                        <button id="provinceResetBtn" class="btn-small btn-secondary" type="button" style="height:36px; margin-left:4px;">
+                            Reset
+                        </button>
+                    </div>
+                </form>
+                <script>
+                    (function () {
+                        var form = document.getElementById('provinceSearchForm');
+                        if (!form) return;
+                        form.addEventListener('submit', function (e) {
+                            if (form.dataset.skipHandler) { delete form.dataset.skipHandler; return; }
+                            var nameEl = document.getElementById('provinceNameSearch');
+                            var name = nameEl ? nameEl.value.trim() : '';
+                            var cs = document.getElementById('countrySelect');
+                            var countryId = cs ? cs.value : '';
+                            var parts = [];
+                            if (name) parts.push('name=re=' + encodeURIComponent(name));
+                            if (countryId) parts.push('countryId=="' + encodeURIComponent(countryId) + '"');
+                            var q = document.getElementById('q');
+                            if (q) q.value = parts.join(';');
+                        });
+                        var resetBtn = document.getElementById('provinceResetBtn');
+                        if (resetBtn) {
+                            resetBtn.addEventListener('click', function () {
+                                form.dataset.skipHandler = 'true';
+                                var nameEl = document.getElementById('provinceNameSearch'); if (nameEl) nameEl.value = '';
+                                var cs = document.getElementById('countrySelect'); if (cs) cs.value = '';
+                                var q = document.getElementById('q'); if (q) q.value = '';
+                                // ensure page reset if present
+                                var pageInput = form.querySelector('input[name=page]'); if (pageInput) pageInput.value = '0';
+                                form.submit();
+                            });
+                        }
+                </script>
                 <table class="striped">
                     <thead>
                         <tr>
@@ -21,10 +70,8 @@
                             <td th:text="${p.name}"></td>
                             <td th:text="${p.countryId}"></td>
                             <td>
-                                <a class="btn-small btn-secondary"
-                                    th:href="@{/provinces/{id}/edit(id=${p.id})}">Edit</a>
-                                <form th:action="@{/provinces/{id}/delete(id=${p.id})}" method="post"
-                                    style="display:inline">
+                                <a class="btn-small btn-secondary" th:href="@{/provinces/{id}/edit(id=${p.id})}">Edit</a>
+                                <form th:action="@{/provinces/{id}/delete(id=${p.id})}" method="post" style="display:inline">
                                     <button class="btn-small btn-secondary" type="submit">Delete</button>
                                 </form>
                             </td>
@@ -34,16 +81,17 @@
                 <div th:if="${totalPages} &gt; 1" class="section">
                     <ul class="pagination">
                         <li th:classappend="${page == 0} ? 'disabled' : 'waves-effect'">
-                            <a th:href="@{/provinces(q=${q}, page=${page - 1}, size=${size})}"><i
-                                    class="material-icons">chevron_left</i></a>
+                            <a th:href="@{/provinces(q=${q}, page=${page - 1}, size=${size})}">
+                                <i class="material-icons">chevron_left</i>
+                            </a>
                         </li>
-                        <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-                            th:classappend="${i == page} ? 'active' : 'waves-effect'">
+                        <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == page} ? 'active' : 'waves-effect'">
                             <a th:href="@{/provinces(q=${q}, page=${i}, size=${size})}" th:text="${i + 1}">1</a>
                         </li>
                         <li th:classappend="${page + 1 == totalPages} ? 'disabled' : 'waves-effect'">
-                            <a th:href="@{/provinces(q=${q}, page=${page + 1}, size=${size})}"><i
-                                    class="material-icons">chevron_right</i></a>
+                            <a th:href="@{/provinces(q=${q}, page=${page + 1}, size=${size})}">
+                                <i class="material-icons">chevron_right</i>
+                            </a>
                         </li>
                     </ul>
                 </div>

@@ -46,6 +46,18 @@ public class CountriesController {
         return "countries/list";
     }
 
+    @GetMapping("/{id}")
+    public String view(@PathVariable(name = "id") String id, Model model) {
+        var country = countriesApi.getCountryById(id);
+        if (country == null) {
+            log.error("Country not found with id: {}", id);
+            throw new RuntimeException("Country not found");
+        }
+        model.addAttribute("country", country);
+        model.addAttribute("title", "Country - " + country.getName());
+        return "countries/view";
+    }
+
     @GetMapping("/create")
     public String createForm(Model model) {
         model.addAttribute("country", new CountryDto());

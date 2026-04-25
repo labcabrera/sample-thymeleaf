@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.labcabrera.sample.front.generated.client.geo.api.ProvincesApi;
+import org.labcabrera.sample.front.generated.client.geo.api.CountriesApi;
 import org.labcabrera.sample.front.generated.client.geo.model.CreateProvinceDto;
 import org.labcabrera.sample.front.generated.client.geo.model.Pagination;
 import org.labcabrera.sample.front.generated.client.geo.model.ProvinceDto;
@@ -28,6 +29,9 @@ public class ProvincesController {
     @Autowired
     private ProvincesApi provincesApi;
 
+    @Autowired
+    private CountriesApi countriesApi;
+
     @GetMapping
     public String list(Model model,
         @RequestParam(value = "q", required = false, defaultValue = "") String q,
@@ -36,8 +40,18 @@ public class ProvincesController {
         log.trace("Fetching provinces with query: {} (page={}, size={})", q, pageParam, sizeParam);
         ProvincePage page = this.provincesApi.getProvincesByRsql(q, pageParam, sizeParam, Arrays.asList("name", "asc"));
         List<ProvinceDto> provinces = page.getContent();
+        // load countries for the filter select
+        List<org.labcabrera.sample.front.generated.client.geo.model.CountryDto> countries = java.util.List.of();
+        try {
+            var cp = countriesApi.getCountriesByRsql("", 0, 1000, Arrays.asList("name", "asc"));
+            countries = cp != null ? cp.getContent() : java.util.List.of();
+        }
+        catch (Exception ex) {
+            log.warn("Could not fetch countries for provinces filter: {}", ex.getMessage());
+        }
         Pagination pagination = page.getPagination();
         model.addAttribute("provinces", provinces);
+        model.addAttribute("countries", countries);
         model.addAttribute("page", pagination.getPage());
         model.addAttribute("size", pagination.getSize());
         model.addAttribute("totalPages", pagination.getTotalPages());
