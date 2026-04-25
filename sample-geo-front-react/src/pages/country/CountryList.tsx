@@ -31,15 +31,14 @@ export default function CountryList() {
   const [pageData, setPageData] = useState<Page<Country> | null>(null);
   const [page, setPage] = useState<number>(0);
   const [size, setSize] = useState<number>(10);
-  const [sort, setSort] = useState<string>("name,asc");
   const [rsql, setRsql] = useState<string>("");
   const [nameFilter, setNameFilter] = useState<string>("");
 
   useEffect(() => {
-    fetchCountries(rsql, size, page, sort, auth).then((response) =>
+    fetchCountries(rsql, size, page, "name,asc", auth).then((response) =>
       setPageData(response),
     );
-  }, [auth, page, size, sort, rsql]);
+  }, [auth, page, size, rsql]);
 
   const handleChangePage = (_: unknown, newPage: number) => {
     setPage(newPage);

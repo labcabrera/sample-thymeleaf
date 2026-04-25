@@ -15,6 +15,7 @@ export interface Page<T> {
   pagination: Pagination;
 }
 
+import type { AuthContextProps } from "react-oidc-context";
 import callApi from "./api";
 
 export const fetchCountries = async (
@@ -22,7 +23,7 @@ export const fetchCountries = async (
   size: number,
   page: number,
   sort: string,
-  auth: any,
+  auth: AuthContextProps,
 ): Promise<Page<Country>> => {
   const data = await callApi(
     auth,
