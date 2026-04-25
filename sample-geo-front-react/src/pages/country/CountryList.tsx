@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import {
   Container,
   Box,
-  TablePagination,
   CircularProgress,
   TextField,
   IconButton,
   List,
   ListItemText,
   ListItemButton,
+  Pagination,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
@@ -17,7 +17,6 @@ import {
   fetchCountries,
   type Country,
   type Page,
-  type Pagination,
 } from "../../lib/countries-api";
 import AppBreadcrumbs from "../../components/AppBreadcrumbs";
 
@@ -26,28 +25,16 @@ export default function CountryList() {
   const navigate = useNavigate();
   const [pageData, setPageData] = useState<Page<Country> | null>(null);
   const [page, setPage] = useState<number>(0);
-  const [size, setSize] = useState<number>(10);
   const [rsql, setRsql] = useState<string>("");
   const [nameFilter, setNameFilter] = useState<string>("");
 
   useEffect(() => {
-    fetchCountries(rsql, size, page, "name,asc", auth).then((response) =>
+    fetchCountries(rsql, 10, page, "name,asc", auth).then((response) =>
       setPageData(response),
     );
-  }, [auth, page, size, rsql]);
-
-  const handleChangePage = (_: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSize(parseInt(e.target.value, 10));
-    setPage(0);
-  };
+  }, [auth, page, rsql]);
 
   const rows: Country[] = pageData?.content ?? [];
-  const pagination: Pagination | null =
-    (pageData as Page<Country>)?.pagination ?? null;
 
   return (
     <Container>
@@ -70,7 +57,6 @@ export default function CountryList() {
         >
           <TextField
             label="Name"
-            // variant="outlined"
             size="small"
             value={nameFilter}
             onChange={(e) => {
@@ -88,7 +74,7 @@ export default function CountryList() {
           </Box>
         ) : (
           <>
-            <List>
+            <List dense>
               {rows.map((r) => (
                 <ListItemButton
                   key={r.id}
@@ -97,20 +83,29 @@ export default function CountryList() {
                       state: { country: r },
                     })
                   }
+                  sx={{
+                    border: 1,
+                    borderColor: "primary.light",
+                    borderRadius: 1,
+                    mb: 1,
+                  }}
                 >
-                  <ListItemText primary={r.name} secondary={r.id} />
+                  <ListItemText primary={`${r.name}`} />
                 </ListItemButton>
               ))}
             </List>
-            <TablePagination
-              component="div"
-              count={pagination?.totalElements ?? 0}
-              page={pagination ? pagination.page : page}
-              onPageChange={handleChangePage}
-              rowsPerPage={pagination ? pagination.size : size}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              rowsPerPageOptions={[5, 10, 25, 50]}
-            />
+            <Box>
+              <Pagination
+                count={pageData.pagination.totalPages}
+                page={pageData.pagination.page + 1}
+                onChange={(_: React.ChangeEvent<unknown>, value: number) =>
+                  setPage(value - 1)
+                }
+                color="primary"
+                showFirstButton
+                showLastButton
+              />
+            </Box>
           </>
         )}
       </Box>

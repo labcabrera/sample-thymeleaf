@@ -1,15 +1,12 @@
 import {
   Container,
-  Paper,
   Box,
-  Typography,
   List,
   ListItemButton,
   ListItemText,
-  Breadcrumbs,
-  Link,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
+import AppBreadcrumbs from "../components/AppBreadcrumbs";
 
 export default function GeoPage() {
   const items = [
@@ -20,22 +17,17 @@ export default function GeoPage() {
 
   return (
     <Container>
+      <AppBreadcrumbs
+        items={[{ label: "Home", href: "/" }, { label: "Geo" }]}
+      />
       <Box sx={{ my: 2 }}>
-        <Breadcrumbs aria-label="breadcrumb">
-          <Link component={RouterLink} underline="hover" color="inherit" to="/">
-            Home
-          </Link>
-          <Typography color="text.primary">Geo</Typography>
-        </Breadcrumbs>
-        <Paper sx={{ p: 2 }}>
-          <List>
-            {items.map((it) => (
-              <ListItemButton key={it.to} component={RouterLink} to={it.to}>
-                <ListItemText primary={it.label} />
-              </ListItemButton>
-            ))}
-          </List>
-        </Paper>
+        <List>
+          {items.map((it) => (
+            <ListItemButton key={it.to} component={RouterLink} to={it.to}>
+              <ListItemText primary={it.label} color="primary" />
+            </ListItemButton>
+          ))}
+        </List>
       </Box>
     </Container>
   );

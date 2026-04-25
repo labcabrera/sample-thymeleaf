@@ -17,12 +17,6 @@ type Props = {
 export default function Header({ onDrawerToggle }: Props) {
   const navigate = useNavigate();
 
-  const handleGeoClick = () => {
-    navigate("/geo");
-  };
-
-  // user menu is handled by UserMenu component
-
   return (
     <AppBar position="fixed">
       <Toolbar>
@@ -35,13 +29,19 @@ export default function Header({ onDrawerToggle }: Props) {
           <MenuIcon />
         </IconButton>
 
-        <Typography variant="h6" component="div" sx={{ mr: 2 }}>
-          Sample Geo React
-        </Typography>
+        <Button
+          color="inherit"
+          onClick={() => navigate("/")}
+          sx={{ textTransform: "none" }}
+        >
+          <Typography variant="h6" component="div" sx={{ mr: 2 }}>
+            Sample Geo React
+          </Typography>
+        </Button>
 
         <Button
           color="inherit"
-          onClick={handleGeoClick}
+          onClick={() => navigate("/geo")}
           sx={{ textTransform: "none" }}
         >
           <Typography variant="h6">Geo</Typography>

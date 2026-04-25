@@ -1,13 +1,12 @@
-import { Container, Typography, Box, Breadcrumbs } from "@mui/material";
+import { Container, Typography, Box } from "@mui/material";
+import AppBreadcrumbs from "../components/AppBreadcrumbs";
 
 export default function HomePage() {
   return (
     <Container>
-      <Breadcrumbs aria-label="breadcrumb">
-        <Typography color="text.primary">Home</Typography>
-      </Breadcrumbs>
+      <AppBreadcrumbs items={[{ label: "Home" }]} />
       <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
+        <Typography variant="h4" component="h1" color="primary" gutterBottom>
           Sample Geo React
         </Typography>
         <Typography>

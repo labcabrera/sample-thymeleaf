@@ -9,12 +9,9 @@ const theme = createTheme({
     secondary: {
       main: "#f9b000",
     },
-    background: {
-      default: "#f5f7fb",
-      paper: "#ffffff",
-    },
-    success: {
-      main: "#2e7d32",
+    divider: "#545f61",
+    error: {
+      main: "#d32f2f",
     },
   },
   typography: {
