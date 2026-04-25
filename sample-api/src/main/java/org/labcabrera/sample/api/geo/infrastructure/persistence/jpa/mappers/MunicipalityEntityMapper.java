@@ -8,9 +8,11 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface MunicipalityEntityMapper {
 
+    @Mapping(source = "province.id", target = "provinceId")
     Municipality toDomain(MunicipalityEntity entity);
 
     @Mapping(target = "version", ignore = true)
+    @Mapping(target = "province", expression = "java(domain.provinceId() == null ? null : new ProvinceEntity(domain.provinceId(), null, null, null, null, null, null))")
     MunicipalityEntity toEntity(Municipality domain);
 
 }
