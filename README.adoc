@@ -23,6 +23,8 @@ Utiliza Spring Data JPA para la persistencia de datos empleando RSQL para las co
 
 La seguridad está basada en Spring Security utilizando la librería `spring-boot-starter-oauth2-resource-server` validando los tokens JWT a través de Keycloak.
 
+Se ha definido la interface `Guard` para implementar un mecanismo de autorización basado en roles y permisos a nivel de operación en lugar de usar las anotaciones de Spring Security a nivel de método. Esto permite una mayor flexibilidad y control dentro de la logica de negocio y encaja más con el enfoque de arquitectura hexagonal.
+
 ## Sample Web
 
 Este módulo está basado en Spring Web MVC y Thymeleaf para renderizar las vistas. Proporciona una interfaz de usuario para interactuar con la API REST del módulo `sample-api`.
@@ -31,7 +33,7 @@ El cliente de la API está generado a través del plugin `org.openapi.generator`
 
 Este proyecto define un layout base muy sencillo utilizando componentes de Materialize CSS para el diseño y estilo de la aplicación.
 
-Cada página está asociada a un _@Controller_ que es responsable de manejar las solicitudes HTTP, interactuar con el cliente de la API y devolver la vista correspondiente.
+Cada página está asociada a un `@Controller` que es responsable de manejar las solicitudes HTTP, interactuar con el cliente de la API y devolver la vista correspondiente.
 
 ## Ejecución
 
