@@ -51,28 +51,26 @@ export default function CountryList() {
 
   return (
     <Container>
+      <AppBreadcrumbs
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Geo", href: "/geo" },
+          { label: "Countries" },
+        ]}
+      >
+        <IconButton onClick={() => navigate("/countries/create")}>
+          <AddCircleIcon />
+        </IconButton>
+      </AppBreadcrumbs>
       <Box sx={{ my: 2 }}>
-        <Box sx={{ mb: 1 }}>
-          <AppBreadcrumbs
-            items={[
-              { label: "Home", href: "/" },
-              { label: "Geo", href: "/geo" },
-              { label: "Countries" },
-            ]}
-          >
-            <IconButton onClick={() => navigate("/countries/create")}>
-              <AddCircleIcon />
-            </IconButton>
-          </AppBreadcrumbs>
-        </Box>
         <Box
           component="form"
           sx={{ display: "flex", gap: 2, mb: 2 }}
           onSubmit={(e) => e.preventDefault()}
         >
           <TextField
-            label="Nombre"
-            variant="outlined"
+            label="Name"
+            // variant="outlined"
             size="small"
             value={nameFilter}
             onChange={(e) => {

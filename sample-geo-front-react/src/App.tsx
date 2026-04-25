@@ -3,13 +3,16 @@ import { ThemeProvider, CssBaseline } from "@mui/material";
 import theme from "./theme";
 import AuthProvider from "./auth/AuthProvider";
 import Layout from "./components/Layout";
-import Home from "./pages/Home";
+import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
 import CountryView from "./pages/country/CountryView";
 import CountryList from "./pages/country/CountryList";
+import CountryCreate from "./pages/country/CountryCreate";
+import CountryEdit from "./pages/country/CountryEdit";
 import Provinces from "./pages/province/Provinces";
 import Municipalities from "./pages/municipality/Municipalities";
 import GeoPage from "./pages/GeoPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   return (
@@ -20,12 +23,15 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Layout />}>
-              <Route index element={<Home />} />
+              <Route index element={<HomePage />} />
               <Route path="geo" element={<GeoPage />} />
               <Route path="countries" element={<CountryList />} />
               <Route path="countries/view/:id" element={<CountryView />} />
+              <Route path="countries/edit/:id" element={<CountryEdit />} />
+              <Route path="countries/create" element={<CountryCreate />} />
               <Route path="provinces" element={<Provinces />} />
               <Route path="municipalities" element={<Municipalities />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>
         </BrowserRouter>

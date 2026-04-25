@@ -1,15 +1,14 @@
+import { type AuthContextProps } from "react-oidc-context";
+
 const API_BASE = import.meta.env.VITE_API_GEO_URL ?? "http://localhost:8082";
 
-// `auth` is the object returned by `useAuth()` from `react-oidc-context`
 export async function callApi(
-  auth: any,
+  auth: AuthContextProps,
   input: RequestInfo,
   init: RequestInit = {},
 ) {
   if (!auth) throw new Error("Auth instance is required");
-
   if (!auth.isAuthenticated) throw new Error("Not authenticated");
-
   const token = auth.user?.access_token;
   if (!token) throw new Error("No access token available");
 

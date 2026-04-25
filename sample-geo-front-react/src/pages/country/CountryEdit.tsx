@@ -6,7 +6,6 @@ import {
   Paper,
   Box,
   Typography,
-  Button,
   CircularProgress,
   IconButton,
   Stack,
@@ -14,10 +13,10 @@ import {
 } from "@mui/material";
 import { fetchCountry, type Country } from "../../lib/countries-api";
 import AppBreadcrumbs from "../../components/AppBreadcrumbs";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
+import CancelIcon from "@mui/icons-material/Cancel";
 
-export default function CountryView() {
+export default function CountryEdit() {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const navigate = useNavigate();
@@ -27,6 +26,8 @@ export default function CountryView() {
   const bindCountry = (id: string) => {
     fetchCountry(id!, auth).then((response) => setCountry(response));
   };
+
+  const onUpdate = () => {};
 
   useEffect(() => {
     if (location.state.country) {
@@ -43,45 +44,28 @@ export default function CountryView() {
           { label: "Home", href: "/" },
           { label: "Geo", href: "/geo" },
           { label: "Countries", href: "/countries" },
-          { label: "View" },
+          { label: "Edit" },
         ]}
       >
         <Stack direction="row">
           <Tooltip title="Refresh">
-            <IconButton onClick={() => bindCountry(id!)} color="primary">
-              <RefreshIcon />
+            <IconButton onClick={onUpdate} color="primary">
+              <SaveIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Edit">
             <IconButton
               onClick={() =>
-                navigate(`/countries/edit/${id}`, { state: country })
+                navigate(`/countries/view/${id}`, { state: country })
               }
               color="primary"
             >
-              <EditIcon />
+              <CancelIcon />
             </IconButton>
           </Tooltip>
         </Stack>
       </AppBreadcrumbs>
-      <Box sx={{ my: 2 }}>
-        <Paper sx={{ p: 2 }}>
-          {!country ? (
-            <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
-              <CircularProgress />
-            </Box>
-          ) : country ? (
-            <Box>
-              <Typography variant="h6">{country.name}</Typography>
-              <Typography variant="body2" color="text.secondary">
-                Id: {country.id}
-              </Typography>
-            </Box>
-          ) : (
-            <Typography>No se encontró el country</Typography>
-          )}
-        </Paper>
-      </Box>
+      <Box sx={{ my: 2 }}>TODO</Box>
     </Container>
   );
 }

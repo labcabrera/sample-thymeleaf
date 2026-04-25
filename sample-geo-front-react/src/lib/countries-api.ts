@@ -37,6 +37,18 @@ export const fetchCountry = async (
   countryId: string,
   auth: AuthContextProps,
 ): Promise<Country> => {
-  const data = await callApi(auth, `/countries${countryId}`);
+  const data = await callApi(auth, `/countries/${countryId}`);
+  return data as Country;
+};
+
+export const createCountry = async (
+  country: Country,
+  auth: AuthContextProps,
+): Promise<Country> => {
+  const data = await callApi(auth, `/countries`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(country),
+  });
   return data as Country;
 };

@@ -1,6 +1,6 @@
 import { Container, Typography, Box, Breadcrumbs } from "@mui/material";
 
-export default function Home() {
+export default function HomePage() {
   return (
     <Container>
       <Breadcrumbs aria-label="breadcrumb">
