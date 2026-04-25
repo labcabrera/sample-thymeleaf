@@ -48,13 +48,19 @@ En este punto tendremos que configurar Keycloak para crear un realm, un cliente 
 
 Creamos un nuevo realm llamado `sample` y dentro de este un nuevo cliente llamado `sample-client` con la siguiente configuración:
 
+----
 - Client authentication: on
 - Authorization: on
 - PKCE Method: S256
+----
 
-Después actualizaremos el secret generado del cliente en los ficheros de configuración tanto de la API como del frontal.
+También crearemos un rol llamado `geo-admin` y se lo asignaremos al usuario que crearemos posteriormente (podemos hacerlo a través de un grupo pero tendríamos que configurar el mapeo de roles en el cliente para que se incluyan en el token JWT).
 
-El proyecto `sample-api` durante el arranque crea una serie de datos de ejemplo.
+A continuación crearemos un nuevo usuario al que habremos asignado el rol `geo-admin` para poder realizar operaciones de escritura sobre la API.
+
+Una vez configurado Keycloak actualizaremos el secret generado para el cliente `sample-client` en los ficheros de configuración tanto de la API como del frontal.
+
+Durante el arranque de la aplicación se cargarán varios datos de ejemplo para países, provincias y municipios a travñes de un `CommandLineRunner`.
 
 Para compilar y ejecutarmente la API haremos:
 
