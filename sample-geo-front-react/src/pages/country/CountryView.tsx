@@ -22,7 +22,7 @@ export default function CountryView() {
     if (location.state.country) {
       setCountry(location.state.country as Country);
     } else if (id) {
-      fetchCountry(id).then((response) => setCountry(response));
+      fetchCountry(id, auth).then((response) => setCountry(response));
     }
   }, [id, auth, country, location]);
 

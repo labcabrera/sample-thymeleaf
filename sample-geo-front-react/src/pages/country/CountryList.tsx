@@ -16,6 +16,9 @@ import {
   TextField,
   Stack,
   IconButton,
+  List,
+  ListItemText,
+  ListItemButton,
 } from "@mui/material";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
@@ -113,23 +116,21 @@ export default function CountryList() {
             <CircularProgress />
           </Box>
         ) : (
-          <TableContainer component={Paper}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Id</TableCell>
-                  <TableCell>Nombre</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.map((r) => (
-                  <TableRow key={r.id} hover>
-                    <TableCell>{r.id}</TableCell>
-                    <TableCell>{r.name}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+          <>
+            <List>
+              {rows.map((r) => (
+                <ListItemButton
+                  key={r.id}
+                  onClick={() =>
+                    navigate(`/countries/view/${r.id}`, {
+                      state: { country: r },
+                    })
+                  }
+                >
+                  <ListItemText primary={r.name} secondary={r.id} />
+                </ListItemButton>
+              ))}
+            </List>
             <TablePagination
               component="div"
               count={pagination?.totalElements ?? 0}
@@ -139,7 +140,7 @@ export default function CountryList() {
               onRowsPerPageChange={handleChangeRowsPerPage}
               rowsPerPageOptions={[5, 10, 25, 50]}
             />
-          </TableContainer>
+          </>
         )}
       </Box>
     </Container>
