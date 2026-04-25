@@ -9,7 +9,7 @@ import CountryView from "./pages/country/CountryView";
 import CountryList from "./pages/country/CountryList";
 import CountryCreate from "./pages/country/CountryCreate";
 import CountryEdit from "./pages/country/CountryEdit";
-import Provinces from "./pages/province/Provinces";
+import ProvinceList from "./pages/province/ProvinceList";
 import Municipalities from "./pages/municipality/Municipalities";
 import GeoPage from "./pages/GeoPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -29,7 +29,7 @@ function App() {
               <Route path="countries/view/:id" element={<CountryView />} />
               <Route path="countries/edit/:id" element={<CountryEdit />} />
               <Route path="countries/create" element={<CountryCreate />} />
-              <Route path="provinces" element={<Provinces />} />
+              <Route path="provinces" element={<ProvinceList />} />
               <Route path="municipalities" element={<Municipalities />} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>

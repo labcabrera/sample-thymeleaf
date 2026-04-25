@@ -12,21 +12,21 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
-import { fetchCountries, type Country } from "../../lib/countries-api";
 import AppBreadcrumbs from "../../components/AppBreadcrumbs";
 import AddButton from "../../components/buttons/AddButton";
 import type { Page } from "../../lib/api";
+import { fetchProvinces, type Province } from "../../lib/provinces-api";
 
-export default function CountryList() {
+export default function ProvinceList() {
   const auth = useAuth();
   const navigate = useNavigate();
-  const [pageData, setPageData] = useState<Page<Country> | null>(null);
+  const [pageData, setPageData] = useState<Page<Province> | null>(null);
   const [page, setPage] = useState<number>(0);
   const [rsql, setRsql] = useState<string>("");
   const [nameFilter, setNameFilter] = useState<string>("");
 
   useEffect(() => {
-    fetchCountries(rsql, 10, page, "name,asc", auth).then((response) =>
+    fetchProvinces(rsql, 10, page, "name,asc", auth).then((response) =>
       setPageData(response),
     );
   }, [auth, page, rsql]);
@@ -37,7 +37,7 @@ export default function CountryList() {
         items={[
           { label: "Home", href: "/" },
           { label: "Geo", href: "/geo" },
-          { label: "Countries" },
+          { label: "Provinces" },
         ]}
       >
         <AddButton onClick={() => navigate("/countries/create")} />

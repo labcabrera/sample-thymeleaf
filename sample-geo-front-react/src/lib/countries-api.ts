@@ -1,22 +1,9 @@
-// import { useAuth, type AuthContextProps } from "react-oidc-context";
-import callApi from "./api";
+import callApi, { type Page } from "./api";
 import { type AuthContextProps } from "react-oidc-context";
 
 export interface Country {
   id: string;
   name: string;
-}
-
-export interface Pagination {
-  page: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-}
-
-export interface Page<T> {
-  content: T[];
-  pagination: Pagination;
 }
 
 export const fetchCountries = async (

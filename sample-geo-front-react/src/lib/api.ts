@@ -2,6 +2,18 @@ import { type AuthContextProps } from "react-oidc-context";
 
 const API_BASE = import.meta.env.VITE_API_GEO_URL ?? "http://localhost:8082";
 
+export interface Pagination {
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
+export interface Page<T> {
+  content: T[];
+  pagination: Pagination;
+}
+
 export async function callApi(
   auth: AuthContextProps,
   input: RequestInfo,
