@@ -5,19 +5,21 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
-import { useKeycloak } from "@react-keycloak/web";
+import { useAuth } from "react-oidc-context";
 
 export default function UserMenu() {
-  const { keycloak } = useKeycloak();
+  const auth = useAuth();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleOpen = (e: React.MouseEvent<HTMLElement>) =>
     setAnchorEl(e.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
-  if (keycloak?.authenticated) {
+  if (auth?.isAuthenticated) {
     const username =
-      (keycloak.tokenParsed as any)?.preferred_username || "User";
+      (auth.user as any)?.profile?.preferred_username ||
+      (auth.user as any)?.profile?.name ||
+      "User";
     const initial = (username as string).charAt(0).toUpperCase();
     return (
       <>
@@ -34,7 +36,7 @@ export default function UserMenu() {
           <MenuItem
             onClick={() => {
               handleClose();
-              keycloak.logout({ redirectUri: window.location.origin });
+              auth.signoutRedirect();
             }}
           >
             Logout
@@ -45,7 +47,7 @@ export default function UserMenu() {
   }
 
   return (
-    <Button color="inherit" onClick={() => keycloak?.login()}>
+    <Button color="inherit" onClick={() => auth?.signinRedirect()}>
       Login
     </Button>
   );

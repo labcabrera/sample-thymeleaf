@@ -3,13 +3,13 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { useKeycloak } from "@react-keycloak/web";
+import { useAuth } from "react-oidc-context";
 
 export default function Login() {
-  const { keycloak } = useKeycloak();
+  const auth = useAuth();
 
   const handleLogin = () => {
-    keycloak?.login();
+    auth?.signinRedirect();
   };
 
   return (
@@ -18,11 +18,9 @@ export default function Login() {
         <Typography variant="h5" gutterBottom>
           Iniciar sesión
         </Typography>
-        <Typography sx={{ mb: 2 }}>
-          Para iniciar sesión se redirigirá a Keycloak.
-        </Typography>
+        <Typography sx={{ mb: 2 }}>Iniciar sesión (OIDC)</Typography>
         <Button variant="contained" color="primary" onClick={handleLogin}>
-          Login con Keycloak
+          Login
         </Button>
       </Box>
     </Container>

@@ -1,29 +1,22 @@
-import type { KeycloakInstance } from "keycloak-js";
+const API_BASE = import.meta.env.VITE_API_GEO_URL ?? "http://localhost:8082";
 
-const API_BASE = import.meta.env.VITE_API_GEO_URL ?? "http://localhost:8080";
-
+// `auth` is the object returned by `useAuth()` from `react-oidc-context`
 export async function callApi(
-  keycloak: KeycloakInstance | undefined,
+  auth: any,
   input: RequestInfo,
   init: RequestInit = {},
 ) {
-  if (!keycloak) throw new Error("Keycloak instance is required");
+  if (!auth) throw new Error("Auth instance is required");
 
-  // try to refresh token if expiring in the next 5 seconds
-  try {
-    await keycloak.updateToken(5);
-  } catch (e) {
-    // updateToken throws if it cannot refresh; we'll still try with existing token
-  }
+  if (!auth.isAuthenticated) throw new Error("Not authenticated");
 
-  const token = keycloak.token;
+  const token = auth.user?.access_token;
   if (!token) throw new Error("No access token available");
 
   const headers = new Headers(init.headers as HeadersInit);
   headers.set("Authorization", `Bearer ${token}`);
   init.headers = headers;
 
-  // prefix relative URLs with API_BASE
   const url =
     typeof input === "string" && input.startsWith("/")
       ? `${API_BASE}${input}`

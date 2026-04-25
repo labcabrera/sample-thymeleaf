@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
@@ -8,34 +8,32 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useKeycloak } from "@react-keycloak/web";
+import { useAuth } from "react-oidc-context";
 import callApi from "../../lib/api";
 
 export default function Countries() {
-  const { keycloak } = useKeycloak();
-  const [loading, setLoading] = React.useState(false);
-  const [items, setItems] = React.useState<
-    Array<{ id?: string; name: string }>
-  >([]);
-  const [error, setError] = React.useState<string | null>(null);
+  const auth = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [items, setItems] = useState<Array<{ id?: string; name: string }>>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     let mounted = true;
     const load = async () => {
       setLoading(true);
       setError(null);
       try {
-        if (!keycloak) {
+        if (!auth) {
           setError("Authentication service not available");
           return;
         }
 
-        if (!keycloak.authenticated) {
+        if (!auth.isAuthenticated) {
           setError("Not authenticated");
           return;
         }
 
-        const data = await callApi(keycloak as any, "/countries");
+        const data = await callApi(auth as any, "/countries");
         if (!mounted) return;
         // assume API returns array of { id, name }
         setItems(Array.isArray(data) ? data : []);
@@ -51,7 +49,7 @@ export default function Countries() {
     return () => {
       mounted = false;
     };
-  }, [keycloak]);
+  }, [auth]);
 
   return (
     <Container>
@@ -72,8 +70,11 @@ export default function Countries() {
               <Typography color="error" sx={{ mb: 2 }}>
                 {error}
               </Typography>
-              {(!keycloak || !keycloak.authenticated) && (
-                <Button variant="contained" onClick={() => keycloak?.login()}>
+              {(!auth || !auth.isAuthenticated) && (
+                <Button
+                  variant="contained"
+                  onClick={() => auth?.signinRedirect()}
+                >
                   Login
                 </Button>
               )}

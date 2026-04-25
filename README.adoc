@@ -50,7 +50,8 @@ Para generar el proyecto hemos utilizado Vite con el template de React y TypeScr
 npm create vite@latest sample-geo-front-react -- --template react-ts
 cd sample-geo-front-react
 npm install
-npm install react-router-dom keycloak-js @react-keycloak/web
+npm install oidc-client-ts react-oidc-context
+#npm install react-router-dom keycloak-js @react-keycloak/web
 npm install @mui/material @emotion/react @emotion/styled
 npm install @mui/icons-material
 ----
