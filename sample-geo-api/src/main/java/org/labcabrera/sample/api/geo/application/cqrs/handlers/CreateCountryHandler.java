@@ -35,7 +35,11 @@ public class CreateCountryHandler implements CommandHandler<CreateCountryCommand
         if (current.isPresent()) {
             throw new ConflictException("country.msg.err.already-exists");
         }
-        Country country = new Country(command.id(), command.name(), LocalDateTime.now(), null);
+        Country country = new Country(
+            command.id().toUpperCase(),
+            command.name().toUpperCase(),
+            LocalDateTime.now(),
+            null);
         var saved = countryRepository.save(country);
         eventBusPort.publish(new CountryCreatedEvent(saved.getId(), saved.getName(), LocalDateTime.now()));
         return saved;

@@ -43,10 +43,10 @@ public class UpdateProvinceHandler implements CommandHandler<UpdateProvinceComma
 
     private void merge(Province existing, UpdateProvinceCommand command) {
         if (command.name().isPresent()) {
-            existing.setName(command.name().get());
+            existing.setName(command.name().get().toUpperCase());
         }
         if (command.countryId().isPresent()) {
-            existing.setCountryId(command.countryId().get());
+            existing.setCountryId(command.countryId().get().toUpperCase());
         }
         existing.setUpdatedAt(LocalDateTime.now());
     }

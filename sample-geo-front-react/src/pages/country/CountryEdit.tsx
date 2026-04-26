@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
-import { Container, Box, CircularProgress, Stack } from "@mui/material";
+import { Container, CircularProgress, Stack, Paper } from "@mui/material";
 import { fetchCountry, type Country } from "../../lib/countries-api";
 import AppBreadcrumbs from "../../components/AppBreadcrumbs";
 import CountryForm from "./CountryForm";
@@ -67,13 +67,13 @@ export default function CountryEdit() {
       {!formData ? (
         <CircularProgress />
       ) : (
-        <Box sx={{ my: 2 }}>
+        <Paper elevation={5} sx={{ p: 2, mt: 2 }}>
           <CountryForm
             formData={formData}
             setFormData={setFormData}
             create={false}
           />
-        </Box>
+        </Paper>
       )}
     </Container>
   );

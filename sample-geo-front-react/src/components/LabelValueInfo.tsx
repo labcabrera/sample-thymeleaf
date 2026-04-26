@@ -12,7 +12,7 @@ export default function ClearableTextField({
   gridSize = 6,
 }: Props) {
   return (
-    <Grid size={gridSize}>
+    <Grid size={gridSize} sx={{ mt: 4 }}>
       <Stack direction="column">
         <Typography variant="body1" color="primary">
           {value || "-"}

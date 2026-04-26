@@ -71,7 +71,10 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
             new Country("LU", "LUXEMBOURG", now, null),
             new Country("MT", "MALTA", now, null),
             new Country("NL", "NETHERLANDS", now, null),
-            new Country("PL", "POLAND", now, null)
+            new Country("PL", "POLAND", now, null),
+            new Country("KP", "NORTH KOREA", now, null),
+            new Country("RU", "RUSSIAN FEDERATION", now, null),
+            new Country("CN", "CHINA", now, null),
         };
         for (Country country : countries) {
             countryRepository.save(country);

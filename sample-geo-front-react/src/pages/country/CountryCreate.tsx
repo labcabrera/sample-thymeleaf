@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
-import { Container, IconButton } from "@mui/material";
+import { Container, IconButton, Paper } from "@mui/material";
 import { createCountry, type Country } from "../../lib/countries-api";
 import SaveIcon from "@mui/icons-material/Save";
 import AppBreadcrumbs from "../../components/AppBreadcrumbs";
@@ -47,7 +47,9 @@ export default function CountryCreate() {
           <SaveIcon />
         </IconButton>
       </AppBreadcrumbs>
-      <CountryForm formData={formData} setFormData={setFormData} create />
+      <Paper elevation={5} sx={{ p: 2, mt: 2 }}>
+        <CountryForm formData={formData} setFormData={setFormData} create />
+      </Paper>
     </Container>
   );
 }

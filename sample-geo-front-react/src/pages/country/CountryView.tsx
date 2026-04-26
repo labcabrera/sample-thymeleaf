@@ -10,6 +10,14 @@ import {
   CircularProgress,
   Stack,
   Grid,
+  Avatar,
+  Table,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableContainer,
+  TablePagination,
 } from "@mui/material";
 import ConfirmDeleteDialog from "../../components/ConfirmDeleteDialog";
 import {
@@ -22,6 +30,8 @@ import DeleteButon from "../../components/buttons/DeleteButton";
 import EditButton from "../../components/buttons/EditButton";
 import RefreshButton from "../../components/buttons/RefreshButton";
 import LabelValueInfo from "../../components/LabelValueInfo";
+import { fetchProvinces, type Province } from "../../lib/provinces-api";
+import type { Page } from "../../lib/api";
 
 export default function CountryView() {
   const { id } = useParams<{ id: string }>();
@@ -85,6 +95,13 @@ export default function CountryView() {
             </Box>
           ) : (
             <Grid container spacing={1}>
+              <Grid size={12}>
+                <Avatar
+                  src={`https://flagcdn.com/${country.id.toLowerCase()}.svg`}
+                  variant="rounded"
+                  alt={country.id}
+                ></Avatar>
+              </Grid>
               <LabelValueInfo label="Id" value={country.id} />
               <LabelValueInfo label="Name" value={country.name} />
               <LabelValueInfo
@@ -104,6 +121,79 @@ export default function CountryView() {
         onClose={() => setDeleteDialogOpen(false)}
         onConfirm={onDelete}
       />
+      {country?.id && (
+        <Box sx={{ my: 2 }}>
+          <Paper sx={{ p: 2 }}>
+            <CountryViewProvinces countryId={country.id} />
+          </Paper>
+        </Box>
+      )}
     </Container>
+  );
+}
+function CountryViewProvinces({ countryId }: { countryId?: string }) {
+  const navigate = useNavigate();
+  const [pageData, setPageData] = useState<Page<Province>>();
+  const [page, setPage] = useState<number>(0);
+  const [size, setSize] = useState<number>(20);
+  const auth = useAuth();
+
+  useEffect(() => {
+    if (!countryId || !auth) return;
+    fetchProvinces(
+      `country.id==${countryId}`,
+      size,
+      page,
+      "name,asc",
+      auth,
+    ).then((response) => setPageData(response));
+  }, [countryId, page, size, auth]);
+
+  if (!pageData || pageData.content.length === 0) {
+    return <Box sx={{ p: 2 }}>No provinces</Box>;
+  }
+  return (
+    <>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Id</TableCell>
+              <TableCell>Name</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {pageData.content.map((p) => (
+              <TableRow
+                key={p.id}
+                hover
+                sx={{ cursor: "pointer" }}
+                onClick={() =>
+                  navigate(`/provinces/view/${p.id}`, {
+                    state: { province: p },
+                  })
+                }
+              >
+                <TableCell>{p.id}</TableCell>
+                <TableCell>{p.name}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        component="div"
+        count={pageData.pagination.totalElements}
+        page={page}
+        onPageChange={(_e, newPage) => setPage(newPage)}
+        rowsPerPage={size}
+        onRowsPerPageChange={(e) => {
+          const newSize = parseInt(e.target.value as string, 10);
+          setSize(newSize);
+          setPage(0);
+        }}
+        rowsPerPageOptions={[10, 20, 50, 100]}
+      />
+    </>
   );
 }

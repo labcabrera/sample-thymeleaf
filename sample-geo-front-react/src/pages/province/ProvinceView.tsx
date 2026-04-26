@@ -55,7 +55,7 @@ export default function ProvinceView() {
     } else if (id) {
       bindProvince(id);
     }
-  }, [id, auth, province, location]);
+  }, [id, auth, location]);
 
   return (
     <Container>

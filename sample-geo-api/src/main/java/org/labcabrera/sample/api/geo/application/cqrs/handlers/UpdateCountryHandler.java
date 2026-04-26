@@ -45,8 +45,8 @@ public class UpdateCountryHandler implements CommandHandler<UpdateCountryCommand
     private void merge(Country existing, UpdateCountryCommand command) {
         boolean updated = false;
         if (command.name() != null) {
-            if (!command.name().equals(existing.getName())) {
-                existing.setName(command.name());
+            if (!command.name().equalsIgnoreCase(existing.getName())) {
+                existing.setName(command.name().toUpperCase());
                 updated = true;
             }
         }

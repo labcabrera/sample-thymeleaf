@@ -43,8 +43,8 @@ public class CreateProvinceHandler implements CommandHandler<CreateProvinceComma
         countryRepository.findById(command.countryId())
             .orElseThrow(() -> new BadRequestException("province.msg.err.country-not-found", command.countryId()));
         Province province = Province.builder()
-            .id(command.id())
-            .name(command.name())
+            .id(command.id().toUpperCase())
+            .name(command.name().toUpperCase())
             .countryId(command.countryId())
             .createdAt(LocalDateTime.now())
             .build();

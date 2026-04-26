@@ -9,6 +9,8 @@ import {
   Pagination,
   Paper,
   Typography,
+  ListItemAvatar,
+  Avatar,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuth, type AuthContextProps } from "react-oidc-context";
@@ -51,7 +53,7 @@ export default function CountryList() {
       >
         <AddButton onClick={() => navigate("/countries/create")} />
       </AppBreadcrumbs>
-      <Paper sx={{ p: 2 }}>
+      <Paper elevation={5} sx={{ p: 2 }}>
         <Box
           component="form"
           sx={{ display: "flex", gap: 2, my: 2 }}
@@ -79,6 +81,13 @@ export default function CountryList() {
                     })
                   }
                 >
+                  <ListItemAvatar>
+                    <Avatar
+                      src={`https://flagcdn.com/${r.id.toLowerCase()}.svg`}
+                      variant="rounded"
+                      alt={r.id}
+                    ></Avatar>
+                  </ListItemAvatar>
                   <ListItemText>
                     <Typography color="primary">{r.name}</Typography>
                   </ListItemText>
