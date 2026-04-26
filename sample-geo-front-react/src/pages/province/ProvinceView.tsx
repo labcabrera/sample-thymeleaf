@@ -22,6 +22,7 @@ import DeleteButon from "../../components/buttons/DeleteButton";
 import EditButton from "../../components/buttons/EditButton";
 import RefreshButton from "../../components/buttons/RefreshButton";
 import LabelValueInfo from "../../components/LabelValueInfo";
+import { fetchCountry, type Country } from "../../lib/countries-api";
 
 export default function ProvinceView() {
   const { id } = useParams<{ id: string }>();
@@ -29,6 +30,7 @@ export default function ProvinceView() {
   const navigate = useNavigate();
   const auth = useAuth();
   const [province, setProvince] = useState<Province>();
+  const [country, setCountry] = useState<Country>();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
   const onDelete = async () => {
@@ -48,6 +50,13 @@ export default function ProvinceView() {
     if (Number.isNaN(dt.getTime())) return null;
     return dt.toISOString().split(".")[0];
   };
+
+  useEffect(() => {
+    if (!province || !auth) return;
+    fetchCountry(province.countryId, auth).then((response) =>
+      setCountry(response),
+    );
+  }, [province, auth]);
 
   useEffect(() => {
     if (location.state?.province) {
@@ -87,7 +96,11 @@ export default function ProvinceView() {
             <Grid container spacing={1}>
               <LabelValueInfo label="Id" value={province.id} />
               <LabelValueInfo label="Name" value={province.name} />
-              <LabelValueInfo label="Country" value={province.countryId} />
+              <LabelValueInfo
+                label="Country"
+                value={country ? country.name : province.countryId}
+                href={`/countries/view/${province.countryId}`}
+              />
               <Grid size={6}></Grid>
               <LabelValueInfo
                 label="Created"

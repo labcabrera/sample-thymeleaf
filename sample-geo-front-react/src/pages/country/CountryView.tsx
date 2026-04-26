@@ -60,12 +60,12 @@ export default function CountryView() {
   };
 
   useEffect(() => {
-    if (location.state.country) {
+    if (location && location.state && location.state.country) {
       setCountry(location.state.country);
     } else if (id) {
       bindCountry(id);
     }
-  }, [id, auth, country, location]);
+  }, [id, auth, location]);
 
   return (
     <Container>
@@ -135,7 +135,7 @@ function CountryViewProvinces({ countryId }: { countryId?: string }) {
   const navigate = useNavigate();
   const [pageData, setPageData] = useState<Page<Province>>();
   const [page, setPage] = useState<number>(0);
-  const [size, setSize] = useState<number>(20);
+  const [size, setSize] = useState<number>(10);
   const auth = useAuth();
 
   useEffect(() => {
@@ -158,8 +158,8 @@ function CountryViewProvinces({ countryId }: { countryId?: string }) {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Id</TableCell>
-              <TableCell>Name</TableCell>
+              <TableCell sx={{ width: "20%" }}>Id</TableCell>
+              <TableCell sx={{ width: "80%" }}>Name</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
