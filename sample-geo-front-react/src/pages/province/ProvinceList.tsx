@@ -10,7 +10,6 @@ import {
   ListItemButton,
   Pagination,
   Paper,
-  Autocomplete,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
@@ -18,7 +17,7 @@ import AppBreadcrumbs from "../../components/AppBreadcrumbs";
 import AddButton from "../../components/buttons/AddButton";
 import type { Page } from "../../lib/api";
 import { fetchProvinces, type Province } from "../../lib/provinces-api";
-import { fetchCountries, type Country } from "../../lib/countries-api";
+import CountrySelect from "../../components/selects/CountrySelect";
 
 export default function ProvinceList() {
   const auth = useAuth();
@@ -29,9 +28,6 @@ export default function ProvinceList() {
 
   const [nameFilter, setNameFilter] = useState<string>();
   const [countryFilter, setCountryFilter] = useState<string>();
-
-  const [countries, setCountries] = useState<Country[]>([]);
-  const [countriesLoading, setCountriesLoading] = useState<boolean>(false);
 
   useEffect(() => {
     let rsql = "";
@@ -48,13 +44,6 @@ export default function ProvinceList() {
       setPageData(response),
     );
   }, [auth, page, rsql]);
-
-  useEffect(() => {
-    setCountriesLoading(true);
-    fetchCountries("", 200, 0, "name,asc", auth)
-      .then((res) => setCountries(res.content))
-      .finally(() => setCountriesLoading(false));
-  }, [auth]);
 
   return (
     <Container>
@@ -79,16 +68,10 @@ export default function ProvinceList() {
             value={nameFilter}
             onChange={(e) => setNameFilter(e.target.value)}
           />
-          <Autocomplete
-            options={countries}
-            getOptionLabel={(option) => option.name}
-            loading={countriesLoading}
+          <CountrySelect
+            onChange={(v) => setCountryFilter(v?.id)}
             size="small"
             sx={{ minWidth: 240 }}
-            onChange={(_, value) => setCountryFilter(value?.id)}
-            renderInput={(params) => (
-              <TextField {...params} label="Country" size="small" />
-            )}
           />
         </Box>
 

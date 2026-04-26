@@ -27,7 +27,7 @@ export default function AppBreadcrumbs({ items, children }: Props) {
               key={idx}
               component={RouterLink}
               underline="hover"
-              color="inherit"
+              color={it.href ? "primary" : "inherit"}
               to={it.href}
             >
               {it.label}

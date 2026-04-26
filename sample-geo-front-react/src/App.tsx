@@ -10,6 +10,9 @@ import CountryList from "./pages/country/CountryList";
 import CountryCreate from "./pages/country/CountryCreate";
 import CountryEdit from "./pages/country/CountryEdit";
 import ProvinceList from "./pages/province/ProvinceList";
+import ProvinceCreate from "./pages/province/ProvinceCreate";
+import ProvinceEdit from "./pages/province/ProvinceEdit";
+import ProvinceView from "./pages/province/ProvinceView";
 import Municipalities from "./pages/municipality/Municipalities";
 import GeoPage from "./pages/GeoPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -30,6 +33,9 @@ function App() {
               <Route path="countries/edit/:id" element={<CountryEdit />} />
               <Route path="countries/create" element={<CountryCreate />} />
               <Route path="provinces" element={<ProvinceList />} />
+              <Route path="provinces/view/:id" element={<ProvinceView />} />
+              <Route path="provinces/edit/:id" element={<ProvinceEdit />} />
+              <Route path="provinces/create" element={<ProvinceCreate />} />
               <Route path="municipalities" element={<Municipalities />} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>

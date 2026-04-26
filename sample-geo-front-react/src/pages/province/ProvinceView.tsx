@@ -10,45 +10,44 @@ import {
   Typography,
   CircularProgress,
   Stack,
-  Grid,
 } from "@mui/material";
 import ConfirmDeleteDialog from "../../components/ConfirmDeleteDialog";
 import {
-  fetchCountry,
-  deleteCountry,
-  type Country,
-} from "../../lib/countries-api";
+  fetchProvince,
+  deleteProvince,
+  type Province,
+} from "../../lib/provinces-api";
 import AppBreadcrumbs from "../../components/AppBreadcrumbs";
 import DeleteButon from "../../components/buttons/DeleteButton";
 import EditButton from "../../components/buttons/EditButton";
 import RefreshButton from "../../components/buttons/RefreshButton";
 
-export default function CountryView() {
+export default function ProvinceView() {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const navigate = useNavigate();
   const auth = useAuth();
-  const [country, setCountry] = useState<Country>();
+  const [province, setProvince] = useState<Province>();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
   const onDelete = async () => {
-    if (!country?.id) return;
-    deleteCountry(country.id, auth)
-      .then(() => navigate("/countries"))
-      .catch((err) => console.log("error deleting country", err));
+    if (!province?.id) return;
+    deleteProvince(province.id, auth)
+      .then(() => navigate("/provinces"))
+      .catch((err) => console.log("error deleting province", err));
   };
 
-  const bindCountry = (id: string) => {
-    fetchCountry(id!, auth).then((response) => setCountry(response));
+  const bindProvince = (id: string) => {
+    fetchProvince(id!, auth).then((response) => setProvince(response));
   };
 
   useEffect(() => {
-    if (location.state.country) {
-      setCountry(location.state.country);
+    if (location.state?.province) {
+      setProvince(location.state.province);
     } else if (id) {
-      bindCountry(id);
+      bindProvince(id);
     }
-  }, [id, auth, country, location]);
+  }, [id, auth, province, location]);
 
   return (
     <Container>
@@ -56,15 +55,15 @@ export default function CountryView() {
         items={[
           { label: "Home", href: "/" },
           { label: "Geo", href: "/geo" },
-          { label: "Countries", href: "/countries" },
+          { label: "Provinces", href: "/provinces" },
           { label: "View" },
         ]}
       >
         <Stack direction="row">
-          <RefreshButton onClick={() => bindCountry(id!)} />
+          <RefreshButton onClick={() => bindProvince(id!)} />
           <EditButton
             onClick={() =>
-              navigate(`/countries/edit/${id}`, { state: country })
+              navigate(`/provinces/edit/${id}`, { state: province })
             }
           />
           <DeleteButon onClick={() => setDeleteDialogOpen(true)} />
@@ -72,17 +71,28 @@ export default function CountryView() {
       </AppBreadcrumbs>
       <Box sx={{ my: 2 }}>
         <Paper sx={{ p: 2 }}>
-          {!country ? (
+          {!province ? (
             <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
               <CircularProgress />
             </Box>
+          ) : province ? (
+            <Box>
+              <Typography variant="h6">{province.name}</Typography>
+              <Typography variant="body2" color="text.secondary">
+                Id: {province.id}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Country Id: {province.countryId}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Created At: {province.createdAt}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Updated At: {province.updatedAt}
+              </Typography>
+            </Box>
           ) : (
-            <Grid container spacing={1}>
-              <KeyValueView label="Id" value={country.id} />
-              <KeyValueView label="Name" value={country.name} />
-              <KeyValueView label="Created" value={country.createdAt} />
-              <KeyValueView label="Updated" value={country.updatedAt} />
-            </Grid>
+            <Typography>No se encontró la province</Typography>
           )}
         </Paper>
       </Box>
@@ -92,18 +102,5 @@ export default function CountryView() {
         onConfirm={onDelete}
       />
     </Container>
-  );
-}
-
-function KeyValueView({ label, value }: { label: string; value: string }) {
-  return (
-    <Grid size={6}>
-      <Stack direction="column">
-        <Typography variant="body1" color="primary">
-          {value || "-"}
-        </Typography>
-        <Typography variant="caption">{label}</Typography>
-      </Stack>
-    </Grid>
   );
 }

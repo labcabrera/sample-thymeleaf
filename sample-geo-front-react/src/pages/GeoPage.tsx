@@ -4,6 +4,8 @@ import {
   List,
   ListItemButton,
   ListItemText,
+  Paper,
+  Typography,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import AppBreadcrumbs from "../components/AppBreadcrumbs";
@@ -21,13 +23,17 @@ export default function GeoPage() {
         items={[{ label: "Home", href: "/" }, { label: "Geo" }]}
       />
       <Box sx={{ my: 2 }}>
-        <List>
-          {items.map((it) => (
-            <ListItemButton key={it.to} component={RouterLink} to={it.to}>
-              <ListItemText primary={it.label} color="primary" />
-            </ListItemButton>
-          ))}
-        </List>
+        <Paper>
+          <List dense>
+            {items.map((it) => (
+              <ListItemButton key={it.to} component={RouterLink} to={it.to}>
+                <ListItemText>
+                  <Typography color="primary">{it.label}</Typography>
+                </ListItemText>
+              </ListItemButton>
+            ))}
+          </List>
+        </Paper>
       </Box>
     </Container>
   );
