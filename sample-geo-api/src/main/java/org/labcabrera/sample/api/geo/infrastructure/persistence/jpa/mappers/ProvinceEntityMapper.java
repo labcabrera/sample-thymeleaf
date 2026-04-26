@@ -8,13 +8,11 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ProvinceEntityMapper {
 
-    @Mapping(target = "countryId", source = "countryCode")
+    @Mapping(source = "country.id", target = "countryId")
     Province toDomain(ProvinceEntity entity);
 
+    @Mapping(target = "country", expression = "java(domain.getCountryId() == null ? null : new org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.entities.CountryEntity(domain.getCountryId(), null, null, null, null))")
     @Mapping(target = "version", ignore = true)
-    @Mapping(target = "id", source = "id")
-    @Mapping(target = "code", source = "id")
-    @Mapping(target = "countryCode", source = "countryId")
     ProvinceEntity toEntity(Province domain);
 
 }

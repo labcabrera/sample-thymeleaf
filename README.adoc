@@ -12,6 +12,7 @@ El proyecto está organizado en los siguientes módulos:
 
 - `sample-geo-api`: Contiene la lógica de negocio y las capas de servicio y repositorio.
 - `sample-geo-front-thymeleaf`: Contiene los controladores y las vistas Thymeleaf.
+- `sample-geo-front-react`: Contiene los componentes y la lógica de la aplicación React.
 
 ## Sample API
 

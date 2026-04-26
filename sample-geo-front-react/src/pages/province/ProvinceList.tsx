@@ -30,7 +30,7 @@ export default function ProvinceList() {
 
   useEffect(() => {
     let rsql = "";
-    if (nameFilter && nameFilter !== "") rsql = `name=re=${name}`;
+    if (nameFilter && nameFilter !== "") rsql = `name=re=${nameFilter}`;
     if (countryFilter && countryFilter !== "") {
       if (rsql !== "") rsql += ";";
       rsql += `country.id==${countryFilter}`;
