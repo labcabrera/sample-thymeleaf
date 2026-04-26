@@ -11,7 +11,7 @@ public interface MunicipalityEntityMapper {
     @Mapping(source = "province.id", target = "provinceId")
     Municipality toDomain(MunicipalityEntity entity);
 
-    @Mapping(target = "province", expression = "java(domain.provinceId() == null ? null : new org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.entities.ProvinceEntity(domain.provinceId(), null, null, null, null, null))")
+    @Mapping(target = "province", expression = "java(domain.provinceId() == null ? null : new ProvinceEntity(domain.provinceId(), null, null, null, null, null))")
     @Mapping(target = "version", ignore = true)
     MunicipalityEntity toEntity(Municipality domain);
 

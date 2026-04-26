@@ -12,7 +12,5 @@ public interface ProvinceJpaRepository extends
     JpaRepository<ProvinceEntity, String>,
     JpaSpecificationExecutor<ProvinceEntity> {
 
-    Optional<ProvinceEntity> findByCodeIgnoreCase(String code);
-
     Optional<ProvinceEntity> findByNameIgnoreCase(String name);
 }

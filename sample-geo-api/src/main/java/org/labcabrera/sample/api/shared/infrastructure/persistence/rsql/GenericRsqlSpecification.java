@@ -69,7 +69,7 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
         case LIKE:
             var str = argument.toString();
             var value = str.indexOf('%') < 0 ? String.format("%%%s%%", str) : str;
-            return builder.like(path.as(String.class), value);
+            return builder.like(builder.lower(path.as(String.class)), value.toLowerCase());
         }
 
         return null;

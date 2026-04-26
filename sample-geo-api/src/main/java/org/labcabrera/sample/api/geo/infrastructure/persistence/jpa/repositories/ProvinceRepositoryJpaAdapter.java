@@ -2,6 +2,7 @@ package org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.repositorie
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -32,6 +34,7 @@ public class ProvinceRepositoryJpaAdapter implements ProvinceRepository {
     private final ProvinceJpaRepository jpaRepository;
     private final ProvinceEntityMapper mapper;
     private final RSQLParser rsqlParser;
+    private final EntityManager entityManager;
 
     @Override
     @Cacheable(value = "province", key = "#p0", unless = "#result == null || #result.isEmpty()")
@@ -78,11 +81,11 @@ public class ProvinceRepositoryJpaAdapter implements ProvinceRepository {
     @Transactional
     @CachePut(value = "province", key = "#result.id")
     public Province save(Province province) {
-        String provinceId = province.getId();
-        if (province.getId() != null && jpaRepository.existsById(provinceId)) {
-            throw new BadRequestException("province.msg.err.already-exists", provinceId);
-        }
         var entity = mapper.toEntity(province);
+        if (entity.getCountry() != null && entity.getCountry().getId() != null) {
+            var countryRef = entityManager.getReference(entity.getCountry().getClass(), entity.getCountry().getId());
+            entity.setCountry(countryRef);
+        }
         var savedEntity = jpaRepository.save(entity);
         return mapper.toDomain(savedEntity);
     }

@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -33,6 +34,7 @@ public class MunicipalityRepositoryJpaAdapter implements MunicipalityRepository 
     private final MunicipalityJpaRepository jpaRepository;
     private final MunicipalityEntityMapper mapper;
     private final RSQLParser rsqlParser;
+    private final EntityManager entityManager;
 
     @Override
     public Optional<Municipality> findByName(String name) {
@@ -83,6 +85,10 @@ public class MunicipalityRepositoryJpaAdapter implements MunicipalityRepository 
             throw new BadRequestException("municipality.msg.err.already-exists", municipality.id());
         }
         var entity = mapper.toEntity(municipality);
+        if (entity.getProvince() != null && entity.getProvince().getId() != null) {
+            var provinceRef = entityManager.getReference(entity.getProvince().getClass(), entity.getProvince().getId());
+            entity.setProvince(provinceRef);
+        }
         var savedEntity = jpaRepository.save(entity);
         return mapper.toDomain(savedEntity);
     }

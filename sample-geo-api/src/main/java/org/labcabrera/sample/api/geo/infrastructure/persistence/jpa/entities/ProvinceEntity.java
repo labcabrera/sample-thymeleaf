@@ -2,11 +2,9 @@ package org.labcabrera.sample.api.geo.infrastructure.persistence.jpa.entities;
 
 import java.time.LocalDateTime;
 
-import org.labcabrera.sample.api.geo.domain.Country;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -32,8 +30,8 @@ public class ProvinceEntity {
     @Column(name = "name", length = 200)
     private String name;
 
-    @ManyToOne(cascade = { CascadeType.ALL })
-    @JoinColumn(name = "country_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "country_id", nullable = false)
     private CountryEntity country;
 
     @Column(name = "created_at", nullable = false, updatable = false)

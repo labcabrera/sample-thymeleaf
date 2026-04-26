@@ -7,12 +7,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
-import jakarta.persistence.CascadeType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,29 +28,29 @@ public class AddressEntity {
     @Column(name = "id", length = 36)
     private String id;
 
-    @ManyToOne(cascade = { CascadeType.ALL })
-    @JoinColumn(name = "country_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "country_id", nullable = false)
     private PostalCodeEntity country;
 
-    @ManyToOne(cascade = { CascadeType.ALL })
-    @JoinColumn(name = "municipality_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "municipality_id", nullable = false)
     private MunicipalityEntity municipality;
 
-    @ManyToOne(cascade = { CascadeType.ALL })
-    @JoinColumn(name = "province_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "province_id", nullable = false)
     private ProvinceEntity province;
 
-    @ManyToOne(cascade = { CascadeType.ALL })
-    @JoinColumn(name = "postal_code_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "postal_code_id", nullable = false)
     private PostalCodeEntity postalCode;
 
-    @Column(name = "street_name", length = 200)
+    @Column(name = "street_name", length = 200, nullable = false)
     private String streetName;
 
-    @Column(name = "street_number", length = 50)
+    @Column(name = "street_number", length = 50, nullable = true)
     private String streetNumber;
 
-    @Column(name = "additional_info", length = 400)
+    @Column(name = "additional_info", length = 400, nullable = true)
     private String additionalInfo;
 
     @CreationTimestamp
