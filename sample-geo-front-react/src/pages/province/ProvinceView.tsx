@@ -7,9 +7,9 @@ import {
   Container,
   Paper,
   Box,
-  Typography,
   CircularProgress,
   Stack,
+  Grid,
 } from "@mui/material";
 import ConfirmDeleteDialog from "../../components/ConfirmDeleteDialog";
 import {
@@ -21,6 +21,7 @@ import AppBreadcrumbs from "../../components/AppBreadcrumbs";
 import DeleteButon from "../../components/buttons/DeleteButton";
 import EditButton from "../../components/buttons/EditButton";
 import RefreshButton from "../../components/buttons/RefreshButton";
+import LabelValueInfo from "../../components/LabelValueInfo";
 
 export default function ProvinceView() {
   const { id } = useParams<{ id: string }>();
@@ -39,6 +40,13 @@ export default function ProvinceView() {
 
   const bindProvince = (id: string) => {
     fetchProvince(id!, auth).then((response) => setProvince(response));
+  };
+
+  const formatDate = (date?: string | Date | null): string | null => {
+    if (!date) return null;
+    const dt = typeof date === "string" ? new Date(date) : date;
+    if (Number.isNaN(dt.getTime())) return null;
+    return dt.toISOString().split(".")[0];
   };
 
   useEffect(() => {
@@ -75,24 +83,21 @@ export default function ProvinceView() {
             <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
               <CircularProgress />
             </Box>
-          ) : province ? (
-            <Box>
-              <Typography variant="h6">{province.name}</Typography>
-              <Typography variant="body2" color="text.secondary">
-                Id: {province.id}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Country Id: {province.countryId}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Created At: {province.createdAt}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Updated At: {province.updatedAt}
-              </Typography>
-            </Box>
           ) : (
-            <Typography>No se encontró la province</Typography>
+            <Grid container spacing={1}>
+              <LabelValueInfo label="Id" value={province.id} />
+              <LabelValueInfo label="Name" value={province.name} />
+              <LabelValueInfo label="Country" value={province.countryId} />
+              <Grid size={6}></Grid>
+              <LabelValueInfo
+                label="Created"
+                value={formatDate(province.createdAt)}
+              />
+              <LabelValueInfo
+                label="Updated"
+                value={formatDate(province.updatedAt)}
+              />
+            </Grid>
           )}
         </Paper>
       </Box>

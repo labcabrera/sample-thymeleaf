@@ -10,7 +10,6 @@ const theme = createTheme({
       dark: darken(primaryMain, 0.15),
       contrastText: "#ffffff",
     },
-    // Additional palette configuration
     secondary: {
       main: "#f9b000",
     },
@@ -18,7 +17,6 @@ const theme = createTheme({
     error: {
       main: "#d32f2f",
     },
-    // improve contrast handling
     tonalOffset: 0.2,
     contrastThreshold: 3,
   },
@@ -49,6 +47,16 @@ const theme = createTheme({
         root: {
           backgroundImage: "none",
         },
+      },
+    },
+    MuiTextField: {
+      defaultProps: {
+        size: "small",
+      },
+    },
+    MuiAutocomplete: {
+      defaultProps: {
+        size: "small",
       },
     },
   },

@@ -9,6 +9,7 @@ import {
   Pagination,
   Paper,
   Typography,
+  Stack,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
@@ -29,13 +30,13 @@ export default function ProvinceList() {
   const [countryFilter, setCountryFilter] = useState<string>();
 
   useEffect(() => {
+    if (!auth) return;
     let rsql = "";
     if (nameFilter && nameFilter !== "") rsql = `name=re=${nameFilter}`;
     if (countryFilter && countryFilter !== "") {
       if (rsql !== "") rsql += ";";
       rsql += `country.id==${countryFilter}`;
     }
-    console.log(nameFilter, countryFilter, rsql);
     fetchProvinces(rsql, 10, page, "name,asc", auth).then((response) =>
       setPageData(response),
     );
@@ -63,11 +64,7 @@ export default function ProvinceList() {
             value={nameFilter || null}
             onChange={(e) => setNameFilter(e || "")}
           />
-          <CountrySelect
-            onChange={(v) => setCountryFilter(v?.id)}
-            size="small"
-            sx={{ minWidth: 240 }}
-          />
+          <CountrySelect onChange={(v) => setCountryFilter(v?.id)} allOption />
         </Box>
 
         {!pageData ? (
@@ -81,13 +78,19 @@ export default function ProvinceList() {
                 <ListItemButton
                   key={r.id}
                   onClick={() =>
-                    navigate(`/countries/view/${r.id}`, {
+                    navigate(`/provinces/view/${r.id}`, {
                       state: { country: r },
                     })
                   }
                 >
                   <ListItemText>
-                    <Typography color="primary">{r.name}</Typography>
+                    <Stack
+                      direction="row"
+                      sx={{ justifyContent: "space-between" }}
+                    >
+                      <Typography color="primary">{r.name}</Typography>
+                      <Typography color="primary">{r.countryId}</Typography>
+                    </Stack>
                   </ListItemText>
                 </ListItemButton>
               ))}

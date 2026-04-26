@@ -14,7 +14,7 @@ export default function CountryForm({ create, formData, setFormData }: Props) {
       <Grid size={4}>
         <TextField
           label="Id"
-          value={formData.id}
+          value={formData.id ?? ""}
           onChange={(e) => setFormData({ ...formData, id: e.target.value })}
           disabled={!create}
           required
@@ -24,7 +24,7 @@ export default function CountryForm({ create, formData, setFormData }: Props) {
       <Grid size={4}>
         <TextField
           label="Name"
-          value={formData.name}
+          value={formData.name ?? ""}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           required
           fullWidth

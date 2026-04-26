@@ -5,44 +5,42 @@ import { fetchCountries, type Country } from "../../lib/countries-api";
 
 type Props = {
   value?: Country | null;
-  onChange?: (value: Country | null) => void;
   label?: string;
-  size?: "small" | "medium";
-  sx?: any;
   disabled?: boolean;
+  allOption?: boolean;
+  onChange?: (value: Country | null) => void;
 };
 
 export default function CountrySelect({
   value,
-  onChange,
   label = "Country",
-  size = "small",
-  sx,
   disabled,
+  allOption = false,
+  onChange,
 }: Props) {
   const auth = useAuth();
   const [options, setOptions] = useState<Country[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    setLoading(true);
-    fetchCountries("", 500, 0, "name,asc", auth)
-      .then((res) => setOptions(res.content))
-      .finally(() => setLoading(false));
-  }, [auth]);
+    fetchCountries("", 500, 0, "name,asc", auth).then((res) =>
+      setOptions(
+        allOption
+          ? [{ id: "", name: "ALL" } as Country, ...res.content]
+          : res.content,
+      ),
+    );
+  }, [auth, allOption]);
 
   return (
     <Autocomplete
       options={options}
       value={value ?? null}
-      getOptionLabel={(opt) => opt.name}
-      onChange={(_, v) => onChange && onChange(v)}
-      loading={loading}
-      size={size}
-      sx={sx}
+      getOptionLabel={(opt) => opt?.name ?? ""}
+      onChange={(_, v) => onChange && onChange(v && v.id !== "" ? v : null)}
       disabled={disabled}
+      fullWidth
       renderInput={(params) => (
-        <TextField {...params} label={label} size={size} />
+        <TextField {...params} label={label} size="small" />
       )}
     />
   );

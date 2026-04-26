@@ -32,17 +32,15 @@ export default function CountryEdit() {
   };
 
   useEffect(() => {
-    console.log("use e 1");
     if (country) {
       setFormData(country);
     }
   }, [country]);
 
   useEffect(() => {
-    console.log("use e 0");
     if (location.state.country) {
       setCountry(location.state.country);
-    } else if (id) {
+    } else if (id && auth) {
       bindCountry(id);
     }
   }, [id, auth, location]);

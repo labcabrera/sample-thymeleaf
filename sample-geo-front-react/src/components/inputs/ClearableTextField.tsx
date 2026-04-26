@@ -14,6 +14,7 @@ export default function ClearableTextField({ label, value, onChange }: Props) {
       value={value}
       size="small"
       onChange={(e) => onChange(e.target.value)}
+      fullWidth
       slotProps={{
         input: {
           endAdornment: value ? (

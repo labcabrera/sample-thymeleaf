@@ -7,7 +7,6 @@ import {
   Container,
   Paper,
   Box,
-  Typography,
   CircularProgress,
   Stack,
   Grid,
@@ -22,6 +21,7 @@ import AppBreadcrumbs from "../../components/AppBreadcrumbs";
 import DeleteButon from "../../components/buttons/DeleteButton";
 import EditButton from "../../components/buttons/EditButton";
 import RefreshButton from "../../components/buttons/RefreshButton";
+import LabelValueInfo from "../../components/LabelValueInfo";
 
 export default function CountryView() {
   const { id } = useParams<{ id: string }>();
@@ -85,13 +85,13 @@ export default function CountryView() {
             </Box>
           ) : (
             <Grid container spacing={1}>
-              <KeyValueView label="Id" value={country.id} />
-              <KeyValueView label="Name" value={country.name} />
-              <KeyValueView
+              <LabelValueInfo label="Id" value={country.id} />
+              <LabelValueInfo label="Name" value={country.name} />
+              <LabelValueInfo
                 label="Created"
                 value={formatDate(country.createdAt)}
               />
-              <KeyValueView
+              <LabelValueInfo
                 label="Updated"
                 value={formatDate(country.updatedAt)}
               />
@@ -105,24 +105,5 @@ export default function CountryView() {
         onConfirm={onDelete}
       />
     </Container>
-  );
-}
-
-function KeyValueView({
-  label,
-  value,
-}: {
-  label: string;
-  value: string | null;
-}) {
-  return (
-    <Grid size={6}>
-      <Stack direction="column">
-        <Typography variant="body1" color="primary">
-          {value || "-"}
-        </Typography>
-        <Typography variant="caption">{label}</Typography>
-      </Stack>
-    </Grid>
   );
 }
