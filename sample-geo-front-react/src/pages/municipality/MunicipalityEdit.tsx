@@ -4,44 +4,47 @@ import { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
 import { Container, Box, CircularProgress, Stack } from "@mui/material";
-import { fetchCountry, type Country } from "../../lib/countries-api";
+import {
+  fetchMunicipality,
+  type Municipality,
+  updateMunicipality,
+} from "../../lib/municipalities-api";
 import AppBreadcrumbs from "../../components/AppBreadcrumbs";
-import CountryForm from "./CountryForm";
+import MunicipalityForm from "./MunicipalityForm";
 import SaveButton from "../../components/buttons/SaveButton";
 import CancelButton from "../../components/buttons/CancelButton";
-import { updateCountry } from "../../lib/countries-api";
 
-export default function CountryEdit() {
+export default function MunicipalityEdit() {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const navigate = useNavigate();
   const auth = useAuth();
-  const [country, setCountry] = useState<Country>();
-  const [formData, setFormData] = useState<Country>({} as Country);
+  const [municipality, setMunicipality] = useState<Municipality>();
+  const [formData, setFormData] = useState<Municipality>({} as Municipality);
 
-  const bindCountry = (id: string) => {
-    fetchCountry(id!, auth).then((response) => setCountry(response));
+  const bindMunicipality = (id: string) => {
+    fetchMunicipality(id!, auth).then((response) => setMunicipality(response));
   };
 
   const onUpdate = () => {
-    updateCountry(formData, auth).then((response) =>
-      navigate(`/countries/view/${response.id}`, {
-        state: { country: response },
+    updateMunicipality(formData, auth).then((response) =>
+      navigate(`/municipalities/view/${response.id}`, {
+        state: { municipality: response },
       }),
     );
   };
 
   useEffect(() => {
-    if (country) {
-      setFormData(country);
+    if (municipality) {
+      setFormData(municipality);
     }
-  }, [country]);
+  }, [municipality]);
 
   useEffect(() => {
-    if (location.state.country) {
-      setCountry(location.state.country);
-    } else if (id && auth) {
-      bindCountry(id);
+    if (location.state?.municipality) {
+      setMunicipality(location.state.municipality);
+    } else if (id) {
+      bindMunicipality(id);
     }
   }, [id, auth, location]);
 
@@ -51,24 +54,24 @@ export default function CountryEdit() {
         items={[
           { label: "Home", href: "/" },
           { label: "Geo", href: "/geo" },
-          { label: "Countries", href: "/countries" },
+          { label: "Municipalities", href: "/municipalities" },
           { label: "Edit" },
         ]}
       >
         <Stack direction="row">
+          <SaveButton onClick={onUpdate} />
           <CancelButton
             onClick={() =>
-              navigate(`/countries/view/${id}`, { state: country })
+              navigate(`/municipalities/view/${id}`, { state: municipality })
             }
           />
-          <SaveButton onClick={onUpdate} />
         </Stack>
       </AppBreadcrumbs>
       {!formData ? (
         <CircularProgress />
       ) : (
         <Box sx={{ my: 2 }}>
-          <CountryForm
+          <MunicipalityForm
             formData={formData}
             setFormData={setFormData}
             create={false}

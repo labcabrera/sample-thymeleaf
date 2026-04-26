@@ -1,4 +1,4 @@
-import { useState, useEffect, type ChangeEvent } from "react";
+import { useState, useEffect } from "react";
 import {
   Container,
   Box,
@@ -9,36 +9,41 @@ import {
   Pagination,
   Paper,
   Typography,
+  Stack,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useAuth, type AuthContextProps } from "react-oidc-context";
-import { fetchCountries, type Country } from "../../lib/countries-api";
+import { useAuth } from "react-oidc-context";
 import AppBreadcrumbs from "../../components/AppBreadcrumbs";
 import AddButton from "../../components/buttons/AddButton";
 import type { Page } from "../../lib/api";
+import {
+  fetchMunicipalities,
+  type Municipality,
+} from "../../lib/municipalities-api";
+import ProvinceSelect from "../../components/selects/ProvinceSelect";
 import ClearableTextField from "../../components/inputs/ClearableTextField";
 
-export default function CountryList() {
+export default function MunicipalityList() {
   const auth = useAuth();
   const navigate = useNavigate();
-  const [pageData, setPageData] = useState<Page<Country> | null>(null);
+  const [pageData, setPageData] = useState<Page<Municipality> | null>(null);
   const [page, setPage] = useState<number>(0);
-  const [nameFilter, setNameFilter] = useState<string>("");
 
-  const bindCountries = (
-    rsql: string,
-    page: number,
-    auth: AuthContextProps,
-  ) => {
-    fetchCountries(rsql, 10, page, "name,asc", auth).then((response) =>
-      setPageData(response),
-    );
-  };
+  const [nameFilter, setNameFilter] = useState<string>();
+  const [provinceFilter, setProvinceFilter] = useState<string>();
 
   useEffect(() => {
-    const rsql = nameFilter ? `name=re=${nameFilter}` : "";
-    bindCountries(rsql, page, auth);
-  }, [auth, page, nameFilter]);
+    if (!auth) return;
+    let rsql = "";
+    if (nameFilter && nameFilter !== "") rsql = `name=re=${nameFilter}`;
+    if (provinceFilter && provinceFilter !== "") {
+      if (rsql !== "") rsql += ";";
+      rsql += `province.id==${provinceFilter}`;
+    }
+    fetchMunicipalities(rsql, 10, page, "name,asc", auth).then((response) =>
+      setPageData(response),
+    );
+  }, [auth, page, nameFilter, provinceFilter]);
 
   return (
     <Container>
@@ -46,12 +51,12 @@ export default function CountryList() {
         items={[
           { label: "Home", href: "/" },
           { label: "Geo", href: "/geo" },
-          { label: "Countries" },
+          { label: "Municipalities" },
         ]}
       >
-        <AddButton onClick={() => navigate("/countries/create")} />
+        <AddButton onClick={() => navigate("/municipalities/create")} />
       </AppBreadcrumbs>
-      <Paper sx={{ p: 2 }}>
+      <Paper sx={{ my: 2, p: 2 }}>
         <Box
           component="form"
           sx={{ display: "flex", gap: 2, my: 2 }}
@@ -59,10 +64,12 @@ export default function CountryList() {
         >
           <ClearableTextField
             label="Name"
-            value={nameFilter}
+            value={nameFilter || null}
             onChange={(e) => setNameFilter(e || "")}
           />
+          <ProvinceSelect onChange={(v) => setProvinceFilter(v?.id)} />
         </Box>
+
         {!pageData ? (
           <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
             <CircularProgress />
@@ -74,31 +81,28 @@ export default function CountryList() {
                 <ListItemButton
                   key={r.id}
                   onClick={() =>
-                    navigate(`/countries/view/${r.id}`, {
-                      state: { country: r },
+                    navigate(`/municipalities/view/${r.id}`, {
+                      state: { municipality: r },
                     })
                   }
                 >
                   <ListItemText>
-                    <Typography color="primary">{r.name}</Typography>
+                    <Stack
+                      direction="row"
+                      sx={{ justifyContent: "space-between" }}
+                    >
+                      <Typography color="primary">{r.name}</Typography>
+                      <Typography color="primary">{r.provinceId}</Typography>
+                    </Stack>
                   </ListItemText>
                 </ListItemButton>
               ))}
             </List>
-            {pageData.content.length === 0 && (
-              <Typography>No results were found</Typography>
-            )}
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                mt: 2,
-              }}
-            >
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
               <Pagination
                 count={pageData.pagination.totalPages}
                 page={pageData.pagination.page + 1}
-                onChange={(_: ChangeEvent<unknown>, value: number) =>
+                onChange={(_: React.ChangeEvent<unknown>, value: number) =>
                   setPage(value - 1)
                 }
                 color="primary"

@@ -15,6 +15,7 @@ export default function GeoPage() {
     { label: "Countries", to: "/countries" },
     { label: "Provinces", to: "/provinces" },
     { label: "Municipalities", to: "/municipalities" },
+    { label: "Postal codes", to: "/postal-codes" },
   ];
 
   return (

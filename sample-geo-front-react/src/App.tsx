@@ -13,7 +13,10 @@ import ProvinceList from "./pages/province/ProvinceList";
 import ProvinceCreate from "./pages/province/ProvinceCreate";
 import ProvinceEdit from "./pages/province/ProvinceEdit";
 import ProvinceView from "./pages/province/ProvinceView";
-import Municipalities from "./pages/municipality/Municipalities";
+import MunicipalityList from "./pages/municipality/MunicipalityList";
+import MunicipalityCreate from "./pages/municipality/MunicipalityCreate";
+import MunicipalityEdit from "./pages/municipality/MunicipalityEdit";
+import MunicipalityView from "./pages/municipality/MunicipalityView";
 import GeoPage from "./pages/GeoPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
@@ -36,7 +39,19 @@ function App() {
               <Route path="provinces/view/:id" element={<ProvinceView />} />
               <Route path="provinces/edit/:id" element={<ProvinceEdit />} />
               <Route path="provinces/create" element={<ProvinceCreate />} />
-              <Route path="municipalities" element={<Municipalities />} />
+              <Route path="municipalities" element={<MunicipalityList />} />
+              <Route
+                path="municipalities/view/:id"
+                element={<MunicipalityView />}
+              />
+              <Route
+                path="municipalities/edit/:id"
+                element={<MunicipalityEdit />}
+              />
+              <Route
+                path="municipalities/create"
+                element={<MunicipalityCreate />}
+              />
               <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>
