@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ChangeEvent } from "react";
 import {
   Container,
   Box,
   CircularProgress,
-  TextField,
   List,
   ListItemText,
   ListItemButton,
   Pagination,
   Paper,
+  Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
@@ -16,20 +16,21 @@ import { fetchCountries, type Country } from "../../lib/countries-api";
 import AppBreadcrumbs from "../../components/AppBreadcrumbs";
 import AddButton from "../../components/buttons/AddButton";
 import type { Page } from "../../lib/api";
+import ClearableTextField from "../../components/inputs/ClearableTextField";
 
 export default function CountryList() {
   const auth = useAuth();
   const navigate = useNavigate();
   const [pageData, setPageData] = useState<Page<Country> | null>(null);
   const [page, setPage] = useState<number>(0);
-  const [rsql, setRsql] = useState<string>("");
   const [nameFilter, setNameFilter] = useState<string>("");
 
   useEffect(() => {
+    const rsql = nameFilter ? `name=re=${nameFilter}` : "";
     fetchCountries(rsql, 10, page, "name,asc", auth).then((response) =>
       setPageData(response),
     );
-  }, [auth, page, rsql]);
+  }, [auth, page, nameFilter]);
 
   return (
     <Container>
@@ -42,57 +43,54 @@ export default function CountryList() {
       >
         <AddButton onClick={() => navigate("/countries/create")} />
       </AppBreadcrumbs>
-      <Box sx={{ my: 2 }}>
+      <Paper sx={{ p: 2 }}>
         <Box
           component="form"
           sx={{ display: "flex", gap: 2, my: 2 }}
           onSubmit={(e) => e.preventDefault()}
         >
-          <TextField
+          <ClearableTextField
             label="Name"
-            size="small"
             value={nameFilter}
-            onChange={(e) => {
-              const v = e.target.value;
-              setNameFilter(v);
-              setRsql(v ? `name=re=${v}` : "");
-              setPage(0);
-            }}
+            onChange={(e) => setNameFilter(e || "")}
           />
         </Box>
-
         {!pageData ? (
           <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
             <CircularProgress />
           </Box>
         ) : (
           <>
-            <Paper>
-              <List dense>
-                {pageData.content.map((r) => (
-                  <ListItemButton
-                    key={r.id}
-                    onClick={() =>
-                      navigate(`/countries/view/${r.id}`, {
-                        state: { country: r },
-                      })
-                    }
-                  >
-                    <ListItemText primary={`${r.name}`} />
-                  </ListItemButton>
-                ))}
-              </List>
-            </Paper>
+            <List dense>
+              {pageData.content.map((r) => (
+                <ListItemButton
+                  key={r.id}
+                  onClick={() =>
+                    navigate(`/countries/view/${r.id}`, {
+                      state: { country: r },
+                    })
+                  }
+                >
+                  <ListItemText>
+                    <Typography color="primary">{r.name}</Typography>
+                  </ListItemText>
+                </ListItemButton>
+              ))}
+            </List>
+            {pageData.content.length === 0 && (
+              <Typography>No results were found</Typography>
+            )}
             <Box
               sx={{
                 display: "flex",
                 justifyContent: "center",
+                mt: 2,
               }}
             >
               <Pagination
                 count={pageData.pagination.totalPages}
                 page={pageData.pagination.page + 1}
-                onChange={(_: React.ChangeEvent<unknown>, value: number) =>
+                onChange={(_: ChangeEvent<unknown>, value: number) =>
                   setPage(value - 1)
                 }
                 color="primary"
@@ -102,7 +100,7 @@ export default function CountryList() {
             </Box>
           </>
         )}
-      </Box>
+      </Paper>
     </Container>
   );
 }

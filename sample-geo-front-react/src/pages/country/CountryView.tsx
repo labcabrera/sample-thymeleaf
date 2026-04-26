@@ -42,6 +42,13 @@ export default function CountryView() {
     fetchCountry(id!, auth).then((response) => setCountry(response));
   };
 
+  const formatDate = (date?: string | Date | null): string | null => {
+    if (!date) return null;
+    const dt = typeof date === "string" ? new Date(date) : date;
+    if (Number.isNaN(dt.getTime())) return null;
+    return dt.toISOString().split(".")[0];
+  };
+
   useEffect(() => {
     if (location.state.country) {
       setCountry(location.state.country);
@@ -80,8 +87,14 @@ export default function CountryView() {
             <Grid container spacing={1}>
               <KeyValueView label="Id" value={country.id} />
               <KeyValueView label="Name" value={country.name} />
-              <KeyValueView label="Created" value={country.createdAt} />
-              <KeyValueView label="Updated" value={country.updatedAt} />
+              <KeyValueView
+                label="Created"
+                value={formatDate(country.createdAt)}
+              />
+              <KeyValueView
+                label="Updated"
+                value={formatDate(country.updatedAt)}
+              />
             </Grid>
           )}
         </Paper>
@@ -95,7 +108,13 @@ export default function CountryView() {
   );
 }
 
-function KeyValueView({ label, value }: { label: string; value: string }) {
+function KeyValueView({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | null;
+}) {
   return (
     <Grid size={6}>
       <Stack direction="column">

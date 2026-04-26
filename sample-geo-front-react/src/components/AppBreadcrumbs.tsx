@@ -1,5 +1,5 @@
-import React, { ReactNode } from "react";
 import { Stack, Breadcrumbs, Link, Typography } from "@mui/material";
+import type { ReactNode } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 type BreadcrumbItem = {

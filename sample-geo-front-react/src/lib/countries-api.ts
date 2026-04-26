@@ -4,8 +4,8 @@ import { type AuthContextProps } from "react-oidc-context";
 export interface Country {
   id: string;
   name: string;
-  createdAt: string;
-  updatedAt: string | null;
+  createdAt: Date;
+  updatedAt: Date | null;
 }
 
 export const fetchCountries = async (

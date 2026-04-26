@@ -1,15 +1,14 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from "react";
 import {
   Container,
   Box,
   CircularProgress,
-  TextField,
   List,
   ListItemText,
   ListItemButton,
   Pagination,
   Paper,
+  Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
@@ -18,13 +17,13 @@ import AddButton from "../../components/buttons/AddButton";
 import type { Page } from "../../lib/api";
 import { fetchProvinces, type Province } from "../../lib/provinces-api";
 import CountrySelect from "../../components/selects/CountrySelect";
+import ClearableTextField from "../../components/inputs/ClearableTextField";
 
 export default function ProvinceList() {
   const auth = useAuth();
   const navigate = useNavigate();
   const [pageData, setPageData] = useState<Page<Province> | null>(null);
   const [page, setPage] = useState<number>(0);
-  const [rsql, setRsql] = useState<string>("");
 
   const [nameFilter, setNameFilter] = useState<string>();
   const [countryFilter, setCountryFilter] = useState<string>();
@@ -34,16 +33,13 @@ export default function ProvinceList() {
     if (nameFilter && nameFilter !== "") rsql = `name=re=${name}`;
     if (countryFilter && countryFilter !== "") {
       if (rsql !== "") rsql += ";";
-      rsql += `countryId==${countryFilter}`;
+      rsql += `country.id==${countryFilter}`;
     }
-    setRsql(rsql);
-  }, [nameFilter, countryFilter]);
-
-  useEffect(() => {
+    console.log(nameFilter, countryFilter, rsql);
     fetchProvinces(rsql, 10, page, "name,asc", auth).then((response) =>
       setPageData(response),
     );
-  }, [auth, page, rsql]);
+  }, [auth, page, nameFilter, countryFilter]);
 
   return (
     <Container>
@@ -56,17 +52,16 @@ export default function ProvinceList() {
       >
         <AddButton onClick={() => navigate("/provinces/create")} />
       </AppBreadcrumbs>
-      <Box sx={{ my: 2 }}>
+      <Paper sx={{ my: 2, p: 2 }}>
         <Box
           component="form"
           sx={{ display: "flex", gap: 2, my: 2 }}
           onSubmit={(e) => e.preventDefault()}
         >
-          <TextField
+          <ClearableTextField
             label="Name"
-            size="small"
-            value={nameFilter}
-            onChange={(e) => setNameFilter(e.target.value)}
+            value={nameFilter || null}
+            onChange={(e) => setNameFilter(e || "")}
           />
           <CountrySelect
             onChange={(v) => setCountryFilter(v?.id)}
@@ -81,22 +76,22 @@ export default function ProvinceList() {
           </Box>
         ) : (
           <>
-            <Paper>
-              <List dense>
-                {pageData.content.map((r) => (
-                  <ListItemButton
-                    key={r.id}
-                    onClick={() =>
-                      navigate(`/countries/view/${r.id}`, {
-                        state: { country: r },
-                      })
-                    }
-                  >
-                    <ListItemText primary={`${r.name}`} />
-                  </ListItemButton>
-                ))}
-              </List>
-            </Paper>
+            <List dense>
+              {pageData.content.map((r) => (
+                <ListItemButton
+                  key={r.id}
+                  onClick={() =>
+                    navigate(`/countries/view/${r.id}`, {
+                      state: { country: r },
+                    })
+                  }
+                >
+                  <ListItemText>
+                    <Typography color="primary">{r.name}</Typography>
+                  </ListItemText>
+                </ListItemButton>
+              ))}
+            </List>
             <Box
               sx={{
                 display: "flex",
@@ -116,7 +111,7 @@ export default function ProvinceList() {
             </Box>
           </>
         )}
-      </Box>
+      </Paper>
     </Container>
   );
 }

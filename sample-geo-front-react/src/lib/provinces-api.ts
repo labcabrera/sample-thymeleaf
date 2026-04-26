@@ -5,8 +5,8 @@ export interface Province {
   id: string;
   name: string;
   countryId: string;
-  createdAt: string;
-  updatedAt: string | null;
+  createdAt: Date;
+  updatedAt: Date | null;
 }
 
 export const fetchProvinces = async (
