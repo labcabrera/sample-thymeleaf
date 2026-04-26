@@ -53,7 +53,7 @@ export default function CountryList() {
       >
         <AddButton onClick={() => navigate("/countries/create")} />
       </AppBreadcrumbs>
-      <Paper elevation={5} sx={{ p: 2 }}>
+      <Paper sx={{ p: 2 }}>
         <Box
           component="form"
           sx={{ display: "flex", gap: 2, my: 2 }}

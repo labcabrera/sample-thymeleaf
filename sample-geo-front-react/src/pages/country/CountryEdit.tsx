@@ -67,7 +67,7 @@ export default function CountryEdit() {
       {!formData ? (
         <CircularProgress />
       ) : (
-        <Paper elevation={5} sx={{ p: 2, mt: 2 }}>
+        <Paper sx={{ p: 2, mt: 2 }}>
           <CountryForm
             formData={formData}
             setFormData={setFormData}

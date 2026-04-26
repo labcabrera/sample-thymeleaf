@@ -1,4 +1,5 @@
-import { Grid, Link, Stack, Typography } from "@mui/material";
+import { Grid, Link as MuiLink, Stack, Typography } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 
 type Props = {
   label: string;
@@ -13,15 +14,25 @@ export default function ClearableTextField({
   href,
   gridSize = 6,
 }: Props) {
+  const isExternal = href ? /^(https?:)?\/\//.test(href) : false;
+
   return (
     <Grid size={gridSize} sx={{ mt: 4 }}>
       <Stack direction="column">
         {href ? (
-          <Link href={href}>
-            <Typography variant="body1" color="primary">
-              {value || "-"}
-            </Typography>
-          </Link>
+          isExternal ? (
+            <MuiLink href={href} target="_blank" rel="noopener noreferrer">
+              <Typography variant="body1" color="primary">
+                {value || "-"}
+              </Typography>
+            </MuiLink>
+          ) : (
+            <MuiLink component={RouterLink} to={href}>
+              <Typography variant="body1" color="primary">
+                {value || "-"}
+              </Typography>
+            </MuiLink>
+          )
         ) : (
           <Typography variant="body1" color="primary">
             {value || "-"}
