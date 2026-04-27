@@ -1,6 +1,7 @@
 package org.labcabrera.sample.api.shared.interfaces.http;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.labcabrera.sample.api.shared.domain.exceptions.ConstraintViolationException;
@@ -17,9 +18,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
-
-import com.labcabrera.sample.archetype.generated.model.ApiError;
-import com.labcabrera.sample.archetype.generated.model.ApiErrorDetail;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,24 +39,28 @@ public class RestExceptionHandler {
     @ExceptionHandler(SecurityException.class)
     public ResponseEntity<ApiError> handleSecurityException(SecurityException ex) {
         log.error("Caugth security exception: code={}, message={}", ex.getMessage(), ex);
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ApiError(
-            "FORBIDDEN",
-            ex.getMessage(),
-            LocalDateTime.now()));
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+            new ApiError(
+                "FORBIDDEN",
+                ex.getMessage(),
+                LocalDateTime.now(),
+                new ArrayList<>()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleValidationExceptions(MethodArgumentNotValidException ex) {
         log.error("Validation exception", ex);
-        var apiError = new ApiError(
-            "msg.err.validation-error",
-            i18n("msg.err.validation-error"),
-            LocalDateTime.now());
+        var details = new ArrayList<ApiErrorDetail>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            apiError.addDetailsItem(new ApiErrorDetail(fieldName, errorMessage));
+            details.add(new ApiErrorDetail(fieldName, errorMessage));
         });
+        var apiError = new ApiError(
+            "msg.err.validation-error",
+            i18n("msg.err.validation-error"),
+            LocalDateTime.now(),
+            details);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
     }
 
@@ -68,7 +70,8 @@ public class RestExceptionHandler {
         ApiError error = new ApiError(
             "msg.err.illegal-argument",
             ex.getMessage(),
-            LocalDateTime.now());
+            LocalDateTime.now(),
+            new ArrayList<>());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
@@ -83,7 +86,8 @@ public class RestExceptionHandler {
         ApiError error = new ApiError(
             "msg.err.method-argument-type-mismatch",
             message,
-            LocalDateTime.now());
+            LocalDateTime.now(),
+            new ArrayList<>());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
@@ -93,7 +97,8 @@ public class RestExceptionHandler {
         ApiError error = new ApiError(
             "msg.err.http-message-not-readable",
             i18n("msg.err.http-message-not-readable"),
-            LocalDateTime.now());
+            LocalDateTime.now(),
+            new ArrayList<>());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
@@ -103,7 +108,8 @@ public class RestExceptionHandler {
         ApiError error = new ApiError(
             "msg.err.no-resource-found",
             i18n("msg.err.no-resource-found"),
-            LocalDateTime.now());
+            LocalDateTime.now(),
+            new ArrayList<>());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
@@ -113,7 +119,8 @@ public class RestExceptionHandler {
         ApiError error = new ApiError(
             "msg.err.no-handler-found",
             i18n("msg.err.no-handler-found"),
-            LocalDateTime.now());
+            LocalDateTime.now(),
+            new ArrayList<>());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
@@ -123,21 +130,24 @@ public class RestExceptionHandler {
         ApiError error = new ApiError(
             "INTERNAL_SERVER_ERROR",
             "An unexpected error occurred",
-            LocalDateTime.now());
+            LocalDateTime.now(),
+            new ArrayList<>());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 
     private ApiError fromDomainException(DomainException ex) {
-        var err = new ApiError(
-            ex.getMessage(),
-            i18n(ex.getMessage(), ex.getArgs()),
-            LocalDateTime.now());
-        err.addDetailsItem(new ApiErrorDetail("stacktrace", ExceptionUtils.getStackTrace(ex)));
+        var list = new ArrayList<ApiErrorDetail>();
+        list.add(new ApiErrorDetail("stacktrace", ExceptionUtils.getStackTrace(ex)));
         if (ex instanceof ConstraintViolationException cvex) {
             cvex.getViolations().stream()
                 .map(v -> new ApiErrorDetail("violation", String.format("%s %s", i18n(v.getPropertyPath().toString()), v.getMessage())))
-                .forEach(e -> err.addDetailsItem(e));
+                .forEach(e -> list.add(e));
         }
+        var err = new ApiError(
+            ex.getMessage(),
+            i18n(ex.getMessage(), ex.getArgs()),
+            LocalDateTime.now(),
+            list);
         return err;
     }
 
