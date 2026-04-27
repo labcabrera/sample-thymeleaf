@@ -71,11 +71,11 @@ table.striped td {
   font-size: 1.6rem;
 }
 
-/* Accent helpers */
 .text-accent { color: var(--color-accent); }
 .bg-accent { background-color: var(--color-accent); color: #fff; }
 
-/* Form inputs readability */
+h3, .section h3 { color: var(--color-primary) !important; }
+
 .input-field input {
   font-size: 1rem;
 }
