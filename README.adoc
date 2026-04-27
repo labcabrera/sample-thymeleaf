@@ -26,7 +26,7 @@ La seguridad está basada en Spring Security utilizando la librería `spring-boo
 
 Se ha definido la interface `Guard` para implementar un mecanismo de autorización basado en roles a nivel de operación en lugar de usar las anotaciones de Spring Security a nivel de método. Esto permite una mayor flexibilidad y control dentro de la logica de negocio y encaja más con el enfoque de arquitectura hexagonal.
 
-Dentro de la paquetería `shared` se han definido diferentes componente que serían comunes a otros módulos como el cliente de la API, los DTOs, los mapeadores o las excepciones personalizadas. Estos componentes podrían ser extrañidos a módulos independientes equivalentes a los starters de Spring Boot.
+Dentro de la paquetería `shared` se han definido diferentes componente que serían comunes a otros módulos como el cliente de la API, los DTOs, los mapeadores o las excepciones personalizadas. Estos componentes podrían ser extraídos a módulos independientes equivalentes a los starters de Spring Boot.
 
 ## Sample Front Thymeleaf
 
@@ -92,7 +92,7 @@ A continuación crearemos un nuevo usuario al que habremos asignado el rol `geo-
 
 Una vez configurado Keycloak actualizaremos el secret generado para el cliente `sample-client` en los ficheros de configuración tanto de la API como del frontal.
 
-Durante el arranque de la aplicación se cargarán varios datos de ejemplo para países, provincias y municipios a travñes de un `CommandLineRunner`.
+Durante el arranque de la aplicación se cargarán varios datos de ejemplo para países, provincias y municipios a través de un `CommandLineRunner`.
 
 Para compilar y ejecutarmente la API haremos:
 
@@ -137,7 +137,7 @@ Docker compose incluye una imagen de Kafka UI a la que podemos acceder a través
 - Menor interactividad y experiencia de usuario. Recarga completa de la página para cada interacción, lo que puede resultar en una experiencia de usuario menos fluida y más lenta en comparación con las aplicaciones SPA modernas.
 - Los componentes reutilizables tienen un alto acoplamiento (_jar+version_) y muy baja cohesión (muchos pueden tener diferentes comportamientos dentro de todas las apps existentes), lo que puede dificultar su mantenimiento y evolución a largo plazo. Requisitos específicos de un módulo impactan a todos los módulos que lo utilizan. Esto deriva en los mismos problemas de los monolitos donde un cambio residual puede requerir la actualización de todos los módulos que lo utilizan.
 - Lenguaje más áspero para desarrolladores. Mayor complejidad para implementar cualquier funcionalidad básica.
-- Mayor complejidad a la hora de añadir nuevas funcionalidades, especialmente cuando se dependen de datos diñámicos donde en el patrón MVN se reuqiere de la modificación del controlador (por ejemplo, añadir un nuevo _select_ a una vista requiere que el _controller_ realice la carga mientras que en un patrón SPA el componente se encargaría de realizar la llamada a la API para cargar los datos de forma dinámica).
+- Mayor complejidad a la hora de añadir nuevas funcionalidades, especialmente cuando se dependen de datos dinámicos donde en el patrón MVN se reuqiere de la modificación del controlador (por ejemplo, añadir un nuevo _select_ a una vista requiere que el _controller_ realice la carga mientras que en un patrón SPA el componente se encargaría de realizar la llamada a la API para cargar los datos de forma dinámica).
 - Mayor carga en el servidor debido a la necesidad de renderizar cada página en el servidor lo que deriva en mayores costes de infraestructura (aunque se optimice el uso de recursos sigue siendo una aplicación que requiere de una JVM con una importante huella de memoria que multiplicado por decenas de aplicaciones en muchos entornos implica unos costes nada despreciables).
 - Librerías y herramientas limitadas en comparación con los frameworks modernos de frontend.
 - Menos adecuado para aplicaciones modernas y dinámicas que requieren de una comunicación asíncrona fluida.
@@ -169,7 +169,7 @@ Docker compose incluye una imagen de Kafka UI a la que podemos acceder a través
 - Mayor complejidad arquitectónica (por ejemplo a nivel de exposición de APIs, seguridad, etc.) y de configuración y despliegue.
 - Curva de aprendizaje más pronunciada para perfiles Java sin experiencia en frontend.
 - Complejidad adicional en casos de requisitos de SEO (aunque no aplicarían para la mayor parte de aplicaciones de gestiona).
-- Riesgo de crear un monstruo mal diseñado que conserve los mismos problemas de los monolitos tradicionales y que añada una capa de complejidad de poco valor añadido a un stack tecnológico ya de por si complejo.
+- Riesgo de crear un monstruo mal diseñado que conserve los mismos problemas de los monolitos tradicionales y que incorpore una capa de complejidad de poco valor añadido a un stack tecnológico ya de por si complejo.
 - Migración más compleja entre aplicaciones con funcionamiento legacy y modernas. En este caso no hay mucha diferencia con Thymeleaf aunque en determinados casos con Thymeleaf se pueden trampear problemas de integración que tengan que ver con la lógica de negocio de una forma más sencilla que con React, aunque estos sean casos que deberían evitarse pero que en casos donde se requieran de sesiones o de un comportamiento más diseñado para JSFs que fuera complejo mirar sería más complejo.
 
 == Conclusiones
@@ -184,7 +184,7 @@ Y aunque la adopción de frameworks modernos requiera de más frecuencia de actu
 
 == Recomendación
 
-Para una migración de aplicaciones monoñiticas en primer lugar haría una refactorización interna para aislar:
+Para una migración de aplicaciones monolíticas en primer lugar haría una refactorización interna para aislar:
 
 - Separación del dominio de la aplicación (aislamiento absoluto pese a la naturaleza relacional del modelo de datos)
 - Definición de la lógica de negocio (y modelo de objetos asociados)
@@ -211,7 +211,7 @@ También, dentro de esa parte evitar todos los comportamientos AOP que no sean e
 
 Ok, separado todo eso y aislado el dominio no es posible que el código de negocio se pueda migrar porque de pronto en un fragmento se hace un rollback de una transacción o en otro la mezcla entre entidades y DTOS haga de un calvario separarlas. En esos casos Thymeleaf. Hacer un render de _session.userName_ y encogerse de hombros diciendo: se intentó.
 
-Aunque, en general, si se aplican refactorizaciones para aislar a cada componente de sus funciones (la labor más compleja y tediosa), cualquier migraciñon posterior a tal o cual framework es algo bastante sencillo.
+Aunque, en general, si se aplican refactorizaciones para aislar a cada componente de sus funciones (la labor más compleja y tediosa), cualquier migración posterior a tal o cual framework es algo bastante sencillo.
 
 Moraleja: no useis Thymeleaf, no para renderizar vistas al menos, usarlo para phishings si acaso ya que si que es un buen motor de plantillas.
 
