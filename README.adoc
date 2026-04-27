@@ -1,8 +1,8 @@
 # Sample Spring Boot Thymeleaf + React
 
-Esta aplicación es un ejemplo de una API basada en Spring Boot con dos frontales que la consumen. Uno con Spring Boot y Thymeleaf y otro con React. El objetivo es mostrar cómo se puede estructurar una estructura básica para una migración de aplicaciones legacy J2EE basadas en patrones MCV a una arquitectura más moderna basada en microservicios y arquitectura hexagonal.
+Esta aplicación es un ejemplo de una API basada en Spring Boot con dos frontales que la consumen. Uno con Spring Boot y Thymeleaf y otro con React. El objetivo es mostrar un ejemplo de estructura básica de proyectosde cara a una migración de aplicaciones legacy J2EE basadas en patrones MCV a una arquitectura más moderna basada en microservicios.
 
-Personalmente no recomendaría el uso de Thymeleaf para nuevos proyectos, ya que existen alternativas más modernas y eficientes como React, Angular u otros frameworks SPA. Sin embargo, Thymeleaf sigue siendo una opción válida para proyectos que requieren una integración estrecha con el backend de Spring Boot y para aquellos que prefieren una solución más tradicional basada en plantillas como evolución de proyectos legacy basados en patrones MVC.
+Personalmente no recomendaría el uso de Thymeleaf para nuevos proyectos ya que existen alternativas más modernas y eficientes como React, Angular u otros frameworks SPA. Sin embargo, Thymeleaf sigue siendo una opción válida para proyectos que requieren una integración estrecha con el backend de Spring Boot y para aquellos que prefieren una solución más tradicional basada en plantillas como evolución de proyectos legacy basados en patrones MVC.
 
 También, la estructura del proyecto evita el uso de patrones DDD tales como agregados y en lugar de eso la lógica de negocio estaría organizada dentro de la capa de aplicación dentro de los manejadores CQRS. De este modo el dominio simlemente devolvería objetos de valor y entidades sin lógica de negocio.
 
