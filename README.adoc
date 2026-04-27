@@ -118,33 +118,6 @@ Docker compose incluye una imagen de Kafka UI a la que podemos acceder a través
 
 ## Comparativa
 
-// |===
-// | Característica | Thymeleaf | React
-
-// | Paradigma | MVC (Old SSR) | SPA
-
-// | Interactividad
-// | Limitada, requiere recarga de página y la gestión manual de llamadas con JavaScript
-// | Alta, permite actualizaciones dinámicas sin recargar la página
-
-// | Componentes reutilizables | No nativamente, aunque se pueden crear fragmentos de Thymeleaf | Sí, a través de componentes de React y de las bibliotecas de componentes compatibles
-
-// | Librerías | Limitadas, principalmente para el lado del servidor | Amplio ecosistema de librerías para frontend
-
-// | Uso de recursos | Ligero en el cliente pero costoso en el servidor | Más pesado en el cliente pero puede reducir la carga en el servidor
-
-
-
-// | Coste ejecución | Generalmente más bajo para aplicaciones simples | Puede ser más alto debido a la necesidad de un servidor de desarrollo y herramientas de construcción
-
-// | Curva de aprendizaje | Más fácil para desarrolladores con experiencia en Java y Spring | Requiere conocimientos de JavaScript, React y su ecosistema
-
-// | Ecosistema | Integrado con Spring Boot, menos dependencias externas | Amplio ecosistema de bibliotecas y herramientas, pero requiere gestión de dependencias
-
-// | Rendimiento | Puede ser más lento debido a la necesidad de recargar la página para cada interacción | Generalmente más rápido para aplicaciones interactiv
-
-// |===
-
 === Thymeleaf
 
 *Pros*:
