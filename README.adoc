@@ -184,30 +184,30 @@ Y aunque la adopción de frameworks modernos requiera de más frecuencia de actu
 
 == Recomendación
 
-Para una migraciñon de aplicaciones monoñiticas en primer lugar haría una refactorizaciñon interna para aislar:
+Para una migración de aplicaciones monoñiticas en primer lugar haría una refactorización interna para aislar:
 
-- Definiciñon del dominio de la aplicaciñon
-- Lógica de negocio (y modelo de objetos asociados)
+- Separación del dominio de la aplicación (aislamiento absoluto pese a la naturaleza relacional del modelo de datos)
+- Definición de la lógica de negocio (y modelo de objetos asociados)
 - Interfaces en las que la aplicacion lee de sistemas externos (mayormente DBs)
 - Interfaces en las que la aplicacion escribe a sistemas externos (mayormente DBs)
 - Transaccionalidad de procesos (de container-based-transactions a transacciones distribuidas)
 
-Con este nivel de aislamiento aplicar una refactorizaciñon lógica de negocio para categorizar los componentes dentro de tres capas principales:
+Con este nivel de aislamiento aplicar una refactorización lógica de negocio para categorizar los componentes dentro de tres capas principales:
 
 - Dominio (generalmenete paqueterías de servicios)
-- Infraestructura: todo aquello donde la aplicaciñon escribe y lee dentro del mismo dominio, normalmente bases de datos
-- Interfaces: separación de la capa de todo aquelllo que gestiona una request que llega a la aplicación, ya sea HTTP, eventos, etc.
+- Infraestructura: donde la aplicación escribe.
+- Interfaces: de donde la aplicación recibe peticiones externas.
 
-Con esta lógica separada se puede empezar a aplicar contratos entre cada una de las capas que sin sobreingenieria de interfaces aislen y detecten las depencecias entre cada uno de los módulos. Y en ese punto de tener interfaces de lógica de negocio, escritura y lectura estructuradas cada componente monolítico se puede migrar a un dominio independiente, aunque sea inicialmente sin una ruptura arquitectónica.
+Con una lógica separada se puede empezar a aplicar contratos entre cada una de las capas que sin que haya una sobreingenieria de interfaces, aislando y minimizando las depencecias entre cada uno de los módulos. Y en este punto de tener interfaces de lógica de negocio (separada la lectura y la escritura), estructuradas en las que cada componente monolítico se puede migrar a un dominio independiente, aunque sea inicialmente sin una ruptura arquitectónica.
 
-El uso de un patrón de comandos y consultas puede ayudar a estructurar la lógica de negocio y a definir claramente las operaciones que realiza un determinado sistema.
-Una vez identificados los contratos de entrada y salida (y aislados de tecnologías especñificas dependientes de un determinado framework o tecnología) habría que asegurar una separación clara entre la capa de servicios y las diferentes capas de infraestructura (modelos de ORM, serializaciones, conversiones y demás trampas, etc.). Este nivel de aislamiento (no depender de entities, de stubs generaos por clientes de implementacione REST/SOAP) no asegurarñia una primera versiñon de una separaciñon real entre negocio y framework.
+El uso de un patrón de comandos y consultas puede ayudar a estructurar el comportamiento de cada aplicación e identificar claramente las operaciones que realiza.
+Una vez identificados los contratos de entrada y salida (y aislados de tecnologías específicas dependientes de un determinado framework o librería) habría que asegurar una separación clara entre la capa de servicios y las diferentes capas de infraestructura (modelos de ORM, serializaciones, conversiones y demás trampas, etc.). Este nivel de aislamiento (no depender de entities, de stubs generados por clientes de implementacione REST/SOAP) nos aseguraría una primera versión de una separación real entre negocio e infraestructura.
 
-Todo esto puede hacerse sin una ruptura arquitectónica, usando el mismo paradigma J2EE/Spring/Whatever. Y una vez aislado el comportamiento de cada servicio a nivel de lógica real dentro del dominio, la migracóon de una tecnología a otra se puede hacer de una forma más sencilla tanto en cuanto sólo existe una capa de transformaciñon entre entidades de exposicion a entidades de dominio.
+Todo esto puede hacerse sin una ruptura tecnológica, usando el mismo paradigma J2EE/Spring/Whatever. Y una vez aislado el comportamiento de cada servicio a nivel de lógica real dentro del dominio, la migración de una tecnología a otra se puede hacer de una forma más sencilla tanto en cuanto sólo existe una capa de transformación entre las entidades de exposicion a las entidades de dominio.
 
-Una vez el código esté estructurado de este modo, el uso de un framework u otro no supondría nada más que cambiar los contratos de entrada y saldida.
+Una vez el código esté modelado de este modo, el uso de un framework u otro no supondría nada más que cambiar los contratos de entrada y salida.
 
-Tambiñen, dentro de esa parte evitar todos los comportamientos AOP que no sean estrictamente necesarios a fin de que el flujo de la lógica sea lo más transparente posible, sin aspectos que afecten al comportamiento de la lógica. Si algo se ejecuta como un interceptor debe de ser debidamente justificado para evitar que ninguna lógica esté definida a nivel de aspectos.
+También, dentro de esa parte evitar todos los comportamientos AOP que no sean estrictamente necesarios a fin de que el flujo de la lógica sea lo más transparente posible, sin aspectos que afecten al comportamiento de la lógica. Si algo se ejecuta como un interceptor debe de ser debidamente justificado para evitar que ninguna lógica esté definida a nivel de aspectos.
 
 Ok, separado todo eso y aislado el dominio no es posible que el código de negocio se pueda migrar porque de pronto en un fragmento se hace un rollback de una transacción o en otro la mezcla entre entidades y DTOS haga de un calvario separarlas. En esos casos Thymeleaf. Hacer un render de _session.userName_ y encogerse de hombros diciendo: se intentó.
 
