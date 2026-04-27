@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import feign.FeignException;
 
 @ControllerAdvice
 @Slf4j
@@ -15,11 +14,6 @@ public class GlobalExceptionHandler {
     public String handleException(Exception ex, HttpServletRequest request, Model model) {
         int status = 500;
         String message = ex.getMessage();
-        if (ex instanceof FeignException) {
-            FeignException fe = (FeignException) ex;
-            status = fe.status();
-            message = fe.getMessage();
-        }
         log.error("Unhandled exception for {} {} -> {}", request.getMethod(), request.getRequestURI(), message, ex);
         model.addAttribute("status", status);
         model.addAttribute("message", message != null ? message : "Unexpected error");

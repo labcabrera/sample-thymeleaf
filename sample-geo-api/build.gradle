@@ -18,10 +18,6 @@ ext {
 	springCloudVersion = '2025.1.0'
 	rsqlParserVersion = '2.1.0'
 	mapstructVersion = '1.5.5.Final'
-	feignVersion = '13.5'
-	feignFormVersion = '3.8.0'
-	scribejavaVersion = '8.0.0'
-	migbase64Version = '2.2'
 }
 
 java {
@@ -58,22 +54,6 @@ dependencies {
 	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
 	implementation "cz.jirutka.rsql:rsql-parser:${rsqlParserVersion}"
 
-	// TODO update to Jackson 3 when feign supports it
-	implementation 'com.fasterxml.jackson.core:jackson-databind'
-	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
-
-	// Dependencies required by the generated OpenAPI Feign client
-	implementation "io.github.openfeign:feign-core:${feignVersion}"
-	implementation "io.github.openfeign:feign-jackson:${feignVersion}"
-	implementation "io.github.openfeign:feign-slf4j:${feignVersion}"
-	implementation "io.github.openfeign:feign-okhttp:${feignVersion}"
-	implementation "io.github.openfeign.form:feign-form:${feignFormVersion}"
-
-	// Dependencies required by generated OAuth helper classes
-	implementation "com.github.scribejava:scribejava-core:${scribejavaVersion}"
-	implementation "com.brsanthu:migbase64:${migbase64Version}"
-
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'org.postgresql:postgresql'
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
@@ -99,10 +79,10 @@ openApiGenerate {
         useTags             : "true",
         useSpringBoot3      : "false",
 		useSpringBoot4      : "true",
-		useJackson3         : "false",
+		useJackson3         : "true",
 		useJakartaEe        : "true",
 		useJspecify		    : "true",
-        singleContentTypes  : "true",
+        singleContentTypes  : "false",
         unhandledException  : "true",
 		openApiNullable     : "false",
 		dateLibrary         : "java8-localdatetime"
