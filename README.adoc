@@ -215,5 +215,7 @@ Aunque, en general, si se aplican refactorizaciones para aislar a cada component
 
 Moraleja: no useis Thymeleaf, no para renderizar vistas al menos, usarlo para phishings si acaso ya que si que es un buen motor de plantillas.
 
+## Enlaces
 
+- https://openapi-generator.tech/docs/generators/spring/: Documentación del generador de código para Spring.
 
