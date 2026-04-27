@@ -6,9 +6,7 @@ Personalmente no recomendaría el uso de Thymeleaf para nuevos proyectos, ya que
 
 También, la estructura del proyecto evita el uso de patrones DDD tales como agregados y en lugar de eso la lógica de negocio estaría organizada dentro de la capa de aplicación dentro de los manejadores CQRS. De este modo el dominio simlemente devolvería objetos de valor y entidades sin lógica de negocio.
 
-## Estructura del Proyecto
-
-El proyecto está organizado en los siguientes módulos:
+## Módulos
 
 - `sample-geo-api`: Contiene la lógica de negocio y las capas de servicio y repositorio.
 - `sample-geo-front-thymeleaf`: Contiene los controladores y las vistas Thymeleaf.
@@ -26,7 +24,7 @@ Utiliza Spring Data JPA para la persistencia de datos empleando RSQL para las co
 
 La seguridad está basada en Spring Security utilizando la librería `spring-boot-starter-oauth2-resource-server` validando los tokens JWT a través de Keycloak.
 
-Se ha definido la interface `Guard` para implementar un mecanismo de autorización basado en roles y permisos a nivel de operación en lugar de usar las anotaciones de Spring Security a nivel de método. Esto permite una mayor flexibilidad y control dentro de la logica de negocio y encaja más con el enfoque de arquitectura hexagonal.
+Se ha definido la interface `Guard` para implementar un mecanismo de autorización basado en roles a nivel de operación en lugar de usar las anotaciones de Spring Security a nivel de método. Esto permite una mayor flexibilidad y control dentro de la logica de negocio y encaja más con el enfoque de arquitectura hexagonal.
 
 Dentro de la paquetería `shared` se han definido diferentes componente que serían comunes a otros módulos como el cliente de la API, los DTOs, los mapeadores o las excepciones personalizadas. Estos componentes podrían ser extrañidos a módulos independientes equivalentes a los starters de Spring Boot.
 
@@ -117,4 +115,98 @@ El frontal levantará la aplicación en el puerto 8081 de modo que podremos acce
 Desde aquí podremos navegar por las diferentes páginas y realizar operaciones CRUD sobre las provincias utilizando la API REST del módulo `sample-geo-api`.
 
 Docker compose incluye una imagen de Kafka UI a la que podemos acceder a través de  http://localhost:8091/ usando las credenciales `admin:admin` para comprobar los mensajes que se publican en los topics de Kafka cada vez que se crea, actualiza o elimina una entidad.
+
+## Comparativa
+
+// |===
+// | Característica | Thymeleaf | React
+
+// | Paradigma | MVC (Old SSR) | SPA
+
+// | Interactividad
+// | Limitada, requiere recarga de página y la gestión manual de llamadas con JavaScript
+// | Alta, permite actualizaciones dinámicas sin recargar la página
+
+// | Componentes reutilizables | No nativamente, aunque se pueden crear fragmentos de Thymeleaf | Sí, a través de componentes de React y de las bibliotecas de componentes compatibles
+
+// | Librerías | Limitadas, principalmente para el lado del servidor | Amplio ecosistema de librerías para frontend
+
+// | Uso de recursos | Ligero en el cliente pero costoso en el servidor | Más pesado en el cliente pero puede reducir la carga en el servidor
+
+
+
+// | Coste ejecución | Generalmente más bajo para aplicaciones simples | Puede ser más alto debido a la necesidad de un servidor de desarrollo y herramientas de construcción
+
+// | Curva de aprendizaje | Más fácil para desarrolladores con experiencia en Java y Spring | Requiere conocimientos de JavaScript, React y su ecosistema
+
+// | Ecosistema | Integrado con Spring Boot, menos dependencias externas | Amplio ecosistema de bibliotecas y herramientas, pero requiere gestión de dependencias
+
+// | Rendimiento | Puede ser más lento debido a la necesidad de recargar la página para cada interacción | Generalmente más rápido para aplicaciones interactiv
+
+// |===
+
+=== Thymeleaf
+
+*Pros*:
+
+- Uso de patrones MVC tradicionales, lo que puede ser más familiar para desarrolladores con experiencia en Java y Spring sin conocimientos en arquitecturas de frontends.
+- Migración más sencilla para aplicaciones legacy basadas en patrones MVC.
+- Menor frecuencia de actualización de dependencias.
+- Comparte arquitectura y stack tecnológico con el backend, lo que puede facilitar la integración y el desarrollo para equipos con experiencia en Java.
+- Mismo lenguaje para el frontend y el backend (hasta cierto punto en función de la complejidad que se quiera implementar en el frontend si no se quiere intentar hacer de una falsa SPA vía llamadas asíncronas a la antigua usanza).
+- Menor complejidad en la configuración y el despliegue ya que utiliza los mismos procesos de CI/CD que el backend.
+- Mejor tiempo de primera carga en aquellos casos de páginas pesadas o que involucren muchos componentes.
+- Posibilidad de reutilizar componentes de servidor como los DTOs, mapeadores, validadores, etc. a través de la generación de código o el uso de módulos compartidos aunque esto es algo que debería evitarse de cara a la separación de responsabilidades entre el frontend y el backend que debería estar basada sólamente en contratos a través de APIs REST para los casos síncronos o eventos en los asínronos.
+
+*Contras*:
+
+- StateFull. Aunque es posible implementar aplicaciones sin estado utilizando Thymeleaf, en general se asocia más con aplicaciones stateful, lo que puede complicar la escalabilidad, mantenimiento y la separación entre dominios de cara a adoptar una arquitectura de microservicios.
+- Menor interactividad y experiencia de usuario. Recarga completa de la página para cada interacción, lo que puede resultar en una experiencia de usuario menos fluida y más lenta en comparación con las aplicaciones SPA modernas.
+- Los componentes reutilizables tienen un alto acoplamiento (_jar+version_) y muy baja cohesión (muchos pueden tener diferentes comportamientos dentro de todas las apps existentes), lo que puede dificultar su mantenimiento y evolución a largo plazo. Requisitos específicos de un módulo impactan a todos los módulos que lo utilizan. Esto deriva en los mismos problemas de los monolitos donde un cambio residual puede requerir la actualización de todos los módulos que lo utilizan.
+- Lenguaje más áspero para desarrolladores. Mayor complejidad para implementar cualquier funcionalidad básica.
+- Mayor complejidad a la hora de añadir nuevas funcionalidades, especialmente cuando se dependen de datos diñámicos donde en el patrón MVN se reuqiere de la modificación del controlador (por ejemplo, añadir un nuevo _select_ a una vista requiere que el _controller_ realice la carga mientras que en un patrón SPA el componente se encargaría de realizar la llamada a la API para cargar los datos de forma dinámica).
+- Mayor carga en el servidor debido a la necesidad de renderizar cada página en el servidor lo que deriva en mayores costes de infraestructura (aunque se optimice el uso de recursos sigue siendo una aplicación que requiere de una JVM con una importante huella de memoria que multiplicado por decenas de aplicaciones en muchos entornos implica unos costes nada despreciables).
+- Librerías y herramientas limitadas en comparación con los frameworks modernos de frontend.
+- Menos adecuado para aplicaciones modernas y dinámicas que requieren de una comunicación asíncrona fluida.
+- Mayor complejidad para integrar diferentes aplicaciones dentro de una misma interfaz de usuario (respecto patrones de federación).
+- Riesgos de mezclar responsabilidades entre el frontend y el backend, lo que puede llevar a una arquitectura monolítica difícil de mantener a largo plazo.
+- Reutilización limitada de componente.
+- La reutilización de componentes puede llevar al mismo problema de los monolitos de muy alto acoplamiento (a nivel de versiones de jars).
+- Nada atractivo para perfiles modernos.
+- Ecosistema cercano a cero.
+
+=== React
+
+*Pros*:
+
+- Separación clara y real entre frontends y backends. No hay ninguna zona gris entre donde debería estar cada responsabilidad.
+- Mejor experiencia de usuario.
+- Amplio ecosistema de librerías y herramientas para el desarrollo frontend.
+- Facilidad para definir componentes reutilizables.
+- Capacidad de integración entre componentes a través de federación de módulos.
+- Aislamiento de responsabilidades comunes a nivel de módulo (seguridad, i18n...) lo que simplifica la estructura de cada módulo.
+- Costes de infraestructura cercanos a cero al no requerir de ningún servidor y poder ser desplegado en cualquier CDN.
+- Perfiles de desarrolladores más especializados en frontend.
+- Tencología más moderna y actualizada, lo que puede facilitar la atracción y retención de talento.
+- Actúa como un policy a la hora de estructurar arquitecturas basadas en microservicios a la hora de requerir la implementación vía APIs de los contratos y funcionalidades, algo que con Thymeleaf es más fácil de saltarse.
+
+*Contras*:
+
+- Mayor frecuencia de actualización de dependencias.
+- Mayor complejidad arquitectónica (por ejemplo a nivel de exposición de APIs, seguridad, etc.) y de configuración y despliegue.
+- Curva de aprendizaje más pronunciada para perfiles Java sin experiencia en frontend.
+- Complejidad adicional en casos de requisitos de SEO (aunque no aplicarían para la mayor parte de aplicaciones de gestiona).
+- Riesgo de crear un monstruo mal diseñado que conserve los mismos problemas de los monolitos tradicionales y que añada una capa de complejidad de poco valor añadido a un stack tecnológico ya de por si complejo.
+- Migración más compleja entre aplicaciones con funcionamiento legacy y modernas. En este caso no hay mucha diferencia con Thymeleaf aunque en determinados casos con Thymeleaf se pueden trampear problemas de integración que tengan que ver con la lógica de negocio de una forma más sencilla que con React, aunque estos sean casos que deberían evitarse pero que en casos donde se requieran de sesiones o de un comportamiento más diseñado para JSFs que fuera complejo mirar sería más complejo.
+
+== Conclusiónes
+
+La opciṕn de Thymeleaf sólo me parece adecuada de cara a una migración suave y escalonada de aplicaciones legacy. En si misma no aporta nada de valor añadido a patrones obsoletos como Struts y debería, de ser considerada, un proceso de transición hacia una arquitectura más moderna.
+
+Muchas de las características que añaden complejidad a React como puede ser la necesidad de una mayor frecuencia de actualizaciones pueden ser paliadas por patrones de diseño adecuados y un diseño adecuado de componentes. Especialmente usando tecnologías no opinadas donde los equipos de desarrollo dispongan de un conjunto de componentes comunues que no requieran de su utilización directa y que puedan ser actualizados de forma independiente a través de la federación de módulos. De este modo se puede conseguir una arquitectura basada en microservicios con un frontend desacoplado del backend y con una experiencia de usuario moderna y fluida.
+
+Este paradigma aislaría muchos elementos comunes de cada aplicación como puede ser la seguridad, layouts comunes, i18n, etc. dentro de módulos que simplemente tendrían una relación de dependencias en tiempo de ejecución (contratos a través de un APIM).
+
+Y aunque la adopción de frameworks modernos requiera de más frecuencia de actualizaciones, en gran parte no se debe a roturas de API sino a vulnerabilidades que no son críticas en un entorno controlado de aplicaciones internas y puede ser mitigado a través de un diseño adecuado.
+
 

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: sample-front
+    name: sample-geo-front-thymeleaf
   main:
     banner-mode: off
 

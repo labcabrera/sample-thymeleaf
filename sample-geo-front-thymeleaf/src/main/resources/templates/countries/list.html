@@ -37,7 +37,11 @@
                     </thead>
                     <tbody>
                         <tr th:each="c : ${countries}">
-                            <td th:text="${c.id}"></td>
+                            <td>
+                                <img th:src="@{https://flagcdn.com/{code}.svg(code=${#strings.toLowerCase(c.id)})}" alt="Flag"
+                                    style="width:32px; height:20px; object-fit:cover;" onerror="this.style.display='none'" />
+                                <span th:text="${c.id}" style="margin-left:8px;"></span>
+                            </td>
                             <td><a th:href="@{/countries/{id}(id=${c.id})}" th:text="${c.name}"></a></td>
                         </tr>
                     </tbody>

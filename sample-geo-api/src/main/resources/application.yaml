@@ -10,7 +10,7 @@ spring:
       # - classpath:application-client.yaml
       # - classpath:application-resilience4j.yaml
   application:
-    name: sample-api
+    name: sample-geo-api
   main:
     banner-mode: off
 
