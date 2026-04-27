@@ -182,7 +182,7 @@ Este paradigma aislaría muchos elementos comunes de cada aplicación como puede
 
 Y aunque la adopción de frameworks modernos requiera de más frecuencia de actualizaciones, en gran parte no se debe a roturas de API sino a vulnerabilidades que no son críticas en un entorno controlado de aplicaciones internas.
 
-=== Recomendación
+== Recomendación
 
 Para una migraciñon de aplicaciones monoñiticas en primer lugar haría una refactorizaciñon interna para aislar:
 
