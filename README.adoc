@@ -180,7 +180,7 @@ Muchas de las características que añaden complejidad a React como puede ser la
 
 Este paradigma aislaría muchos elementos comunes de cada aplicación como puede ser la seguridad, layouts comunes, i18n, etc. dentro de módulos que simplemente tendrían una relación de dependencias en tiempo de ejecución (contratos a través de un APIM).
 
-Y aunque la adopción de frameworks modernos requiera de más frecuencia de actualizaciones, en gran parte no se debe a roturas de API sino a vulnerabilidades que no son críticas en un entorno controlado de aplicaciones internas y puede ser mitigado a través de un diseño adecuado.
+Y aunque la adopción de frameworks modernos requiera de más frecuencia de actualizaciones, en gran parte no se debe a roturas de API sino a vulnerabilidades que no son críticas en un entorno controlado de aplicaciones internas.
 
 === Recomendación
 
