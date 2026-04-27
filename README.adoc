@@ -188,9 +188,9 @@ Para una migraciñon de aplicaciones monoñiticas en primer lugar haría una ref
 
 - Definiciñon del dominio de la aplicaciñon
 - Lógica de negocio (y modelo de objetos asociados)
-- Interfaces en las que la aplicaciñon lee de sistemas externos
-- Interfaces en las que la aplicaciñon escribe a sistemas externos
-- Transaccionalidad
+- Interfaces en las que la aplicacion lee de sistemas externos (mayormente DBs)
+- Interfaces en las que la aplicacion escribe a sistemas externos (mayormente DBs)
+- Transaccionalidad de procesos (de container-based-transactions a transacciones distribuidas)
 
 Con este nivel de aislamiento aplicar una refactorizaciñon lógica de negocio para categorizar los componentes dentro de tres capas principales:
 
