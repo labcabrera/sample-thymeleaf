@@ -172,7 +172,7 @@ Docker compose incluye una imagen de Kafka UI a la que podemos acceder a través
 - Riesgo de crear un monstruo mal diseñado que conserve los mismos problemas de los monolitos tradicionales y que añada una capa de complejidad de poco valor añadido a un stack tecnológico ya de por si complejo.
 - Migración más compleja entre aplicaciones con funcionamiento legacy y modernas. En este caso no hay mucha diferencia con Thymeleaf aunque en determinados casos con Thymeleaf se pueden trampear problemas de integración que tengan que ver con la lógica de negocio de una forma más sencilla que con React, aunque estos sean casos que deberían evitarse pero que en casos donde se requieran de sesiones o de un comportamiento más diseñado para JSFs que fuera complejo mirar sería más complejo.
 
-== Conclusiónes
+== Conclusiones
 
 La opciṕn de Thymeleaf sólo me parece adecuada de cara a una migración suave y escalonada de aplicaciones legacy. En si misma no aporta nada de valor añadido a patrones obsoletos como Struts y debería, de ser considerada, un proceso de transición hacia una arquitectura más moderna.
 
@@ -181,5 +181,39 @@ Muchas de las características que añaden complejidad a React como puede ser la
 Este paradigma aislaría muchos elementos comunes de cada aplicación como puede ser la seguridad, layouts comunes, i18n, etc. dentro de módulos que simplemente tendrían una relación de dependencias en tiempo de ejecución (contratos a través de un APIM).
 
 Y aunque la adopción de frameworks modernos requiera de más frecuencia de actualizaciones, en gran parte no se debe a roturas de API sino a vulnerabilidades que no son críticas en un entorno controlado de aplicaciones internas y puede ser mitigado a través de un diseño adecuado.
+
+=== Recomendación
+
+Para una migraciñon de aplicaciones monoñiticas en primer lugar haría una refactorizaciñon interna para aislar:
+
+- Definiciñon del dominio de la aplicaciñon
+- Lógica de negocio (y modelo de objetos asociados)
+- Interfaces en las que la aplicaciñon lee de sistemas externos
+- Interfaces en las que la aplicaciñon escribe a sistemas externos
+- Transaccionalidad
+
+Con este nivel de aislamiento aplicar una refactorizaciñon lógica de negocio para categorizar los componentes dentro de tres capas principales:
+
+- Dominio (generalmenete paqueterías de servicios)
+- Infraestructura: todo aquello donde la aplicaciñon escribe y lee dentro del mismo dominio, normalmente bases de datos
+- Interfaces: separación de la capa de todo aquelllo que gestiona una request que llega a la aplicación, ya sea HTTP, eventos, etc.
+
+Con esta lógica separada se puede empezar a aplicar contratos entre cada una de las capas que sin sobreingenieria de interfaces aislen y detecten las depencecias entre cada uno de los módulos. Y en ese punto de tener interfaces de lógica de negocio, escritura y lectura estructuradas cada componente monolítico se puede migrar a un dominio independiente, aunque sea inicialmente sin una ruptura arquitectónica.
+
+El uso de un patrón de comandos y consultas puede ayudar a estructurar la lógica de negocio y a definir claramente las operaciones que realiza un determinado sistema.
+Una vez identificados los contratos de entrada y salida (y aislados de tecnologías especñificas dependientes de un determinado framework o tecnología) habría que asegurar una separación clara entre la capa de servicios y las diferentes capas de infraestructura (modelos de ORM, serializaciones, conversiones y demás trampas, etc.). Este nivel de aislamiento (no depender de entities, de stubs generaos por clientes de implementacione REST/SOAP) no asegurarñia una primera versiñon de una separaciñon real entre negocio y framework.
+
+Todo esto puede hacerse sin una ruptura arquitectónica, usando el mismo paradigma J2EE/Spring/Whatever. Y una vez aislado el comportamiento de cada servicio a nivel de lógica real dentro del dominio, la migracóon de una tecnología a otra se puede hacer de una forma más sencilla tanto en cuanto sólo existe una capa de transformaciñon entre entidades de exposicion a entidades de dominio.
+
+Una vez el código esté estructurado de este modo, el uso de un framework u otro no supondría nada más que cambiar los contratos de entrada y saldida.
+
+Tambiñen, dentro de esa parte evitar todos los comportamientos AOP que no sean estrictamente necesarios a fin de que el flujo de la lógica sea lo más transparente posible, sin aspectos que afecten al comportamiento de la lógica. Si algo se ejecuta como un interceptor debe de ser debidamente justificado para evitar que ninguna lógica esté definida a nivel de aspectos.
+
+Ok, separado todo eso y aislado el dominio no es posible que el código de negocio se pueda migrar porque de pronto en un fragmento se hace un rollback de una transacción o en otro la mezcla entre entidades y DTOS haga de un calvario separarlas. En esos casos Thymeleaf. Hacer un render de _session.userName_ y encogerse de hombros diciendo: se intentó.
+
+Aunque, en general, si se aplican refactorizaciones para aislar a cada componente de sus funciones (la labor más compleja y tediosa), cualquier migraciñon posterior a tal o cual framework es algo bastante sencillo.
+
+Moraleja: no useis Thymeleaf, no para renderizar vistas al menos, usarlo para phishings si acaso ya que si que es un buen motor de plantillas.
+
 
 
