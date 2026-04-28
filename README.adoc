@@ -217,5 +217,6 @@ Moraleja: no useis Thymeleaf, no para renderizar vistas al menos, usarlo para ph
 
 ## Enlaces
 
+- https://www.thymeleaf.org/: Documentación oficial de Thymeleaf.
 - https://openapi-generator.tech/docs/generators/spring/: Documentación del generador de código para Spring.
 
